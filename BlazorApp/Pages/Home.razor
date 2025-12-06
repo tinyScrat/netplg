@@ -1,7 +1,19 @@
 @page "/"
+@namespace BlazorApp
+@inject HttpClient HttpClient
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+<button @onclick="SayHelloAsync">SayHello</button>
+
+@code {
+    async Task SayHelloAsync()
+    {
+        var response = await HttpClient.GetStringAsync("/hello");
+        Console.WriteLine(response);
+    }
+}

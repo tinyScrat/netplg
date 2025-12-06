@@ -1,6 +1,15 @@
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+    options.AddPolicy("SpaCors", policy =>
+        policy.WithOrigins("https://localhost:8080")
+            .AllowAnyHeader()
+            .AllowAnyMethod()));
+
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.UseCors("SpaCors");
+
+app.MapGet("/hello", () => "Hello World!");
 
 app.Run();
