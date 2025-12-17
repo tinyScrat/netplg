@@ -1,0 +1,16 @@
+= F# Playground
+
+Start a Postgres Docker container
+
+[,shell]
+----
+docker run \
+    -d \
+    --restart always \
+    --name Postgres \
+    -e POSTGRES_USER=postgres \
+    -e POSTGRES_PASSWORD=postgres \
+    -v PostgresData:/var/lib/postgresql \
+    -p 5432:5432 \
+    postgres:alpine
+----

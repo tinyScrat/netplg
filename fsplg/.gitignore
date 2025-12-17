@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Sublime Text
+*.sublime-workspace
+
+# Build output
+bin/
+obj/
