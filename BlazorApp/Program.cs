@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BlazorApp;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
@@ -19,4 +20,11 @@ builder.Services
         return factory.CreateClient("API");
     });
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+var env = app.Services.GetRequiredService<IWebAssemblyHostEnvironment>();
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+
+logger.LogInformation("Environment: {ENV}", env.Environment);
+
+await app.RunAsync();
