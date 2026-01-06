@@ -1,0 +1,10 @@
+@namespace BlazorApp
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject NavigationManager Nav
+
+@code {
+    protected override void OnInitialized()
+    {
+        Nav.NavigateToLogin("authentication/login");
+    }
+}

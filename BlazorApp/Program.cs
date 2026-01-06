@@ -20,6 +20,13 @@ builder.Services
         return factory.CreateClient("API");
     });
 
+builder.Services
+    .AddOidcAuthentication(options =>
+    {
+        builder.Configuration.Bind("EntraID", options.ProviderOptions);
+        options.ProviderOptions.ResponseMode = "redirect";
+    });
+
 var app = builder.Build();
 
 var env = app.Services.GetRequiredService<IWebAssemblyHostEnvironment>();
