@@ -10,7 +10,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services
     .AddHttpClient("API", client =>
     {
-        client.BaseAddress = new Uri("https://localhost:8081/");
+        client.BaseAddress = new Uri("https://localhost:8001/");
     });
 
 builder.Services
@@ -24,7 +24,7 @@ builder.Services
     .AddOidcAuthentication(options =>
     {
         builder.Configuration.Bind("EntraID", options.ProviderOptions);
-        options.ProviderOptions.ResponseMode = "redirect";
+        options.ProviderOptions.DefaultScopes.Add("email");
     });
 
 var app = builder.Build();

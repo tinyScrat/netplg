@@ -22,7 +22,14 @@ Welcome to your new app.
 @code {
     async Task SayHelloAsync()
     {
-        var response = await HttpClient.GetStringAsync("/hello");
-        Console.WriteLine(response);
+        try
+        {
+            var response = await HttpClient.GetStringAsync("/hello");
+            Console.WriteLine(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }

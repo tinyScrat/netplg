@@ -1,5 +1,4 @@
 <Solution>
   <Project Path="BlazorApp/BlazorApp.csproj" />
-  <Project Path="DomainModels/DomainModels.csproj" />
   <Project Path="WebApp/WebApp.csproj" />
 </Solution>
