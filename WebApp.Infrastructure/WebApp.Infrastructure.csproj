@@ -11,4 +11,16 @@
     <ProjectReference Include="..\WebApp.Application\WebApp.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
+    <PackageReference Include="Fluid.Core" Version="3.0.0-beta.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
+    <PackageReference Include="Proto.Actor" Version="1.8.0" />
+    <PackageReference Include="Proto.Persistence" Version="1.8.0" />
+    <PackageReference Include="Proto.Persistence.SqlServer" Version="1.8.0" />
+    <PackageReference Include="System.Reactive" Version="7.0.0-preview.1" />
+  </ItemGroup>
+
 </Project>
