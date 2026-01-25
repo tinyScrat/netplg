@@ -1,4 +1,4 @@
-namespace WebApp.Infrastructure.Abstractions;
+namespace MyApp.Infrastructure.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

@@ -1,4 +1,4 @@
-namespace WebApp.Domain.Abstractions;
+namespace MyApp.Domain.Abstractions;
 
 public interface IRepository<TAggregate, TId>
     where TAggregate : IAggregateRoot<TId>

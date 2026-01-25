@@ -1,6 +1,6 @@
-namespace WebApp.Domain;
+namespace MyApp.Domain;
 
-using WebApp.Domain.Abstractions;
+using MyApp.Domain.Abstractions;
 using System.Collections.Generic;
 
 public sealed record CustomerRef : EntityRef<CustomerId>

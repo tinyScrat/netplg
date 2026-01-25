@@ -1,4 +1,4 @@
-namespace WebApp.Domain.Abstractions;
+namespace MyApp.Domain.Abstractions;
 
 using System;
 using System.Collections.Generic;

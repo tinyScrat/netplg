@@ -1,4 +1,4 @@
-namespace WebApp.Domain.Abstractions;
+namespace MyApp.Domain.Abstractions;
 
 /*
     Characteristics of value object

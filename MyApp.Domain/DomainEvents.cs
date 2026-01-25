@@ -1,6 +1,6 @@
-namespace WebApp.Domain;
+namespace MyApp.Domain;
 
-using WebApp.Domain.Abstractions;
+using MyApp.Domain.Abstractions;
 
 public sealed record CustomerAddressAdded(
     CustomerId CustomerId,
