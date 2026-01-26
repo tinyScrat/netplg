@@ -1,19 +1,12 @@
 namespace MyApp.Domain.Abstractions;
 
-public abstract class DomainException : Exception
-{
-    protected DomainException(string message) : base(message)
-    {
-    }
-}
-
 public interface IAggregateRoot<out TId>
     where TId : EntityId<TId>
 {
     TId GetId();
 }
 
-public abstract class AggregateRoot<TId> 
+public abstract class AggregateRoot<TId>
     : Entity<TId>, IAggregateRoot<TId>
     where TId : EntityId<TId>
 {

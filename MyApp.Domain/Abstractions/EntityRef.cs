@@ -1,6 +1,4 @@
-namespace MyApp.Domain;
-
-using MyApp.Domain.Abstractions;
+namespace MyApp.Domain.Abstractions;
 
 public abstract record EntityRef<TIdentity>
     where TIdentity : IEntityIdentity
