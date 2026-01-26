@@ -6,3 +6,5 @@ public abstract class DomainException : Exception
 }
 
 public sealed class InvalidFormatException(string message) : DomainException(message);
+
+public sealed class EmptyValueException(string message) : DomainException(message);

@@ -46,6 +46,21 @@ public sealed class Address : ValueObject
     }
 }
 
+// builder.OwnsOne(x => x.Address, addr =>
+// {
+//     addr.Property(a => a.Street)
+//         .HasColumnName("Street")
+//         .HasMaxLength(200);
+
+//     addr.Property(a => a.City)
+//         .HasColumnName("City")
+//         .HasMaxLength(100);
+
+//     addr.Property(a => a.ZipCode)
+//         .HasColumnName("ZipCode")
+//         .HasMaxLength(20);
+// });
+
 public sealed class Name : ValueObject
 {
     public string FirstName { get; init; } = null!;
