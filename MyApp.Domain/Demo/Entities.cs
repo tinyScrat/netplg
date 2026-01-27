@@ -11,6 +11,51 @@ public sealed record CustomerRef : EntityRef<CustomerId>
     }
 }
 
+public sealed class Money
+{
+    public decimal Amount { get; }
+    public string Currency { get; } = null!;
+
+    // EF Core parameterless constructor
+    private Money() { }
+
+    public Money(decimal amount, string currency)
+    {
+        Amount = amount;
+        Currency = currency ?? throw new EmptyValueException(nameof(currency));
+    }
+}
+
+public sealed record Name
+{
+    public string FirstName { get; } = null!;
+    public string LastName { get; } = null!;
+
+    private Name() { }
+
+    public Name(string firstName, string lastName)
+    {
+        FirstName = firstName ?? throw new EmptyValueException(nameof(firstName));
+        LastName = lastName ?? throw new EmptyValueException(nameof(lastName));
+    }
+}
+
+public sealed record Address
+{
+    public string Street { get; } = null!;
+    public string City { get; } = null!;
+    public string ZipCode { get; } = null!;
+
+    private Address() { }
+
+    public Address(string street, string city, string zipCode)
+    {
+        Street = street ?? throw new EmptyValueException(nameof(street));
+        City = city ?? throw new EmptyValueException(nameof(city));
+        ZipCode = zipCode ?? throw new EmptyValueException(nameof(zipCode));
+    }
+}
+
 public class Order : AggregateRoot<OrderId>
 {
     public OrderId OrderId => Id;
