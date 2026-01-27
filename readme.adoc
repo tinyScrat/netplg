@@ -12,3 +12,5 @@ podman run -d --rm \
     -e RABBITMQ_DEFAULT_PASS=rabbit \
     docker.io/library/rabbitmq:management-alpine
 ----
+
+
