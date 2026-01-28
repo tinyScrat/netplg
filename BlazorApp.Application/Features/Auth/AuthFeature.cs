@@ -2,19 +2,16 @@ namespace BlazorApp.Application.Features.Auth;
 
 using Microsoft.Extensions.DependencyInjection;
 
-public static class AuthFeature
+public static class AuthFeatures
 {
-    public static IServiceCollection AddAuthFeature(
+    public static IServiceCollection AddAuthFeatures(
         this IServiceCollection services)
     {
-        // services.AddSingleton<AuthStore>();
+        services.AddSingleton<AuthStore>();
         // services.AddSingleton<IAuthStore>(sp =>
         //     sp.GetRequiredService<AuthStore>());
 
-        // services.AddSingleton<LoginEffect>();
-        // services.AddSingleton<RefreshTokenEffect>();
-
-        // services.AddTransient<LoginViewModel>();
+        services.AddTransient<AuthViewModel>();
 
         return services;
     }

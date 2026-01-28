@@ -2,6 +2,9 @@
 @namespace BlazorApp
 
 @inject HttpClient HttpClient
+@inject NavigationManager Nav
+@inject AuthViewModel AuthVM
+@inherits RxComponentBase
 
 <PageTitle>Home</PageTitle>
 
@@ -12,15 +15,27 @@ Welcome to your new app.
 <AuthorizeView>
     <Authorized>
         Authorized
+        <p>@Username</p>
     </Authorized>
     <NotAuthorized>
-        NotAuthorized
+        <button onclick="Login">Login</button>
     </NotAuthorized>
 </AuthorizeView>
 
 <button @onclick="SayHelloAsync">SayHello</button>
 
 @code {
+    string? Username = null;
+
+    protected override void OnInitialized()
+    {
+        Disposables.Add(AuthVM.Username.Subscribe(username =>
+            {
+                Username = username;
+                Console.WriteLine($"Username: {Username}");
+            }));
+    }
+
     async Task SayHelloAsync()
     {
         try
@@ -32,5 +47,9 @@ Welcome to your new app.
         {
             Console.WriteLine(ex.Message);
         }
+    }
+
+    void Login() {
+        Nav.NavigateTo("authentication/login");
     }
 }

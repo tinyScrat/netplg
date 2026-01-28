@@ -13,7 +13,8 @@ MyApp.Application
 │   │   ├── AuthStore.cs
 │   │   ├── LoginEffect.cs
 │   │   ├── RefreshTokenEffect.cs
-│   │   ├── LoginViewModel.cs
+│   │   ├── AuthViewModel.cs
+│   │   ├── IAuthApi.cs
 │   │   └── AuthFeature.cs
 │   │
 │   ├── Portfolio/

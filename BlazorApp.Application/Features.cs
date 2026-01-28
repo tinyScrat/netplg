@@ -12,7 +12,7 @@ public static class AppExtensions
     {
         services
             .AddAppFeature()
-            .AddAuthFeature()
+            .AddAuthFeatures()
             .AddPortfolioFeature();
 
         return services;

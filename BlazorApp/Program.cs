@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BlazorApp;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using BlazorApp.Features.Auth;
+using BlazorApp.Application;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -10,8 +13,11 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services
     .AddHttpClient("API", client =>
     {
-        client.BaseAddress = new Uri("https://localhost:8001/");
-    });
+        var baseAddress = builder.Configuration.GetValue<string>("BaseAddress") ??
+            builder.HostEnvironment.BaseAddress;
+        client.BaseAddress = new Uri(baseAddress);
+    })
+    .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
 builder.Services
     .AddScoped(sp =>
@@ -25,7 +31,11 @@ builder.Services
     {
         builder.Configuration.Bind("EntraID", options.ProviderOptions);
         options.ProviderOptions.DefaultScopes.Add("email");
-    });
+    })
+    .AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, RemoteUserAccount, CustomPrincipalFactory>();
+
+builder.Services
+    .AddApplication();
 
 var app = builder.Build();
 
