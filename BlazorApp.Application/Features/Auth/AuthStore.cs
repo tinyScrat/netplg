@@ -9,7 +9,7 @@ public sealed record AuthState(
     bool IsLoading)
 {
     public static AuthState Anonymous =>
-        new(false, null, Array.Empty<string>(), true);
+        new(false, null, [], true);
 }
 
 

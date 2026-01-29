@@ -4,11 +4,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication.Internal;
 
-public sealed class CustomPrincipalFactory
-    : AccountClaimsPrincipalFactory<RemoteUserAccount>
+public sealed class CustomPrincipalFactory(IAccessTokenProviderAccessor accessor)
+        : AccountClaimsPrincipalFactory<RemoteUserAccount>(accessor)
 {
-    public CustomPrincipalFactory(IAccessTokenProviderAccessor accessor) : base(accessor) {}
-
     public override async ValueTask<ClaimsPrincipal> CreateUserAsync(
         RemoteUserAccount account,
         RemoteAuthenticationUserOptions options)

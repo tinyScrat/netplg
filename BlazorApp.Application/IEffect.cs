@@ -11,7 +11,7 @@ public interface IEffect<TCommand>
 
 public sealed class ObservableState<T>(T initial) : IDisposable
 {
-    private readonly BehaviorSubject<T> _subject = new BehaviorSubject<T>(initial);
+    private readonly BehaviorSubject<T> _subject = new(initial);
 
     public T Value => _subject.Value;
 

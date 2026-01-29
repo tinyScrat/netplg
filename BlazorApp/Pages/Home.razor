@@ -29,11 +29,10 @@ Welcome to your new app.
 
     protected override void OnInitialized()
     {
-        Disposables.Add(AuthVM.Username.Subscribe(username =>
-            {
-                Username = username;
-                Console.WriteLine($"Username: {Username}");
-            }));
+        Subscribe(AuthVM.Username, username =>
+        {
+            Username = username;
+        });
     }
 
     async Task SayHelloAsync()

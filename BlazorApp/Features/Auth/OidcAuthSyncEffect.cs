@@ -3,15 +3,13 @@ namespace BlazorApp.Features.Auth;
 using System.Reactive;
 using System.Reactive.Linq;
 using BlazorApp.Application.Features.Auth;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 public static class UiAuthObservableExtensions
 {
     public static IObservable<T> WithAuthRedirect<T>(
-        this IObservable<T> source,
-        NavigationManager nav)
+        this IObservable<T> source)
     {
         return source.Catch<T, AccessTokenNotAvailableException>(ex =>
         {
@@ -22,25 +20,28 @@ public static class UiAuthObservableExtensions
 }
 
 
-public sealed class OidcAuthSyncEffect : IDisposable
+public sealed class OidcAuthSyncEffect(
+    AuthenticationStateProvider authProvider,
+    AuthStore store) : IDisposable
 {
-    private readonly IDisposable _subscription;
-
-    public OidcAuthSyncEffect(
-        AuthenticationStateProvider authProvider,
-        AuthStore store)
-    {
-        _subscription =
+    private readonly IDisposable _subscription =
             Observable
-                .FromEventPattern<AuthenticationStateChangedHandler,
-                    Task<AuthenticationState>>(
-                    h => authProvider.AuthenticationStateChanged += h,
-                    h => authProvider.AuthenticationStateChanged -= h)
-                .StartWith(default(EventPattern<Task<AuthenticationState>>))
-                .SelectMany(_ => authProvider.GetAuthenticationStateAsync())
+                // 1) Seed store from the current auth state at startup
+                .Defer(() => Observable.FromAsync(authProvider.GetAuthenticationStateAsync))
+                // 2) Then apply subsequent changes
+                .Concat(
+                    Observable
+                        .FromEvent<AuthenticationStateChangedHandler, Task<AuthenticationState>>(
+                            action => task => action(task),
+                            h => authProvider.AuthenticationStateChanged += h,
+                            h => authProvider.AuthenticationStateChanged -= h)
+                        .SelectMany(task => task)
+                )
                 .Subscribe(state =>
                 {
                     var user = state.User;
+
+                    Console.WriteLine($"OIDC Auth State Changed. IsAuthenticated: {user.Identity?.IsAuthenticated}");
 
                     if (user.Identity?.IsAuthenticated == true)
                     {
@@ -54,7 +55,6 @@ public sealed class OidcAuthSyncEffect : IDisposable
                         store.SetAnonymous();
                     }
                 });
-    }
 
     public void Dispose() => _subscription.Dispose();
 }
