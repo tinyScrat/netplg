@@ -1,4 +1,4 @@
-namespace BlazorApp.Extensions;
+namespace BlazorApp.Abstractions;
 
 using System;
 using System.Reactive.Disposables;

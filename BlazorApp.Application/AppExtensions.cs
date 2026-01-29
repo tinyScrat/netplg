@@ -2,7 +2,8 @@ namespace BlazorApp.Application;
 
 using Microsoft.Extensions.DependencyInjection;
 using BlazorApp.Application.Features.Auth;
-using BlazorApp.Application.Features.Portfolio;
+using BlazorApp.Application.Features.Portfolios;
+using BlazorApp.Application.Features.Orders;
 
 public static class AppExtensions
 {
@@ -10,7 +11,8 @@ public static class AppExtensions
         this IServiceCollection services)
     {
         services
-            .AddAuthFeatures()
+            .AddAuthFeature()
+            .AddOrderFeature()
             .AddPortfolioFeature();
 
         return services;

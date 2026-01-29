@@ -4,8 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class AuthFeatures
 {
-    public static IServiceCollection AddAuthFeatures(
-        this IServiceCollection services)
+    public static IServiceCollection AddAuthFeature(this IServiceCollection services)
     {
         services.AddSingleton<AuthStore>();
         // services.AddSingleton<IAuthStore>(sp =>

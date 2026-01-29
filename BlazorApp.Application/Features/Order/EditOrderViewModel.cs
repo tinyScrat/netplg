@@ -1,29 +1,9 @@
-namespace BlazorApp.Application;
+namespace BlazorApp.Application.Features.Orders;
 
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-
-public interface IEffect<TCommand>
-{
-    IObservable<Unit> Handle(TCommand command);
-}
-
-public sealed class ObservableState<T>(T initial) : IDisposable
-{
-    private readonly BehaviorSubject<T> _subject = new(initial);
-
-    public T Value => _subject.Value;
-
-    public IObservable<T> Changes => _subject.AsObservable();
-
-    public void Update(Func<T, T> updater)
-    {
-        _subject.OnNext(updater(_subject.Value));
-    }
-
-    public void Dispose() => _subject.Dispose();
-}
+using BlazorApp.Application.Abstractions;
 
 public sealed record AddressDto(
     string Street,
@@ -40,7 +20,7 @@ public sealed record OrderDraftDto(
     IReadOnlyList<OrderItemDto> Items
 );
 
-public sealed record SaveOrderDraftCommand(Guid OrderId);
+public sealed record SaveOrderDraftCommand(Guid OrderId, OrderDraftDto Draft) : ICommand;
 
 public sealed class EditOrderViewModel : IDisposable
 {
@@ -74,7 +54,7 @@ public sealed class EditOrderViewModel : IDisposable
                 .WithLatestFrom(CanSave, (_, canSave) => canSave)
                 .Where(canSave => canSave)
                 .SelectMany(_ =>
-                    saveEffect.Handle(new SaveOrderDraftCommand(Guid.NewGuid()))
+                    saveEffect.Handle(new SaveOrderDraftCommand(Guid.NewGuid(), _state.Value))
                     .Retry(2)
                 )
                 .Subscribe();
@@ -98,9 +78,6 @@ public sealed class EditOrderViewModel : IDisposable
         => _saveClicks.OnNext(Unit.Default);
 
     // ---- Mapping ----
-
-    public OrderDraftDto ToDraftDto() => _state.Value;
-
     private static bool Validate(OrderDraftDto dto)
         => dto.Items.Count > 0 && !string.IsNullOrWhiteSpace(dto.Address.Street);
 
@@ -109,33 +86,5 @@ public sealed class EditOrderViewModel : IDisposable
         _savePipeline.Dispose();
         _state.Dispose();
         _saveClicks.Dispose();
-    }
-}
-
-
-public interface IOrderApi
-{
-    Task SaveOrderAsync(OrderDraftDto dto);
-}
-
-public sealed class SaveOrderDraftEffect(IOrderApi api, EditOrderViewModel vm) : IEffect<SaveOrderDraftCommand>
-{
-    public IObservable<Unit> Handle(SaveOrderDraftCommand cmd)
-    {
-        return Observable.FromAsync(async () =>
-        {
-            var dto = vm.ToDraftDto();
-
-            // var res = await _http.PostAsJsonAsync(
-            //     $"/orders/{cmd.OrderId}/update-draft",
-            //     dto
-            // );
-
-            // res.EnsureSuccessStatusCode();
-
-            await api.SaveOrderAsync(dto);
-
-            return Unit.Default;
-        });
     }
 }

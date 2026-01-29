@@ -1,6 +1,5 @@
 namespace BlazorApp.Features.Auth;
 
-using System.Reactive;
 using System.Reactive.Linq;
 using BlazorApp.Application.Features.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
