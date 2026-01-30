@@ -12,8 +12,10 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services
-    .AddHttpClient("API", client =>
+    .AddHttpClient("API", (sp, client) =>
     {
+        var logger = sp.GetRequiredService<ILogger<Program>>();
+
         var configuredBaseAddress = builder.Configuration.GetValue<string>("BaseAddress");
 
         var baseAddress =
@@ -23,11 +25,17 @@ builder.Services
 
         if (!Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
         {
-            // Last-resort fallback so the app doesn't crash on startup
+            logger.LogWarning(
+                "Invalid BaseAddress '{BaseAddress}', falling back to '{Fallback}'",
+                baseAddress,
+                builder.HostEnvironment.BaseAddress);
+
             uri = new Uri(builder.HostEnvironment.BaseAddress);
         }
 
         client.BaseAddress = uri;
+        
+        logger.LogInformation("API HttpClient BaseAddress set to {BaseAddress}", client.BaseAddress);
     })
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
