@@ -12,6 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services
+    .AddScoped<AuthDelegatingHandler>()
     .AddHttpClient("API", (sp, client) =>
     {
         var logger = sp.GetRequiredService<ILogger<Program>>();
@@ -37,7 +38,8 @@ builder.Services
         
         logger.LogInformation("API HttpClient BaseAddress set to {BaseAddress}", client.BaseAddress);
     })
-    .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
+    .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
+    .AddHttpMessageHandler<AuthDelegatingHandler>();
 
 builder.Services
     .AddScoped(sp =>
@@ -55,6 +57,7 @@ builder.Services
     .AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, RemoteUserAccount, CustomPrincipalFactory>();
 
 builder.Services
+    .AddBlazorAppFeatures()
     .AddApplication()
     .AddInfrastructure();
 
