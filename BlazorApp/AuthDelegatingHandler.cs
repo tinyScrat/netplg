@@ -1,7 +1,7 @@
-using System.Net;
-using BlazorApp.Application.Abstractions;
+namespace BlazorApp;
 
-namespace BlazorApp.Infrastructure;
+using BlazorApp.Application.Abstractions;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
 public sealed class AuthDelegatingHandler(IAppEventBus bus) : DelegatingHandler
 {
@@ -9,12 +9,14 @@ public sealed class AuthDelegatingHandler(IAppEventBus bus) : DelegatingHandler
        HttpRequestMessage request,
        CancellationToken cancellationToken)
     {
-        var response = await base.SendAsync(request, cancellationToken);
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        try
+        {
+            return await base.SendAsync(request, cancellationToken);
+        }
+        catch (AccessTokenNotAvailableException)
         {
             bus.Publish(new SessionExpiredEvent());
+            throw;
         }
-
-        return response;
     }
 }
