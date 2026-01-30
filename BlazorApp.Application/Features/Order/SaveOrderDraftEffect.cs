@@ -10,13 +10,6 @@ public sealed class SaveOrderDraftEffect(IOrderApi api) : IEffect<SaveOrderDraft
     {
         return Observable.FromAsync(async () =>
         {
-            // var res = await _http.PostAsJsonAsync(
-            //     $"/orders/{cmd.OrderId}/update-draft",
-            //     dto
-            // );
-
-            // res.EnsureSuccessStatusCode();
-
             await api.SaveOrderAsync(cmd.Draft);
 
             return Unit.Default;
