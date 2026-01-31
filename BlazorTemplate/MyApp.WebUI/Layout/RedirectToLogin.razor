@@ -1,0 +1,10 @@
+@namespace MyApp
+
+@inject NavigationManager Nav
+
+@code {
+    protected override void OnInitialized()
+    {
+        Nav.NavigateToLogin("authentication/login");
+    }
+}
