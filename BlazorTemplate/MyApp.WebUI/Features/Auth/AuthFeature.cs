@@ -7,7 +7,9 @@ public static class AuthFeatures
     public static IServiceCollection AddUIAuthFeatures(
         this IServiceCollection services)
     {
+        services.AddScoped<AuthDelegatingHandler>();
         services.AddSingleton<OidcAuthSyncEffect>();
+        services.AddSingleton<SessionExpiredSubscriber>();
 
         return services;
     }

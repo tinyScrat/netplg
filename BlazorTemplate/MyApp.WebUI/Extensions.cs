@@ -1,6 +1,9 @@
 namespace MyApp;
 
 using MyApp.Application.Abstractions;
+using MyApp.Features.Auth;
+using MyApp.Features.Events;
+
 
 internal static class Extensions
 {
@@ -11,8 +14,7 @@ internal static class Extensions
         services.AddSingleton<IAppEventBus>(sp =>
             sp.GetRequiredService<BlazorAppEventBus>());
 
-
-        services.AddSingleton<SessionExpiredSubscriber>();
+        services.AddUIAuthFeatures();
 
         return services;
     }

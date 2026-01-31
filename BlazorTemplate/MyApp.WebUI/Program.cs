@@ -12,7 +12,6 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services
-    .AddScoped<AuthDelegatingHandler>()
     .AddHttpClient("API", (sp, client) =>
     {
         var logger = sp.GetRequiredService<ILogger<Program>>();
@@ -35,7 +34,7 @@ builder.Services
         }
 
         client.BaseAddress = uri;
-        
+
         logger.LogInformation("API HttpClient BaseAddress set to {BaseAddress}", client.BaseAddress);
     })
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
@@ -60,9 +59,6 @@ builder.Services
     .AddBlazorAppFeatures()
     .AddApplication()
     .AddInfrastructure();
-
-builder.Services
-    .AddUIAuthFeatures();
 
 var app = builder.Build();
 

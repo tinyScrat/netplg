@@ -1,4 +1,4 @@
-namespace MyApp;
+namespace MyApp.Features.Events;
 
 using System.Reactive.Linq;
 using System.Reactive.Subjects;

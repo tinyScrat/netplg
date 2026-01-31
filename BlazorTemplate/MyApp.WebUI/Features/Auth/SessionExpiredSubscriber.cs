@@ -1,8 +1,9 @@
-namespace MyApp;
+namespace MyApp.Features.Auth;
 
 using System.Reactive.Linq;
 using MyApp.Application.Abstractions;
 using Microsoft.AspNetCore.Components;
+using MyApp.Features.Events;
 
 public sealed class SessionExpiredSubscriber(
     BlazorAppEventBus bus,
