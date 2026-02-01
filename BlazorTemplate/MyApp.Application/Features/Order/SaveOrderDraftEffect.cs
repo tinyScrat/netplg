@@ -4,7 +4,7 @@ using MyApp.Application.Abstractions;
 using System.Reactive;
 using System.Reactive.Linq;
 
-public sealed class SaveOrderDraftEffect(IOrderApi api) : IEffect<SaveOrderDraftCommand>
+public sealed class SaveOrderDraftEffect(IOrderApi api) : IEffect<SaveOrderDraftCommand, Unit>
 {
     public IObservable<Unit> Handle(SaveOrderDraftCommand cmd)
     {

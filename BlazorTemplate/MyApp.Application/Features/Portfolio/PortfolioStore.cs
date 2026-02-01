@@ -13,7 +13,7 @@ public sealed record PortfolioState(string Name, IEnumerable<Portfolio> Portfoli
 
 internal sealed class PortfolioStore(PortfolioState initial) : IPortfolioStore
 {
-    private ObservableState<PortfolioState> _state = new(initial);
+    private ReactiveState<PortfolioState> _state = new(initial);
 
     public PortfolioState Value => _state.Value;
 

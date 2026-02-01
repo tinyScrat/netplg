@@ -1,10 +1,22 @@
 namespace MyApp.Application.Abstractions;
 
-using System.Reactive;
+public interface ICommand<TResult> { }
 
-public interface ICommand { }
-
-public interface IEffect<in TCommand> where TCommand : ICommand
+public interface IEffect<in TCommand, out TResult> where TCommand : ICommand<TResult>
 {
-    IObservable<Unit> Handle(TCommand command);
+    IObservable<TResult> Handle(TCommand command);
+}
+
+internal sealed class LambdaEffect<TCommand, TResult>
+    : IEffect<TCommand, TResult> where TCommand : ICommand<TResult>
+{
+    private readonly Func<TCommand, IObservable<TResult>> _execute;
+
+    public LambdaEffect(Func<TCommand, IObservable<TResult>> execute)
+    {
+        _execute = execute;
+    }
+
+    public IObservable<TResult> Handle(TCommand command)
+        => _execute(command);
 }

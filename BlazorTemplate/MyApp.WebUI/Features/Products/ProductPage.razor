@@ -1,0 +1,25 @@
+@page "/product"
+@namespace MyApp.WebUI.Features.Products
+@using MyApp.Application.Features.Products
+@using System.Reactive
+@using MyApp.Application.Abstractions
+@inject ProductViewModel VM
+
+<h2>Product</h2>
+
+@* <button disabled="@VM.Save.IsExecuting"
+        @onclick="() => VM.SaveProduct(Guid.NewGuid())">
+    Save
+</button>
+
+@switch (VM.Save.State)
+{
+    case AsyncState<Unit>.Loading:
+        <p>Loading...</p>
+        break;
+
+    case AsyncState<Unit>.Error(var msg, _):
+        <p>@msg</p>
+        break;
+}
+ *@

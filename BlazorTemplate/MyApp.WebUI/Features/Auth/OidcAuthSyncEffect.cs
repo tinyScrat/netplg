@@ -18,7 +18,6 @@ public static class UiAuthObservableExtensions
     }
 }
 
-
 public sealed class OidcAuthSyncEffect(
     AuthenticationStateProvider authProvider,
     AuthStore store) : IDisposable

@@ -2,8 +2,14 @@ namespace MyApp.Infrastructure;
 
 using System.Reactive.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using MyApp.Application.Features.Storage;
 using MyApp.Application.Features.Orders;
+using MyApp.Application.Features.Products;
+using MyApp.Application.Features.Portfolios;
+using MyApp.Infrastructure.Features.Storage;
 using MyApp.Infrastructure.Features.Orders;
+using MyApp.Infrastructure.Features.Products;
+using MyApp.Infrastructure.Features.Portfolios;
 
 public static class HttpObservableExtensions
 {
@@ -23,13 +29,11 @@ public static class InfraExtensions
     {
         // APIs
         services.AddSingleton<IOrderApi, OrderApi>();
-        // services.AddSingleton<IPortfolioApi, PortfolioApi>();
+        services.AddSingleton<IPortfolioApi, PortfolioApi>();
+        services.AddSingleton<IProductApi, ProductApi>();
 
-        // // Auth helpers
-        // services.AddSingleton<ITokenProvider, TokenProvider>();
-
-        // // Browser storage
-        // services.AddSingleton<IBrowserStorage, BrowserStorage>();
+        // Browser storage
+        services.AddSingleton<IBrowserStorage, BrowserStorage>();
 
         return services;
     }

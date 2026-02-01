@@ -20,11 +20,11 @@ public sealed record OrderDraftDto(
     IReadOnlyList<OrderItemDto> Items
 );
 
-public sealed record SaveOrderDraftCommand(Guid OrderId, OrderDraftDto Draft) : ICommand;
+public sealed record SaveOrderDraftCommand(Guid OrderId, OrderDraftDto Draft) : ICommand<Unit>;
 
 public sealed class EditOrderViewModel : IDisposable
 {
-    private readonly ObservableState<OrderDraftDto> _state;
+    private readonly ReactiveState<OrderDraftDto> _state;
     private readonly Subject<Unit> _saveClicks = new();
 
     private readonly IDisposable _savePipeline;
@@ -33,7 +33,7 @@ public sealed class EditOrderViewModel : IDisposable
         OrderDraftDto initial,
         SaveOrderDraftEffect saveEffect)
     {
-        _state = new ObservableState<OrderDraftDto>(initial);
+        _state = new ReactiveState<OrderDraftDto>(initial);
 
         // Derived state
         HasChanges = _state.Changes
