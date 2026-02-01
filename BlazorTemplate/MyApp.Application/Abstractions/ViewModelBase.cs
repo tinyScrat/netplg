@@ -2,9 +2,9 @@ namespace MyApp.Application.Abstractions;
 
 using System.Reactive;
 using System.Reactive.Disposables;
-using System.Reactive.Disposables.Fluent;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
+
+// UI → Dispatch(Command) → Effect → State update
 
 public abstract class ViewModelBase : IDisposable
 {
@@ -17,68 +17,46 @@ public abstract class ViewModelBase : IDisposable
         => _disposables.Dispose();
 }
 
-// UI → Dispatch(Command) → Effect → State update
-
-// public abstract class ReactiveViewModel<TCommand> : ViewModelBase
-//     where TCommand : ICommand
-// {
-//     private readonly Subject<TCommand> _commands = new();
-
-//     protected IObservable<TCommand> Commands => _commands.AsObservable();
-
-//     protected void Dispatch(TCommand command)
-//         => _commands.OnNext(command);
-// }
-
 public abstract class ReactiveViewModel<TCommand> : ViewModelBase
     where TCommand : ICommand
 {
-    private readonly Subject<TCommand> _commands = new();
+    private readonly ObservableEvent<TCommand> _commands = new();
 
-    protected IObservable<TCommand> Commands => _commands.AsObservable();
+    protected readonly ObservableState<bool> _isBusy = new(false);
+    protected readonly ObservableState<string?> _error = new(null);
 
-    protected readonly BehaviorSubject<bool> _isBusy = new(false);
-    protected readonly BehaviorSubject<string?> _error = new(null);
+    protected IObservable<TCommand> Commands => _commands.Events;
+    public IObservable<bool> IsBusy => _isBusy.Changes;
+    public IObservable<string?> Error => _error.Changes.Where(e => e is not null);
 
-    public IObservable<bool> IsBusy => _isBusy.DistinctUntilChanged();
-    public IObservable<string?> Error => _error;
-
-    protected void Dispatch(TCommand command)
-        => _commands.OnNext(command);
+    protected void Dispatch(TCommand command) => _commands.Emit(command);
 
     protected IDisposable TrackEffect(IObservable<Unit> effect)
     {
-        _isBusy.OnNext(true);
-
-        // var subscription = effect
-        //     .Materialize()
-        //     .Do(n =>
-        //     {
-        //         if (n.Kind == NotificationKind.OnError)
-        //             _error.OnNext(n.Exception!.Message);
-
-        //         if (n.Kind != NotificationKind.OnNext)
-        //             _isBusy.OnNext(false);
-        //     })
-        //     .Dematerialize()
-        //     .Subscribe();
-
-        // DisposeWith(subscription);
-        // return subscription;
+        _isBusy.Set(true);
 
         return effect
             .Materialize()
             .Do(notification =>
             {
                 if (notification.Kind == NotificationKind.OnError)
-                    _error.OnNext(notification.Exception!.Message);
+                    _error.Set(notification.Exception!.Message);
 
                 if (notification.Kind != NotificationKind.OnNext)
-                    _isBusy.OnNext(false);
+                    _isBusy.Set(false);
             })
             .Dematerialize()
             .Subscribe()
             .DisposeWith(this);
+    }
+
+    public override void Dispose()
+    {
+        _commands.Dispose();
+        _isBusy.Dispose();
+        _error.Dispose();
+
+        base.Dispose();
     }
 }
 
