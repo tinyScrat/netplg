@@ -1,8 +1,7 @@
 namespace MyApp.Application.Features.Products;
 
+using Microsoft.Extensions.Logging;
 using MyApp.Application.Abstractions;
-using System.Reactive;
-using System.Reactive.Linq;
 
 public sealed record Product(
     string ProductNumber,
@@ -40,60 +39,69 @@ public sealed class ProductViewModel : ViewModelBase
 {
     public AsyncState<Product> Product { get; }
 
-    public ReactiveCommand<SaveProductCmd, ProductVersion> SaveProduct { get; }
+    public ReactiveCommand<SaveProductCmd, ProductVersion> SaveProductRcmd { get; }
 
-    // public AsyncCommand<PublishProductCmd, int> Publish { get; }
-    // public AsyncCommand<LoadProductCmd, ProductDetailDTO> Load { get; }
+    public ReactiveCommand<PublishProductCmd, int> PublishRcmd { get; }
+
+    public ReactiveCommand<LoadProductCmd, ProductDetailDTO> LoadRcmd { get; }
 
     public ProductViewModel(
+        ILogger<ProductViewModel> logger,
         SaveProductEffect saveProductEffect,
         SaveProductReducer saveProductReducer,
-        PublishProductEffect publishProductEffect)
+        PublishProductEffect publishProductEffect,
+        LoadProductEffect loadProductEffect)
     {
         Product = new AsyncState<Product>(new Product(string.Empty, string.Empty, string.Empty, 0, 1, DateTimeOffset.Now));
+        Product.DisposeWith(this);
 
-        var dispatcher = new CommandDispatcher<Product>(Product);
+        SaveProductRcmd = ReactiveCommand.CreateWithReducer(
+            state: Product,
+            effect: saveProductEffect,
+            reducer: saveProductReducer)
+            .DisposeWith(this);
 
-        SaveProduct = ReactiveCommand.CreateFromObservable<Product, SaveProductCmd, ProductVersion>(
-            commandFactory: draft => new SaveProductCmd(draft),
-            execute: command =>
-                dispatcher.Dispatch(
-                    command,
-                    saveProductEffect,
-                    saveProductReducer
-                )//,
-            //asyncState: saveProductState
-        );
+        LoadRcmd = new ReactiveCommand<LoadProductCmd, ProductDetailDTO>(
+            effect: loadProductEffect,
+            asyncState: Product,
+            onResult: (cmd, result) =>
+            {
+                logger.LogInformation("Loaded product details, id: {Id}.", cmd.ProductId);
+            })
+            .DisposeWith(this);
 
+        PublishRcmd = new ReactiveCommand<PublishProductCmd, int>(
+            effect: publishProductEffect,
+            asyncState: Product,
+            onResult: (_, result) =>
+            {
+                logger.LogInformation("Published {Count} items.", result);
+            })
+            .DisposeWith(this);
 
-        // var saveState = new AsyncState<ProductVersion>(new ProductVersion(Product.Data.Value.Version));
-        // Save = new AsyncCommand<SaveProductCmd, ProductVersion>(saveProductEffect, saveState, version =>
-        // {
-        //     Console.WriteLine($"Saved. New version: {version}");
-        // });
+        LoadRcmd
+            .Results
+            .Subscribe(dto =>
+            {
+                Product.Data.Update(_ => new Product(
+                    ProductNumber: dto.ProductNumber,
+                    ProductName: dto.ProductName,
+                    Description: dto.ProductDescription,
+                    Price: dto.Price,
+                    Version: dto.Version,
+                    LastSavedAt: DateTimeOffset.UtcNow));
 
-        // Save.DisposeWith(this);
-
-        // Publish = new AsyncCommand<PublishProductCmd, int>(publishProductEffect.Handle);
-        // Publish.DisposeWith(this);
-
-        // Load = new AsyncCommand<LoadProductCmd, ProductDetailDTO>()
-
-        // Save.Changes
-        //     .OfType<AsyncState<Product>.Success>()
-        //     .Select(s => s.Value)
-        //     .Subscribe(Product.Set)
-        //     .DisposeWith(this);
-
-        // Publish.Changes
-        //     .OfType<AsyncState<Product>.Success>()
-        //     .Select(s => s.Value)
-        //     .Subscribe(Product.Set)
-        //     .DisposeWith(this);
+                logger.LogInformation("Product data updated in ViewModel number: {ProductNumber}.", dto.ProductNumber);
+            })
+            .DisposeWith(this);
     }
 
-    // public void SaveProduct(Guid id)
-    // {
-    //     Save.Execute(new SaveProductCmd(id));
-    // }
+    public void SaveProduct(Product draft) =>
+        SaveProductRcmd.Execute(new SaveProductCmd(draft));
+
+    public void PublishProduct(Guid productId) =>
+        PublishRcmd.Execute(new PublishProductCmd(productId));
+
+    public void LoadProduct(Guid productId) =>
+        LoadRcmd.Execute(new LoadProductCmd(productId));
 }

@@ -2,6 +2,11 @@ using System.Reactive.Linq;
 
 namespace MyApp.Application.Abstractions;
 
+public interface IAsyncTracker
+{
+    IObservable<T> TrackAsync<T>(IObservable<T> source);
+}
+
 public static class AsyncStatusExtensions
 {
     public static bool IsLoading(this AsyncStatus status)
@@ -22,52 +27,68 @@ public abstract record AsyncStatus
     public static readonly AsyncStatus IdleInstance = new Idle();
     public static readonly AsyncStatus LoadingInstance = new Loading();
 
-    public static AsyncStatus FromError(Exception ex)
-        => new Error(ex);
+    public static AsyncStatus FromError(Exception ex) => new Error(ex);
 }
 
-
-// public abstract record AsyncState<T>
-// {
-//     private AsyncState() { }
-
-//     public sealed record Idle : AsyncState<T>;
-//     public sealed record Loading : AsyncState<T>;
-//     public sealed record Success(T Value) : AsyncState<T>;
-//     public sealed record Error(string Message, Exception? Exception = null) : AsyncState<T>;
-
-//     public static AsyncState<T> IdleState { get; } = new Idle();
-//     public static AsyncState<T> LoadingState { get; } = new Loading();
-// }
-
-public sealed class AsyncState<T>
+public sealed class AsyncState<T>(T initial) : IAsyncTracker, IDisposable
 {
-    public ReactiveState<T> Data { get; }
-    public ReactiveState<AsyncStatus> Status { get; }
+    private bool _disposed = false;
 
-    public AsyncState(T initial)
-    {
-        Data = new ReactiveState<T>(initial);
-        Status = new ReactiveState<AsyncStatus>(AsyncStatus.IdleInstance);
-    }
+    // NEW: counts concurrent tracked operations
+    private int _inFlight = 0;
+
+    public ReactiveState<T> Data { get; } = new ReactiveState<T>(initial);
+    public ReactiveState<AsyncStatus> Status { get; } = new ReactiveState<AsyncStatus>(AsyncStatus.IdleInstance);
 
     public IObservable<TResult> TrackAsync<TResult>(IObservable<TResult> source)
     {
         return Observable.Defer(() =>
         {
-            Status.Set(AsyncStatus.LoadingInstance);
+            Exception? error = null;
 
-            return source
-                .Do(
-                    onNext: _ =>
+            // Enter loading state when first operation starts
+            if (Interlocked.Increment(ref _inFlight) == 1)
+                Status.Set(AsyncStatus.LoadingInstance);
+
+            try
+            {
+                return source
+                    .Do(
+                        onNext: _ => { },
+                        onError: ex => error = ex,
+                        onCompleted: () => { })
+                    .Finally(() =>
                     {
-                        Status.Set(AsyncStatus.IdleInstance);
-                    },
-                    onError: ex =>
-                    {
-                        Status.Set(AsyncStatus.FromError(ex));
-                    }
-                );
+                        var remaining = Interlocked.Decrement(ref _inFlight);
+
+                        // Error wins (don’t overwrite it with Idle)
+                        if (error != null)
+                        {
+                            Status.Set(AsyncStatus.FromError(error));
+                            return;
+                        }
+
+                        // Only go Idle when nothing else is running
+                        if (remaining == 0)
+                            Status.Set(AsyncStatus.IdleInstance);
+                    });
+            }
+            catch (Exception ex)
+            {
+                // Synchronous error
+                Status.Set(AsyncStatus.FromError(ex));
+                Interlocked.Decrement(ref _inFlight);
+                return Observable.Throw<TResult>(ex);
+            }
         });
+    }
+
+    public void Dispose()
+    {
+        if (_disposed) return;
+
+        _disposed = true;
+        Data.Dispose();
+        Status.Dispose();
     }
 }

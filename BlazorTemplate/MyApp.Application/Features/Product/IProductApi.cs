@@ -10,6 +10,8 @@ public sealed class ProductDetailDTO
     public string ProductName { get; init; } = null!;
     public string ProductDescription { get; init; } = null!;
     public decimal Price { get; init; }
+    public int Version { get; init;  }
+    public DateTimeOffset LastSavedAt { get; init; }
 }
 
 public interface IProductApi

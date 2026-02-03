@@ -6,7 +6,7 @@ using System.Reactive.Disposables;
 
 public abstract class ViewModelBase : IDisposable
 {
-    private readonly CompositeDisposable _disposables = new();
+    private readonly CompositeDisposable _disposables = [];
 
     internal void AddDisposable(IDisposable disposable)
         => _disposables.Add(disposable);

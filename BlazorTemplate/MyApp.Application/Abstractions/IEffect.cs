@@ -7,16 +7,8 @@ public interface IEffect<in TCommand, out TResult> where TCommand : ICommand<TRe
     IObservable<TResult> Handle(TCommand command);
 }
 
-internal sealed class LambdaEffect<TCommand, TResult>
+internal sealed class LambdaEffect<TCommand, TResult>(Func<TCommand, IObservable<TResult>> execute)
     : IEffect<TCommand, TResult> where TCommand : ICommand<TResult>
 {
-    private readonly Func<TCommand, IObservable<TResult>> _execute;
-
-    public LambdaEffect(Func<TCommand, IObservable<TResult>> execute)
-    {
-        _execute = execute;
-    }
-
-    public IObservable<TResult> Handle(TCommand command)
-        => _execute(command);
+    public IObservable<TResult> Handle(TCommand command) => execute(command);
 }

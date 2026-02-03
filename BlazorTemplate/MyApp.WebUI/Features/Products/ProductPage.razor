@@ -4,22 +4,37 @@
 @using System.Reactive
 @using MyApp.Application.Abstractions
 @inject ProductViewModel VM
+@inherits RxComponentBase
 
 <h2>Product</h2>
 
-@* <button disabled="@VM.Save.IsExecuting"
-        @onclick="() => VM.SaveProduct(Guid.NewGuid())">
-    Save
+<button disabled="@VM.Product.Status.Value.IsLoading()"
+        @onclick="() => VM.PublishProduct(Guid.NewGuid())">
+    Publish Product
 </button>
 
-@switch (VM.Save.State)
+<button disabled="@VM.Product.Status.Value.IsLoading()"
+        @onclick="() => VM.LoadProduct(Guid.NewGuid())">
+    Load Product
+</button>
+
+@switch (VM.Product.Status.Value)
 {
-    case AsyncState<Unit>.Loading:
+    case AsyncStatus.Loading:
         <p>Loading...</p>
         break;
 
-    case AsyncState<Unit>.Error(var msg, _):
-        <p>@msg</p>
+    case AsyncStatus.Error (Exception ex):
+        <p>@ex.Message</p>
         break;
 }
- *@
+
+@code {
+    protected override void OnInitialized()
+    {
+        Subscribe(VM.Product.Status.Changes, status =>
+        {
+            Console.WriteLine($"Cmd status changed to: {status}");
+        });
+    }
+}

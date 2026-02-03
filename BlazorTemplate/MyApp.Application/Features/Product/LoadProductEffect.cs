@@ -10,7 +10,7 @@ public sealed class LoadProductEffect(IProductApi api) : IEffect<LoadProductCmd,
     {
         return Observable.FromAsync(async () =>
         {
-            return await api.LoadProductAsync(Guid.NewGuid());
+            return await api.LoadProductAsync(command.ProductId);
         });
     }
 }

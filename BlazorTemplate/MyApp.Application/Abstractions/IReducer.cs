@@ -7,6 +7,10 @@ public interface IReducer<TState, in TCommand, in TResult>
     TState Reduce(TState state, TCommand command, TResult result);
 }
 
+/// <summary>
+/// Executes a command effect and applies its result to the given AsyncState via a reducer.
+/// Note: work starts only when the returned observable is subscribed.
+/// </summary>
 public sealed class CommandDispatcher<TState>(AsyncState<TState> state)
 {
     public IObservable<TResult> Dispatch<TCommand, TResult>(
@@ -15,13 +19,14 @@ public sealed class CommandDispatcher<TState>(AsyncState<TState> state)
         IReducer<TState, TCommand, TResult> reducer)
         where TCommand : ICommand<TResult>
     {
-        return state.TrackAsync(
-            effect.Handle(command)
-        )
-        .Do(result =>
-        {
-            state.Data.Update(state =>
-                reducer.Reduce(state, command, result));
-        });
+        // Track status + apply reducer once per effect execution,
+        // then share the single execution among all subscribers.
+        return state
+            .TrackAsync(effect.Handle(command))
+            .Do(result =>
+                state.Data.Update(current =>
+                    reducer.Reduce(current, command, result)))
+            .Publish()
+            .RefCount();
     }
 }

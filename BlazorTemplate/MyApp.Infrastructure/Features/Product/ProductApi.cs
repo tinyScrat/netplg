@@ -27,7 +27,9 @@ internal sealed class ProductApi(ILogger<ProductApi> logger) : IProductApi
             ProductNumber = "P0001",
             ProductName = "iPhone 17",
             ProductDescription = "Design by Apple, made in China",
-            Price = 5800
+            Price = 5800,
+            Version = 3,
+            LastSavedAt = DateTimeOffset.UtcNow.AddDays(1)
         };
     }
 }

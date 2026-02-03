@@ -9,7 +9,7 @@ using System.Reactive.Subjects;
 public sealed class ReactiveState<T>(T initial) : IDisposable
 {
     private readonly BehaviorSubject<T> _subject = new(initial);
-    private bool _disposed;
+    private bool _disposed = false;
 
     public T Value => _subject.Value;
 
