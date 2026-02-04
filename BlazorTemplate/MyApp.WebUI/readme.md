@@ -18,3 +18,7 @@ MyApp.Client
 └── Shared/
 
 ```
+
+## Things to Avoid
+
+- Don't use `System.Reactive.Linq.Observable.ToEventPattern`, it is not trimming safe.

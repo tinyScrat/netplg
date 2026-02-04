@@ -5,11 +5,14 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MyApp.Features.Auth;
 using MyApp.Application;
 using MyApp.Infrastructure;
+using Radzen;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+builder.Services.AddRadzenComponents();
 
 builder.Services
     .AddHttpClient("API", (sp, client) =>
