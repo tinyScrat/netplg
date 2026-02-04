@@ -52,6 +52,7 @@ builder.Services
     {
         builder.Configuration.Bind("EntraID", options.ProviderOptions);
         options.ProviderOptions.DefaultScopes.Add("email");
+        options.ProviderOptions.RedirectUri = $"{builder.HostEnvironment.BaseAddress}authentication/login-callback";
     })
     .AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, RemoteUserAccount, CustomPrincipalFactory>();
 
