@@ -4,6 +4,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
+using MyApp.Application.Exceptions;
 
 public static class RxRetry
 {
@@ -26,6 +27,10 @@ public static class RxRetry
             TimeSpan initialDelay,
             double factor)
         {
+            // Never retry auth redirect / token acquisition
+            if (error is AuthenticationUnavailableException)
+                return Observable.Throw<int>(error);
+                
             // Last attempt -> propagate
             if (attempt == maxRetries)
                 return Observable.Throw<int>(error);
@@ -39,7 +44,7 @@ public static class RxRetry
                 // Non-transient 4xx except 408/429
                 if (status is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError
                     && status is not HttpStatusCode.RequestTimeout
-                    && status != (HttpStatusCode)429)
+                    && status != (HttpStatusCode)429) // too many request
                 {
                     return Observable.Throw<int>(error);
                 }

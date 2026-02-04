@@ -2,6 +2,7 @@ namespace MyApp.Features.Auth;
 
 using MyApp.Application.Abstractions;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using MyApp.Application.Exceptions;
 
 public sealed class AuthDelegatingHandler(IAppEventBus bus) : DelegatingHandler
 {
@@ -13,10 +14,12 @@ public sealed class AuthDelegatingHandler(IAppEventBus bus) : DelegatingHandler
         {
             return await base.SendAsync(request, cancellationToken);
         }
-        catch (AccessTokenNotAvailableException)
+        catch (AccessTokenNotAvailableException ex)
         {
             bus.Publish(new SessionExpiredEvent());
-            throw;
+            
+            // Translate UI exception → Application exception
+            throw new AuthenticationUnavailableException(ex);
         }
     }
 }
