@@ -12,7 +12,10 @@ public abstract class ViewModelBase : IDisposable
         => _disposables.Add(disposable);
 
     public virtual void Dispose()
-        => _disposables.Dispose();
+    {
+        _disposables.Dispose();
+        GC.SuppressFinalize(this);
+    }
 }
 
 public static class DisposableExtensions

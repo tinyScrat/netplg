@@ -9,6 +9,9 @@ public interface IAsyncTracker
 
 public static class AsyncStatusExtensions
 {
+    public static bool IsIdle(this AsyncStatus status)
+        => status is AsyncStatus.Idle;
+    
     public static bool IsLoading(this AsyncStatus status)
         => status is AsyncStatus.Loading;
 

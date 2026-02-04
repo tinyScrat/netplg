@@ -11,7 +11,14 @@ public sealed class ReactiveState<T>(T initial) : IDisposable
     private readonly BehaviorSubject<T> _subject = new(initial);
     private bool _disposed = false;
 
-    public T Value => _subject.Value;
+    public T Value
+    {
+        get
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            return _subject.Value;
+        }
+    }
 
     public IObservable<T> Changes =>
         _subject
@@ -20,13 +27,13 @@ public sealed class ReactiveState<T>(T initial) : IDisposable
 
     public void Set(T value)
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(_disposed, this);
         _subject.OnNext(value);
     }
 
     public void Update(Func<T, T> updater)
     {
-        ThrowIfDisposed();
+        ObjectDisposedException.ThrowIf(_disposed, this);
         _subject.OnNext(updater(_subject.Value));
     }
 
@@ -37,11 +44,5 @@ public sealed class ReactiveState<T>(T initial) : IDisposable
 
         _subject.OnCompleted();
         _subject.Dispose();
-    }
-
-    private void ThrowIfDisposed()
-    {
-        if (_disposed)
-            throw new ObjectDisposedException(nameof(ReactiveState<T>));
     }
 }
