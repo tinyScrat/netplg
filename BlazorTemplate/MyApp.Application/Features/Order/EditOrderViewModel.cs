@@ -3,37 +3,46 @@ namespace MyApp.Application.Features.Orders;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using Microsoft.Extensions.Logging;
 using MyApp.Application.Abstractions;
+using MyApp.Contracts.Orders;
 
-public sealed record AddressDto(
-    string Street,
-    string City
-);
-
-public sealed record OrderItemDto(
-    string ProductId,
-    int Quantity
-);
-
-public sealed record OrderDraftDto(
-    AddressDto Address,
-    IReadOnlyList<OrderItemDto> Items
-);
+public sealed record LoadOrderCommand(Guid OrderId) : ICommand<Order?>;
 
 public sealed record SaveOrderDraftCommand(Guid OrderId, OrderDraftDto Draft) : ICommand<Unit>;
 
-public sealed class EditOrderViewModel : IDisposable
+public sealed class EditOrderViewModel : ViewModelBase
 {
     private readonly ReactiveState<OrderDraftDto> _state;
     private readonly Subject<Unit> _saveClicks = new();
 
+    public ReactiveCommand<LoadOrderCommand, Order?> LoadOrderRmd { get; }
+    public AsyncState<Order?> Order { get; }
+
     private readonly IDisposable _savePipeline;
 
     public EditOrderViewModel(
-        OrderDraftDto initial,
+        ILogger<EditOrderViewModel> logger,
+        LoadOrderEffect loadOrderEffect,
         SaveOrderDraftEffect saveEffect)
     {
+        Order = new AsyncState<Order?>(null);
+        Order.DisposeWith(this);
+
+        var address = new AddressDto("street", "city");
+        var initial = new OrderDraftDto(address, []);
+
         _state = new ReactiveState<OrderDraftDto>(initial);
+        _state.DisposeWith(this);
+
+        LoadOrderRmd = new ReactiveCommand<LoadOrderCommand, Order?>(
+            effect: loadOrderEffect,
+            asyncState: Order,
+            onResult: (cmd, result) =>
+            {
+                logger.LogInformation("Loaded order details, id: {Id}.", cmd.OrderId);
+            })
+            .DisposeWith(this);
 
         // Derived state
         HasChanges = _state.Changes
@@ -54,10 +63,13 @@ public sealed class EditOrderViewModel : IDisposable
                 .WithLatestFrom(CanSave, (_, canSave) => canSave)
                 .Where(canSave => canSave)
                 .SelectMany(_ =>
-                    saveEffect.Handle(new SaveOrderDraftCommand(Guid.NewGuid(), _state.Value))
+                    saveEffect.Handle(new SaveOrderDraftCommand(Guid.NewGuid(), _state.Value), CancellationToken.None)
                     .Retry(2)
                 )
                 .Subscribe();
+
+        _saveClicks.DisposeWith(this);
+        _savePipeline.DisposeWith(this);
     }
 
     // ---- Reactive outputs ----
@@ -77,14 +89,10 @@ public sealed class EditOrderViewModel : IDisposable
     public void Save()
         => _saveClicks.OnNext(Unit.Default);
 
+    public void LoadOrder(Guid orderId) =>
+        LoadOrderRmd.Execute(new LoadOrderCommand(orderId));
+
     // ---- Mapping ----
     private static bool Validate(OrderDraftDto dto)
         => dto.Items.Count > 0 && !string.IsNullOrWhiteSpace(dto.Address.Street);
-
-    public void Dispose()
-    {
-        _savePipeline.Dispose();
-        _state.Dispose();
-        _saveClicks.Dispose();
-    }
 }

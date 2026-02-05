@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 
 public sealed class SaveOrderDraftEffect(IOrderApi api) : IEffect<SaveOrderDraftCommand, Unit>
 {
-    public IObservable<Unit> Handle(SaveOrderDraftCommand cmd)
+    public IObservable<Unit> Handle(SaveOrderDraftCommand cmd, CancellationToken ct)
     {
         return Observable.FromAsync(async () =>
         {

@@ -8,7 +8,7 @@ using System.Reactive.Linq;
 
 public sealed class PublishProductEffect(IProductApi api) : IEffect<PublishProductCmd, int>
 {
-    public IObservable<int> Handle(PublishProductCmd command)
+    public IObservable<int> Handle(PublishProductCmd command, CancellationToken ct)
     {
         return Observable.FromAsync(async () =>
         {

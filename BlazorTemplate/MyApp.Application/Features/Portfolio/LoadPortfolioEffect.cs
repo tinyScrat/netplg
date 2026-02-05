@@ -23,7 +23,7 @@ Register concrete for ownership, interface for visibility — both pointing to t
 // Concrete for mutation
 internal sealed class LoadPortfolioEffect(PortfolioStore store) : IEffect<LoadPortfolioCmd, Unit>
 {
-    public IObservable<Unit> Handle(LoadPortfolioCmd command)
+    public IObservable<Unit> Handle(LoadPortfolioCmd command, CancellationToken ct)
     {
         return Observable.FromAsync(async () =>
         {

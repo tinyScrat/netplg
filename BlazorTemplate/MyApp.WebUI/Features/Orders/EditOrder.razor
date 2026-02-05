@@ -1,7 +1,7 @@
 @namespace MyApp.Components
 
 @inject EditOrderViewModel Vm
-@implements IDisposable
+@inherits RxComponentBase
 
 <button disabled="@(!canSave)" @onclick="Vm.Save">
     Save
@@ -9,16 +9,20 @@
 
 @code {
     bool canSave;
-    IDisposable? sub;
 
     protected override void OnInitialized()
     {
-        sub = Vm.CanSave.Subscribe(v =>
+        Subscribe(Vm.CanSave, v =>
         {
             canSave = v;
             InvokeAsync(StateHasChanged);
         });
-    }
 
-    public void Dispose() => sub?.Dispose();
+        Subscribe(Vm.Order.Data.Changes, order =>
+        {
+            Console.WriteLine($"OrderNumber: {order?.OrderNumber}");
+        });
+
+        Vm.LoadOrder(Guid.NewGuid());
+    }
 }

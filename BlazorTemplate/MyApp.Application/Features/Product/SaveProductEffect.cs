@@ -9,7 +9,7 @@ using System.Reactive.Linq;
 
 public sealed class SaveProductEffect(IProductApi api) : IEffect<SaveProductCmd, ProductVersion>
 {
-    public IObservable<ProductVersion> Handle(SaveProductCmd cmd)
+    public IObservable<ProductVersion> Handle(SaveProductCmd cmd, CancellationToken ct)
     {
         return Observable.FromAsync(async () =>
         {

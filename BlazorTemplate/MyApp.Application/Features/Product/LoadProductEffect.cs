@@ -6,7 +6,7 @@ using System.Reactive.Linq;
 
 public sealed class LoadProductEffect(IProductApi api) : IEffect<LoadProductCmd, ProductDetailDTO>
 {
-    public IObservable<ProductDetailDTO> Handle(LoadProductCmd command)
+    public IObservable<ProductDetailDTO> Handle(LoadProductCmd command, CancellationToken ct)
     {
         return Observable.FromAsync(async () =>
         {
