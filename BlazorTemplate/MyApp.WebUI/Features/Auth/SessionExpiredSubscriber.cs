@@ -5,6 +5,11 @@ using MyApp.Application.Abstractions;
 using Microsoft.AspNetCore.Components;
 using MyApp.Features.Events;
 
+/// <summary>
+/// Listen to <see cref="SessionExpiredEvent" /> and redirect user to login page
+/// </summary>
+/// <param name="bus"></param>
+/// <param name="nav"></param>
 public sealed class SessionExpiredSubscriber(
     BlazorAppEventBus bus,
     NavigationManager nav) : IDisposable

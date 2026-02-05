@@ -3,22 +3,15 @@ namespace MyApp.Features.Auth;
 using System.Reactive.Linq;
 using MyApp.Application.Features.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 
-public static class UiAuthObservableExtensions
-{
-    public static IObservable<T> WithAuthRedirect<T>(
-        this IObservable<T> source)
-    {
-        return source.Catch<T, AccessTokenNotAvailableException>(ex =>
-        {
-            ex.Redirect();
-            return Observable.Empty<T>();
-        });
-    }
-}
-
+/// <summary>
+/// Listen to the <see cref="AuthenticationStateProvider" /> and pupolated the Auth state store 
+/// </summary>
+/// <param name="logger"></param>
+/// <param name="authProvider"></param>
+/// <param name="store"></param>
 public sealed class OidcAuthSyncEffect(
+    ILogger<OidcAuthSyncEffect> logger,
     AuthenticationStateProvider authProvider,
     AuthStore store) : IDisposable
 {
@@ -39,7 +32,8 @@ public sealed class OidcAuthSyncEffect(
                 {
                     var user = state.User;
 
-                    Console.WriteLine($"OIDC Auth State Changed. IsAuthenticated: {user.Identity?.IsAuthenticated}");
+                    logger.LogInformation("User {User} IsAuthenticated: {IsAuthenticated}",
+                        user.Identity?.Name, user.Identity?.IsAuthenticated);
 
                     if (user.Identity?.IsAuthenticated == true)
                     {
