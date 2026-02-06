@@ -2,6 +2,8 @@ namespace MyApp.Application.Features.Orders;
 
 using System.Reactive.Linq;
 using MyApp.Application.Abstractions;
+using MyApp.Contracts;
+using MyApp.Contracts.Orders;
 
 public sealed class LoadOrderEffect(IOrderApi api) 
     : IEffect<LoadOrderCommand, Order?>
@@ -21,5 +23,16 @@ public sealed class LoadOrderEffect(IOrderApi api)
                 maxRetries: 3,
                 initialDelay: TimeSpan.FromMilliseconds(500),
                 factor: 2.0);
+    }
+}
+
+public sealed class LoadOrdersEffect(IOrderApi api) : IEffect<LoadOrdersCmd, PagedResponse<OrderOverview>>
+{
+    public IObservable<PagedResponse<OrderOverview>> Handle(LoadOrdersCmd command, CancellationToken ct = default)
+    {
+        return Observable.FromAsync(async () =>
+        {
+            return await api.GetOrdersAsync(ct);
+        });
     }
 }

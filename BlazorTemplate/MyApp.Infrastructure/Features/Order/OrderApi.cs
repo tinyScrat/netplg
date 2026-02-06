@@ -4,6 +4,8 @@ using MyApp.Contracts.Orders;
 using System.Threading.Tasks;
 using MyApp.Application.Features.Orders;
 using Microsoft.Extensions.Logging;
+using MyApp.Contracts;
+
 // using System.Net;
 // using System.Net.Http.Json;
 
@@ -76,5 +78,29 @@ internal sealed class OrderApi(
                 UnitPrice = 7.25m
             }
         ];
+    }
+
+    public async Task<PagedResponse<OrderOverview>> GetOrdersAsync(CancellationToken ct)
+    {
+        await Task.Delay(100);
+        
+        var order = new OrderOverview
+        {
+            OrderId = Guid.NewGuid().ToString(),
+            OrderNumber = "ORD001",
+            CustomerName = "Tech49",
+            Amount = 12.5m,
+            Status = OrderStatus.Paid,
+            CreatedAt = DateTimeOffset.Now
+        };
+
+        return new PagedResponse<OrderOverview>
+        {
+            Page = 1,
+            PageSize = 10,
+            TotalItems = 1,
+            TotalPages = 1,
+            Items = [order]
+        };
     }
 }

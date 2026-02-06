@@ -8,8 +8,10 @@ public static class OrderFeature
     {
         services.AddSingleton<LoadOrderEffect>();
         services.AddSingleton<SaveOrderDraftEffect>();
+        services.AddSingleton<LoadOrdersEffect>();
         
         services.AddTransient<EditOrderViewModel>();
+        services.AddTransient<OrdersViewModel>();
 
         return services;
     }

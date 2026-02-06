@@ -20,14 +20,14 @@ public abstract class RxComponentBase : ComponentBase, IDisposable
         _disposables.Add(disposable);
     }
 
-    protected IDisposable Subscribe<T>(IObservable<T> source, Action<T> onNext)
+    protected IDisposable Subscribe<T>(IObservable<T> source, Action<T>? onNext = null)
     {
         var sub = source.Subscribe(value =>
         {
             // Always marshal back to the Blazor sync context
             InvokeAsync(() =>
             {
-                onNext(value);
+                onNext?.Invoke(value);
                 StateHasChanged();
             });
         });

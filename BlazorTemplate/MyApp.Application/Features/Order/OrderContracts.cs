@@ -31,3 +31,20 @@ public sealed record OrderDraftDto(
     AddressDto Address,
     IReadOnlyList<OrderItemDto> Items
 );
+
+public enum OrderStatus
+{
+    New,
+    Paid,
+    Completed
+}
+
+public sealed record OrderOverview
+{
+    public string OrderId { get; init; } = default!;
+    public string OrderNumber { get; init; } = default!;
+    public string CustomerName { get; init; } = default!;
+    public decimal Amount { get; init; }
+    public OrderStatus Status { get; init; }
+    public DateTimeOffset CreatedAt { get; init; }
+}

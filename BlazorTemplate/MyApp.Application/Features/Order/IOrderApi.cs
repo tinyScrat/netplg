@@ -1,5 +1,6 @@
 namespace MyApp.Application.Features.Orders;
 
+using MyApp.Contracts;
 using MyApp.Contracts.Orders;
 
 public sealed class Order
@@ -78,4 +79,5 @@ public interface IOrderApi
     Task SaveOrderAsync(OrderDraftDto dto);
     Task<OrderDto?> TryGetOrderAsync(Guid orderId, CancellationToken ct);
     Task<IEnumerable<OrderLineDto>> GetOrderLinesAsync(Guid orderId, CancellationToken ct);
+    Task<PagedResponse<OrderOverview>> GetOrdersAsync(CancellationToken ct);
 }

@@ -1,0 +1,44 @@
+@page "/orders"
+@namespace MyApp.Components.Orders
+@using MyApp.Application.Abstractions
+@using MyApp.Contracts.Orders
+@inherits RxComponentBase
+@inject OrdersViewModel Vm
+
+<PageTitle>Orders</PageTitle>
+
+<RadzenDataGrid
+    AllowFiltering="true"
+    AllowColumnResize="true"
+    AllowAlternatingRows="false"
+    FilterMode="FilterMode.Simple"
+    AllowGrouping="true"
+    AllowSorting="true"
+    PageSize="5"
+    AllowPaging="true"
+    PagerHorizontalAlign="HorizontalAlign.Left"
+    Data="@Vm.Orders.Data.Value.Items"
+    TItem="OrderOverview"
+    ColumnWidth="300px"
+    LogicalFilterOperator="LogicalFilterOperator.And"
+    ShowPagingSummary="true"
+    IsLoading="@Vm.Orders.Status.Value.IsLoading()">
+    <Columns>
+        <RadzenDataGridColumn Property="@nameof(OrderOverview.OrderId)" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn Property="@nameof(OrderOverview.CustomerName)" Title="Customer Name" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn Property="@nameof(OrderOverview.Amount)" Title="Amount" Width="160px" FormatString="{0:C}" />
+        <RadzenDataGridColumn Property="@nameof(OrderOverview.Status)" Title="Status" Width="160px" />
+        <RadzenDataGridColumn Property="@nameof(OrderOverview.CreatedAt)" Title="Created At" Width="160px" FormatString="{0:d}" />
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Subscribe(Vm.Orders.Data.Changes);
+
+        Subscribe(Vm.Orders.Status.Changes);
+
+        Vm.LoadOrders();
+    }
+}
