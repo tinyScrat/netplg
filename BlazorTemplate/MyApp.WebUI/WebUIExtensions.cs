@@ -6,7 +6,7 @@ using MyApp.WebUI.Features.Auth;
 using MyApp.WebUI.Features.Events;
 using MyApp.WebUI.Features.Storage;
 
-internal static class Extensions
+internal static class WebUIExtensions
 {
     public static IServiceCollection AddWebUIFeatures(
         this IServiceCollection services)
