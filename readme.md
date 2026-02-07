@@ -1,7 +1,6 @@
-= Read Me
+# Read Me
 
-[,shell]
-----
+```sh
 podman run -d --rm \
     --hostname rabbitmq \
     --name rabbitmq \
@@ -11,6 +10,4 @@ podman run -d --rm \
     -e RABBITMQ_DEFAULT_USER=rabbit \
     -e RABBITMQ_DEFAULT_PASS=rabbit \
     docker.io/library/rabbitmq:management-alpine
-----
-
-
+```
