@@ -10,9 +10,9 @@ using MyApp.Application.Abstractions;
 /// <param name="logger"></param>
 /// <param name="authProvider"></param>
 /// <param name="store"></param>
-public sealed class OidcAuthSyncEffect(
+public sealed class AuthStateChangedEventPublisher(
     AuthenticationStateProvider authProvider,
-    ILogger<OidcAuthSyncEffect> logger,
+    ILogger<AuthStateChangedEventPublisher> logger,
     IAppEventBus eventBus) : IDisposable
 {
     private readonly IDisposable _subscription =

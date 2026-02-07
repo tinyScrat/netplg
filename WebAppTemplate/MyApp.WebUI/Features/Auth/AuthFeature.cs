@@ -9,7 +9,7 @@ public static class AuthFeatures
         this IServiceCollection services)
     {
         services.AddScoped<AuthDelegatingHandler>();
-        services.AddSingleton<OidcAuthSyncEffect>();
+        services.AddSingleton<AuthStateChangedEventPublisher>();
         services.AddSingleton<SessionExpiredSubscriber>();
 
         services.AddScoped<IAuthorizationHandler, PermissionHandler>();
@@ -23,7 +23,7 @@ public static class UseAuthFeaturesExtensions
     public static IServiceProvider UseAuthFeatures(
         this IServiceProvider sp)
     {
-        _ = sp.GetRequiredService<OidcAuthSyncEffect>();
+        _ = sp.GetRequiredService<AuthStateChangedEventPublisher>();
         _ = sp.GetRequiredService<SessionExpiredSubscriber>();
 
         return sp;
