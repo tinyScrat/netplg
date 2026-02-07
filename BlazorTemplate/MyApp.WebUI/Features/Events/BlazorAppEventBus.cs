@@ -1,4 +1,4 @@
-namespace MyApp.Features.Events;
+namespace MyApp.WebUI.Features.Events;
 
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -21,17 +21,6 @@ public sealed class BlazorAppEventBus : IAppEventBus, IDisposable
 
 public static class AuthRxExtensions
 {
-   // public static IObservable<T> WithAuthRedirect<T>(
-   //     this IObservable<T> source,
-   //     BlazorAppEventBus bus)
-   // {
-   //     var sessionExpired =
-   //         bus.OfType<SessionExpiredEvent>()
-   //            .Take(1);
-   //     return source
-   //         .TakeUntil(sessionExpired);
-   // }
-
    public static IObservable<T> WithAuthRedirect<T>(
         this IObservable<T> source,
         BlazorAppEventBus bus)

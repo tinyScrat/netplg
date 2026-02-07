@@ -1,4 +1,4 @@
-namespace MyApp.Features.Auth;
+namespace MyApp.WebUI.Features.Auth;
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;

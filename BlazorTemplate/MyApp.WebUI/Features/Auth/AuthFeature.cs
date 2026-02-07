@@ -1,10 +1,10 @@
-namespace MyApp.Features.Auth;
+namespace MyApp.WebUI.Features.Auth;
 
 using Microsoft.Extensions.DependencyInjection;
 
 public static class AuthFeatures
 {
-    public static IServiceCollection AddUIAuthFeatures(
+    public static IServiceCollection AddBlazorAuthFeatures(
         this IServiceCollection services)
     {
         services.AddScoped<AuthDelegatingHandler>();

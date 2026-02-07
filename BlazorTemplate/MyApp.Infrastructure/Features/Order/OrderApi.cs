@@ -82,7 +82,7 @@ internal sealed class OrderApi(
 
     public async Task<PagedResponse<OrderOverview>> GetOrdersAsync(CancellationToken ct)
     {
-        await Task.Delay(100);
+        await Task.Delay(1000);
         
         var order = new OrderOverview
         {

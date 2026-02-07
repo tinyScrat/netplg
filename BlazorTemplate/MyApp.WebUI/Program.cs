@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using MyApp;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using MyApp.Features.Auth;
 using MyApp.Application;
 using MyApp.Infrastructure;
+using MyApp.WebUI;
+using MyApp.WebUI.Features.Auth;
 using Radzen;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -60,7 +60,7 @@ builder.Services
     .AddAccountClaimsPrincipalFactory<RemoteAuthenticationState, RemoteUserAccount, CustomPrincipalFactory>();
 
 builder.Services
-    .AddBlazorAppFeatures()
+    .AddWebUIFeatures()
     .AddApplication()
     .AddInfrastructure();
 

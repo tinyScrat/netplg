@@ -1,7 +1,6 @@
-@namespace MyApp.Components
-
-@inject EditOrderViewModel Vm
+@namespace MyApp.WebUI.Features.Orders
 @inherits RxComponentBase
+@inject EditOrderViewModel Vm
 
 <button disabled="@(!canSave)" @onclick="Vm.Save">
     Save

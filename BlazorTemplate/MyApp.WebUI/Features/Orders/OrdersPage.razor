@@ -1,6 +1,5 @@
 @page "/orders"
-@namespace MyApp.Components.Orders
-@using MyApp.Application.Abstractions
+@namespace MyApp.WebUI.Features.Orders
 @using MyApp.Contracts.Orders
 @inherits RxComponentBase
 @inject OrdersViewModel Vm
@@ -12,9 +11,9 @@
     AllowColumnResize="true"
     AllowAlternatingRows="false"
     FilterMode="FilterMode.Simple"
-    AllowGrouping="true"
+    AllowGrouping="false"
     AllowSorting="true"
-    PageSize="5"
+    PageSize="@Vm.Orders.Data.Value.PageSize"
     AllowPaging="true"
     PagerHorizontalAlign="HorizontalAlign.Left"
     Data="@Vm.Orders.Data.Value.Items"
@@ -24,7 +23,6 @@
     ShowPagingSummary="true"
     IsLoading="@Vm.Orders.Status.Value.IsLoading()">
     <Columns>
-        <RadzenDataGridColumn Property="@nameof(OrderOverview.OrderId)" Filterable="false" Title="ID" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
         <RadzenDataGridColumn Property="@nameof(OrderOverview.CustomerName)" Title="Customer Name" Frozen="true" Width="160px" />
         <RadzenDataGridColumn Property="@nameof(OrderOverview.Amount)" Title="Amount" Width="160px" FormatString="{0:C}" />
         <RadzenDataGridColumn Property="@nameof(OrderOverview.Status)" Title="Status" Width="160px" />

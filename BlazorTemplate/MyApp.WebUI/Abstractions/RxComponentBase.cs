@@ -1,4 +1,4 @@
-namespace MyApp.Abstractions;
+namespace MyApp.WebUI.Components.Abstractions;
 
 using System;
 using System.Reactive.Disposables;

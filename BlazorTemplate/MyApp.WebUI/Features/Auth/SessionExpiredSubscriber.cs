@@ -1,9 +1,9 @@
-namespace MyApp.Features.Auth;
+namespace MyApp.WebUI.Features.Auth;
 
 using System.Reactive.Linq;
 using MyApp.Application.Abstractions;
 using Microsoft.AspNetCore.Components;
-using MyApp.Features.Events;
+using MyApp.WebUI.Features.Events;
 
 /// <summary>
 /// Listen to <see cref="SessionExpiredEvent" /> and redirect user to login page

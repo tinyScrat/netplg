@@ -1,4 +1,4 @@
-namespace MyApp.Features.Auth;
+namespace MyApp.WebUI.Features.Auth;
 
 using System.Reactive.Linq;
 using MyApp.Application.Features.Auth;

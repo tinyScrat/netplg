@@ -1,5 +1,5 @@
 @page "/"
-@namespace MyApp.Pages
+@namespace MyApp.WebUI.Pages
 
 @inject HttpClient HttpClient
 @inject NavigationManager Nav
@@ -20,10 +20,6 @@ Welcome to your new app.
 <hr />
 
 <RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
-
-<hr />
-
-<EditOrder />
 
 <AuthorizeView>
     <Authorized>
