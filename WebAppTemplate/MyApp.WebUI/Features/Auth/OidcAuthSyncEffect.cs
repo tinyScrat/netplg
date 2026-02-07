@@ -12,6 +12,7 @@ using MyApp.Application.Abstractions;
 /// <param name="store"></param>
 public sealed class OidcAuthSyncEffect(
     AuthenticationStateProvider authProvider,
+    ILogger<OidcAuthSyncEffect> logger,
     IAppEventBus eventBus) : IDisposable
 {
     private readonly IDisposable _subscription =
@@ -29,6 +30,7 @@ public sealed class OidcAuthSyncEffect(
                 )
                 .Subscribe(state =>
                 {
+                    logger.LogInformation("Authentication state changed, user: {User}", state.User.Identity?.Name ?? "anonymous");
                     // Broadcast event to Application layer
                     eventBus.Publish(new AuthStateChangedEvent(state.User));
                 });
