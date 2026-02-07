@@ -51,6 +51,7 @@ builder.Services
     });
 
 builder.Services
+    .AddAuthorizationCore(options => options.AddPermissionPolicies())
     .AddOidcAuthentication(options =>
     {
         builder.Configuration.Bind("EntraID", options.ProviderOptions);
@@ -72,5 +73,6 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("Environment: {ENV}", env.Environment);
 
 app.Services.UseAuthFeatures();
+app.Services.UseApplicationFeatures();
 
 await app.RunAsync();

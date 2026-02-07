@@ -1,6 +1,6 @@
 namespace MyApp.Application.Features.Auth;
 
-using System.Reactive.Subjects;
+using MyApp.Application.Abstractions;
 
 public sealed record AuthState(
     bool IsAuthenticated,
@@ -12,27 +12,26 @@ public sealed record AuthState(
         new(false, null, [], true);
 }
 
-
 public sealed class AuthStore
 {
-    private readonly BehaviorSubject<AuthState> _state =
+    private readonly ReactiveState<AuthState> _state =
         new(AuthState.Anonymous);
 
-    public IObservable<AuthState> State => _state;
+    public IObservable<AuthState> State => _state.Changes;
 
     public void SetAuthenticated(
         string userName,
         IEnumerable<string> roles)
     {
-        _state.OnNext(new AuthState(
+        _state.Update( s => new AuthState(
             true,
             userName,
-            roles.ToList(),
+            [.. roles],
             false));
     }
 
     public void SetAnonymous()
-        => _state.OnNext(AuthState.Anonymous with
+        => _state.Update(s => AuthState.Anonymous with
         {
             IsLoading = false
         });

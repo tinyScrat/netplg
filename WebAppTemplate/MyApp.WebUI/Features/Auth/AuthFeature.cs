@@ -1,5 +1,6 @@
 namespace MyApp.WebUI.Features.Auth;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 public static class AuthFeatures
@@ -11,6 +12,8 @@ public static class AuthFeatures
         services.AddSingleton<OidcAuthSyncEffect>();
         services.AddSingleton<SessionExpiredSubscriber>();
 
+        services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+
         return services;
     }
 }
@@ -21,6 +24,7 @@ public static class UseAuthFeaturesExtensions
         this IServiceProvider sp)
     {
         _ = sp.GetRequiredService<OidcAuthSyncEffect>();
+        _ = sp.GetRequiredService<SessionExpiredSubscriber>();
 
         return sp;
     }

@@ -7,8 +7,7 @@ public static class AuthFeatures
     public static IServiceCollection AddAuthFeature(this IServiceCollection services)
     {
         services.AddSingleton<AuthStore>();
-        // services.AddSingleton<IAuthStore>(sp =>
-        //     sp.GetRequiredService<AuthStore>());
+        services.AddSingleton<AuthStateChangedSubscriber>();
 
         services.AddTransient<AuthViewModel>();
 
