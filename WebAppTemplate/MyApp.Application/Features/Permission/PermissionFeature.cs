@@ -19,17 +19,15 @@ public static class PermissionFeatures
         
         services.AddSingleton<ICommandPipeline<LoadPermissionCommand>>(sp =>
             {
-                var inner =
-                    new CommandPipeline<LoadPermissionCommand, IReadOnlySet<string>>(
-                        sp.GetRequiredService<IEffect<LoadPermissionCommand, IReadOnlySet<string>>>(),
+                return new IdempotentCommandPipeline<LoadPermissionCommand, IReadOnlySet<string>>(
+                    sp.GetRequiredService<IEffect<LoadPermissionCommand, IReadOnlySet<string>>>(),
                         perms =>
                             sp.GetRequiredService<PermissionStore>()
-                                .SetPermissions(perms));
-
-                return new IdempotentCommandPipeline<LoadPermissionCommand, IReadOnlySet<string>>(
-                    inner,
-                    sp.GetRequiredService<PermissionCommandKey>());
+                                .SetPermissions(perms),
+                    sp.GetRequiredService<ICommandKey<LoadPermissionCommand>>());
             });
+
+        services.AddSingleton<AuthPermissionSyncSubscriber>();
 
         return services;
     }

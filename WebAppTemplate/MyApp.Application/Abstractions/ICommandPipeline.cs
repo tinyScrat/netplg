@@ -10,25 +10,7 @@ using System.Reactive.Disposables;
 public interface ICommandPipeline<in TCommand> where TCommand : ICommand
 {
     IDisposable Execute(TCommand command);
-}
-
-/// <summary>
-/// A command pipeline that executes a single effect and invokes a callback with the result.
-/// </summary>
-/// <typeparam name="TCommand"></typeparam>
-/// <typeparam name="TResult"></typeparam>
-/// <param name="effect"></param>
-/// <param name="onResult"></param>
-internal sealed class CommandPipeline<TCommand, TResult>(
-    IEffect<TCommand, TResult> effect,
-    Action<TResult> onResult)
-    : ICommandPipeline<TCommand>
-    where TCommand : ICommand<TResult>
-{
-    public IDisposable Execute(TCommand command) =>
-        effect
-            .Handle(command, CancellationToken.None)
-            .Subscribe(onResult);
+    void Cancel(string key);
 }
 
 /// <summary>
@@ -40,34 +22,65 @@ internal sealed class CommandPipeline<TCommand, TResult>(
 /// <param name="inner"></param>
 /// <param name="keyProvider"></param>
 internal sealed class IdempotentCommandPipeline<TCommand, TResult>(
-    CommandPipeline<TCommand, TResult> inner,
+    IEffect<TCommand, TResult> effect,
+    Action<TResult> onResult,
     ICommandKey<TCommand> keyProvider)
     : ICommandPipeline<TCommand>
     where TCommand : ICommand<TResult>
 {
-    private readonly ConcurrentDictionary<string, IDisposable> _inFlight = new();
+    private sealed record InFlight(
+        CancellationTokenSource Cts,
+        IDisposable Subscription);
+
+    private readonly ConcurrentDictionary<string, InFlight> _inFlight = new();
 
     public IDisposable Execute(TCommand command)
     {
         var key = keyProvider.GetKey(command);
 
-        // Already executing → no-op
+        // Already running → no-op
         if (_inFlight.ContainsKey(key))
             return Disposable.Empty;
 
-        var subscription =
-            inner.Execute(command);
+        var cts = new CancellationTokenSource();
 
-        if (!_inFlight.TryAdd(key, subscription))
+        var subscription =
+            effect
+                .Handle(command, cts.Token)
+                .Subscribe(
+                    onResult,
+                    _ => Cleanup(key),
+                    () => Cleanup(key));
+
+        var entry = new InFlight(cts, subscription);
+
+        if (!_inFlight.TryAdd(key, entry))
         {
             subscription.Dispose();
+            cts.Cancel();
+            cts.Dispose();
             return Disposable.Empty;
         }
 
-        return Disposable.Create(() =>
+        return Disposable.Create(() => Cancel(key));
+    }
+
+    public void Cancel(string key)
+    {
+        if (_inFlight.TryRemove(key, out var entry))
         {
-            subscription.Dispose();
-            _inFlight.TryRemove(key, out _);
-        });
+            entry.Cts.Cancel();
+            entry.Subscription.Dispose();
+            entry.Cts.Dispose();
+        }
+    }
+
+    private void Cleanup(string key)
+    {
+        if (_inFlight.TryRemove(key, out var entry))
+        {
+            entry.Subscription.Dispose();
+            entry.Cts.Dispose();
+        }
     }
 }

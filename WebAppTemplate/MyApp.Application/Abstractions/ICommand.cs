@@ -25,4 +25,11 @@ public interface ICommandKey<in TCommand>
     /// <param name="command"></param>
     /// <returns></returns>
     string GetKey(TCommand command);
+
+    /// <summary>
+    /// Returns the key of the currently executing command, if any. This can be used to implement
+    /// cancellation of in-flight commands when the relevant context changes (e.g. user logs out).
+    /// </summary>
+    /// <returns></returns>
+    string? GetCurrentKey();
 }

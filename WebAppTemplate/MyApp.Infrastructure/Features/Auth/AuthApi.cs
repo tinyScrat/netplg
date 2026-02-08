@@ -15,6 +15,13 @@ internal sealed class AuthApi : IAuthApi
     {
         // Implement the logic to get user permissions from the API
         // endpoint: GET /auth/me/permissions
-        return Task.FromResult<IReadOnlySet<string>>(new HashSet<string>());
+        var permissions = new HashSet<string>
+        {
+            "Order.View",
+            // "order:create",
+            // "product:view",
+            // Add more permissions as needed
+        };
+        return Task.FromResult<IReadOnlySet<string>>(permissions);
     }
 }

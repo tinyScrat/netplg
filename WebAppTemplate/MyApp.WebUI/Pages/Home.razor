@@ -21,7 +21,7 @@ Welcome to your new app.
 
 <RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
 
-<AuthorizeView>
+<PolicyAuthorizeView Policy="@Policies.OrderView">
     <Authorized>
         Authorized
         <p>@Username</p>
@@ -29,7 +29,7 @@ Welcome to your new app.
     <NotAuthorized>
         <button onclick="Login">Login</button>
     </NotAuthorized>
-</AuthorizeView>
+</PolicyAuthorizeView>
 
 <button @onclick="SayHelloAsync">SayHello</button>
 

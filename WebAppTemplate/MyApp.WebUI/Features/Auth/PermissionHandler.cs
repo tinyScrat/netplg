@@ -25,6 +25,11 @@ public sealed class PermissionHandler(
             return Task.CompletedTask;
         }
 
+        logger.LogInformation(
+                "User needs {Permission}. User has permissions: {UserPermissions}",
+                requirement.Permission,
+                string.Join(", ", permissionStore.Permissions));
+
         if (permissionStore.Permissions.Contains(requirement.Permission))
         {
             context.Succeed(requirement);

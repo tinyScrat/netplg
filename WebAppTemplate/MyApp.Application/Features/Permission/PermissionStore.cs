@@ -17,6 +17,7 @@ public sealed class PermissionStore : IPermissionStore
 
     public bool IsInitialized => _state.Data.Value.IsInitialized;
     public IReadOnlySet<string> Permissions => _state.Data.Value.Permissions;
+    public IObservable<PermissionState> Changes => _state.Data.Changes;
 
     public void Reset() =>
         _state.Data.Update(p => PermissionState.Uninitialized);

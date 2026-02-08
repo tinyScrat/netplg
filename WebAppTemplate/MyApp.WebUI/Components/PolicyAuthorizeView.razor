@@ -1,0 +1,95 @@
+@namespace MyApp.WebUI.Components
+@using MyApp.Application.Features.Permission
+@inherits MyApp.WebUI.Components.RxComponentBase
+@inject IPermissionStore PermissionStore
+
+@if (IsAuthorizing)
+{
+    @Authorizing
+}
+else if (IsAuthorized)
+{
+    @Authorized
+}
+else
+{
+    @NotAuthorized
+}
+
+@code {
+    [Parameter] public RenderFragment? Authorized { get; set; }
+    [Parameter] public RenderFragment? NotAuthorized { get; set; }
+    [Parameter] public RenderFragment? Authorizing { get; set; }
+
+    /// <summary>
+    /// Single policy to check (convenience alias)
+    /// </summary>
+    [Parameter] public string? Policy { get; set; }
+
+    /// <summary>
+    /// Comma-separated list of policies to check
+    /// </summary>
+    [Parameter] public string? Policies { get; set; }
+
+    /// <summary>
+    /// Require all policies (true) or any (false)
+    /// </summary>
+    [Parameter] public bool RequireAll { get; set; } = true;
+
+    private bool IsAuthorized { get; set; }
+    private bool IsAuthorizing { get; set; }
+
+    /// <summary>
+    /// Returns the set of required policies to evaluate
+    /// </summary>
+    private IReadOnlySet<string> ParsedPolicies
+    {
+        get
+        {
+            if (!string.IsNullOrWhiteSpace(Policy))
+                return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { Policy! };
+
+            if (string.IsNullOrWhiteSpace(Policies))
+                return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            return Policies.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                           .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        // Subscribe to store changes
+        Subscribe(PermissionStore.Changes, _ => EvaluateAuthorization());
+
+        // Initial evaluation
+        EvaluateAuthorization();
+    }
+
+    private void EvaluateAuthorization()
+    {
+        if (!PermissionStore.IsInitialized)
+        {
+            IsAuthorizing = true;
+            IsAuthorized = false;
+            return;
+        }
+
+        IsAuthorizing = false;
+
+        var userPermissions = PermissionStore.Permissions;
+        var requiredPolicies = ParsedPolicies;
+
+        if (requiredPolicies.Count == 0)
+        {
+            // No policy specified → default to authorized
+            IsAuthorized = true;
+        }
+        else
+        {
+            IsAuthorized = RequireAll
+                ? requiredPolicies.All(p => userPermissions.Contains(p))
+                : requiredPolicies.Any(p => userPermissions.Contains(p));
+        }
+    }
+}
