@@ -11,10 +11,10 @@ internal sealed class AuthApi : IAuthApi
         return Task.CompletedTask;
     }
 
-    public Task GetPermissionsAsync()
+    public Task<IReadOnlySet<string>> GetPermissionsAsync()
     {
         // Implement the logic to get user permissions from the API
         // endpoint: GET /auth/me/permissions
-        return Task.CompletedTask;
+        return Task.FromResult<IReadOnlySet<string>>(new HashSet<string>());
     }
 }

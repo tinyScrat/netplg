@@ -18,6 +18,7 @@ public sealed class AuthStore
         new(AuthState.Anonymous);
 
     public IObservable<AuthState> State => _state.Changes;
+    public AuthState Current => _state.Value;
 
     public void SetAuthenticated(
         string userName,
