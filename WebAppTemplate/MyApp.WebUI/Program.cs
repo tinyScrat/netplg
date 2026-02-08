@@ -38,7 +38,7 @@ builder.Services
 
         client.BaseAddress = uri;
 
-        logger.LogInformation("API HttpClient BaseAddress set to {BaseAddress}", client.BaseAddress);
+        logger.LogInformation("BaseAddress: {BaseAddress}", client.BaseAddress);
     })
     .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
     .AddHttpMessageHandler<AuthDelegatingHandler>();
