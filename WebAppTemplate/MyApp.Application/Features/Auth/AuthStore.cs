@@ -2,6 +2,11 @@ namespace MyApp.Application.Features.Auth;
 
 using MyApp.Application.Abstractions;
 
+
+
+
+
+
 public sealed record AuthState(
     bool IsAuthenticated,
     string? UserName,

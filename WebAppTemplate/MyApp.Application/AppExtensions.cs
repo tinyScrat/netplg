@@ -7,6 +7,7 @@ using MyApp.Application.Features.Orders;
 using MyApp.Application.Features.Products;
 using MyApp.Application.Features.Permission;
 using MyApp.Application.Abstractions;
+using MyApp.Application.Features.User;
 
 public static class AppExtensions
 {
@@ -16,11 +17,12 @@ public static class AppExtensions
         services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
 
         services
-            .AddAuthFeature()
+            //.AddAuthFeature()
             .AddPermissionFeature()
             .AddOrderFeature()
             .AddProductFeature()
-            .AddPortfolioFeature();
+            .AddPortfolioFeature()
+            .AddUserProfileFeature();
 
         return services;
     }
@@ -30,8 +32,9 @@ public static class UseApplicationExtensions
 {
     public static IServiceProvider UseApplicationFeatures(this IServiceProvider sp)
     {
-        _ = sp.GetRequiredService<AuthStateChangedSubscriber>();
-        _ = sp.GetRequiredService<AuthPermissionSyncSubscriber>();
+        // _ = sp.GetRequiredService<AuthStateChangedSubscriber>();
+        // _ = sp.GetRequiredService<AuthPermissionSyncSubscriber>();
+        _ = sp.GetRequiredService<UserProfileAuthStateSubscriber>();
 
         return sp;
     }

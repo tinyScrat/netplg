@@ -1,8 +1,8 @@
 @namespace MyApp.WebUI.Components
-@using MyApp.Application.Features.Permission
 @using System.Security.Claims
+@using MyApp.Application.Features.User
 @inherits MyApp.WebUI.Components.RxComponentBase
-@inject IPermissionStore PermissionStore
+@inject IUserProfileStore UserProfileStore
 
 @if (_isAuthorizing)
 {
@@ -38,7 +38,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        SubscribeAsync(PermissionStore.Changes, _ => Evaluate());
+        SubscribeAsync(UserProfileStore.Changes, _ => Evaluate());
 
         if (AuthenticationStateTask is not null)
         {
@@ -68,7 +68,7 @@ else
             return;
         }
 
-        if (!PermissionStore.IsInitialized)
+        if (!UserProfileStore.IsAuthenticated)
         {
             _isAuthorizing = true;
             _isAuthorized = false;
@@ -99,7 +99,7 @@ else
         if (requiredPolicies.Count == 0)
             return true; // roles passed, no permission constraint
 
-        var permissions = PermissionStore.Permissions;
+        var permissions = UserProfileStore.Current?.Permissions ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         return RequireAll
             ? requiredPolicies.All(permissions.Contains)

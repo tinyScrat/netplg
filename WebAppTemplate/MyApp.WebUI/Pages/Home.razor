@@ -3,7 +3,6 @@
 
 @inject HttpClient HttpClient
 @inject NavigationManager Nav
-@inject AuthViewModel AuthVM
 @inherits RxComponentBase
 
 <PageTitle>Home</PageTitle>
@@ -38,10 +37,10 @@ Welcome to your new app.
 
     protected override void OnInitialized()
     {
-        Subscribe(AuthVM.Username, username =>
+        @* Subscribe(AuthVM.Username, username =>
         {
             Username = username;
-        });
+        }); *@
     }
 
     async Task SayHelloAsync()

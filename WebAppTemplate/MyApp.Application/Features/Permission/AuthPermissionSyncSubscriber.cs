@@ -6,7 +6,7 @@ using MyApp.Application.Features.Auth;
 
 public sealed record LoadPermissionCommand() : ICommand<IReadOnlySet<string>>;
 
-internal sealed class PermissionCommandKey(AuthStore authStore)
+internal sealed class PermissionCommandKey()
     : ICommandKey<LoadPermissionCommand>
 {
     public string GetKey(LoadPermissionCommand _)
@@ -15,10 +15,11 @@ internal sealed class PermissionCommandKey(AuthStore authStore)
 
     public string? GetCurrentKey()
     {
-        var userId = authStore.Current.UserName; // sub / oid
-        return userId is null
-            ? null
-            : $"permissions:{userId}";
+        // var userId = authStore.Current.UserName; // sub / oid
+        // return userId is null
+        //     ? null
+        //     : $"permissions:{userId}";
+        return "permissions"; // Assuming permissions are not user-specific in this example
     }
 }
 
