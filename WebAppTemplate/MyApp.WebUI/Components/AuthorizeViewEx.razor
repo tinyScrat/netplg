@@ -1,0 +1,131 @@
+@namespace MyApp.WebUI.Components
+@using MyApp.Application.Features.Permission
+@using System.Security.Claims
+@inherits MyApp.WebUI.Components.RxComponentBase
+@inject IPermissionStore PermissionStore
+
+@if (_isAuthorizing)
+{
+    @Authorizing
+}
+else if (_isAuthorized)
+{
+    @Authorized
+}
+else
+{
+    @NotAuthorized
+}
+
+@code {
+    [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
+    [Parameter] public RenderFragment? Authorized { get; set; }
+    [Parameter] public RenderFragment? NotAuthorized { get; set; }
+    [Parameter] public RenderFragment? Authorizing { get; set; }
+
+    // === Standard AuthorizeView ===
+    [Parameter] public string? Roles { get; set; }
+
+    // === Permission-based ===
+    [Parameter] public string? Policy { get; set; }
+    [Parameter] public string? Policies { get; set; }
+    [Parameter] public bool RequireAll { get; set; } = true;
+
+    private ClaimsPrincipal? _user;
+    private bool _isAuthorized;
+    private bool _isAuthorizing = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        SubscribeAsync(PermissionStore.Changes, _ => Evaluate());
+
+        if (AuthenticationStateTask is not null)
+        {
+            var authState = await AuthenticationStateTask;
+            _user = authState.User;
+        }
+
+        await Evaluate();
+    }
+
+    private async Task Evaluate()
+    {
+        if (AuthenticationStateTask is null)
+        {
+            _isAuthorizing = true;
+            return;
+        }
+
+        var authState = await AuthenticationStateTask;
+        var user = authState.User;
+        _user = user;
+
+        if (user.Identity?.IsAuthenticated != true)
+        {
+            _isAuthorizing = false;
+            _isAuthorized = false;
+            return;
+        }
+
+        if (!PermissionStore.IsInitialized)
+        {
+            _isAuthorizing = true;
+            _isAuthorized = false;
+            return;
+        }
+
+        _isAuthorizing = false;
+
+        // permission / role logic here
+        _isAuthorized = CheckAuthorization(user);
+    }
+
+    private bool CheckAuthorization(ClaimsPrincipal user)
+    {
+        if (user.Identity?.IsAuthenticated != true)
+            return false;
+
+        // === Role check (AuthorizeView semantics) ===
+        var requiredRoles = ParseRoles();
+        if (requiredRoles.Count > 0 &&
+            !requiredRoles.Any(user.IsInRole))
+        {
+            return false;
+        }
+
+        // === Permission check ===
+        var requiredPolicies = ParsePolicies();
+        if (requiredPolicies.Count == 0)
+            return true; // roles passed, no permission constraint
+
+        var permissions = PermissionStore.Permissions;
+
+        return RequireAll
+            ? requiredPolicies.All(permissions.Contains)
+            : requiredPolicies.Any(permissions.Contains);
+    }
+
+    private IReadOnlySet<string> ParseRoles()
+    {
+        if (string.IsNullOrWhiteSpace(Roles))
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        return Roles
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private IReadOnlySet<string> ParsePolicies()
+    {
+        if (!string.IsNullOrWhiteSpace(Policy))
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { Policy };
+
+        if (string.IsNullOrWhiteSpace(Policies))
+            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        return Policies
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+    }
+}
