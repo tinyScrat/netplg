@@ -1,8 +1,33 @@
 @page "/authentication/{action}"
 @namespace MyApp.WebUI.Pages
 
-<RemoteAuthenticatorView Action="@Action" />
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using MyApp.Application.Abstractions
+
+@inject ILogger<Authentication> Logger
+@inject IAppEventBus EventBus
+@inject NavigationManager Nav
+@inject AuthenticationStateProvider AuthStateProvider
+
+<RemoteAuthenticatorView
+    Action="@Action"
+    OnLogInSucceeded="HandleLogInSucceeded" />
 
 @code{
     [Parameter] public string? Action { get; set; }
+
+    private async Task HandleLogInSucceeded(RemoteAuthenticationState state)
+    {
+        Logger.LogInformation("Login succeeded. ReturnUrl={ReturnUrl}", state.ReturnUrl);
+
+        // Force a post-login app notification using the current auth state.
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        EventBus.Publish(new AuthStateChangedEvent(authState.User));
+
+        if (string.IsNullOrWhiteSpace(state.ReturnUrl))
+        {
+            Nav.NavigateTo("/", replace: true);
+        }
+    }
 }
