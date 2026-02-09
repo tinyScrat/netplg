@@ -12,8 +12,6 @@ public static class AuthFeatures
         services.AddSingleton<AuthStateChangedEventPublisher>();
         services.AddSingleton<SessionExpiredSubscriber>();
 
-        services.AddScoped<IAuthorizationHandler, PermissionHandler>();
-
         return services;
     }
 }
