@@ -1,4 +1,4 @@
-namespace MyApp.Infrastructure.Features.Products;
+namespace MyApp.Infrastructure.Services;
 
 using System.Threading.Tasks;
 using MyApp.Application.Features.Products;

@@ -1,4 +1,4 @@
-namespace MyApp.Infrastructure.Features.Portfolios;
+namespace MyApp.Infrastructure.Services;
 
 using MyApp.Application.Features.Portfolios;
 using Microsoft.Extensions.Logging;

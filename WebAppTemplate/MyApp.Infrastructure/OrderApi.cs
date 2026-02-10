@@ -1,4 +1,4 @@
-namespace MyApp.Infrastructure.Features.Orders;
+namespace MyApp.Infrastructure.Services;
 
 using MyApp.Contracts.Orders;
 using System.Threading.Tasks;

@@ -4,11 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using MyApp.Application.Features.Orders;
 using MyApp.Application.Features.Products;
 using MyApp.Application.Features.Portfolios;
-using MyApp.Infrastructure.Features.Orders;
-using MyApp.Infrastructure.Features.Products;
-using MyApp.Infrastructure.Features.Portfolios;
-using MyApp.Infrastructure.Features.User;
 using MyApp.Application.Features.User;
+using MyApp.Infrastructure.Services;
 
 public static class InfraExtensions
 {

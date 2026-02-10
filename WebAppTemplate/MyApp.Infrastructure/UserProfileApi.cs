@@ -1,4 +1,4 @@
-namespace MyApp.Infrastructure.Features.User;
+namespace MyApp.Infrastructure.Services;
 
 using MyApp.Application.Features.User;
 
