@@ -72,7 +72,7 @@ var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
 logger.LogInformation("Environment: {ENV}", env.Environment);
 
-app.Services.UseAuthFeatures();
 app.Services.UseApplicationFeatures();
+app.Services.UseWebUIFeatures();
 
 await app.RunAsync();

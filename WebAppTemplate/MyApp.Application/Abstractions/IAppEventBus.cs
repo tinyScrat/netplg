@@ -1,6 +1,7 @@
 namespace MyApp.Application.Abstractions;
 
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 public interface IAppEventBus
 {
@@ -8,6 +9,20 @@ public interface IAppEventBus
         where TEvent : AppEvent;
    void Publish(AppEvent evt);
 }
+
+public sealed class AppEventBus : IAppEventBus, IDisposable
+{
+    private readonly Subject<AppEvent> _events = new();
+
+    public IObservable<TEvent> OfType<TEvent>()
+        where TEvent : AppEvent
+        => _events.OfType<TEvent>();
+
+    public void Publish(AppEvent evt) => _events.OnNext(evt);
+
+    public void Dispose() => _events.Dispose();
+}
+
 
 public static class AuthRxExtensions
 {

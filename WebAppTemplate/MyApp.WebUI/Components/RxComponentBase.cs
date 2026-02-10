@@ -48,7 +48,6 @@ public abstract class RxComponentBase : ComponentBase, IDisposable
         return Track(sub);
     }
 
-
     public virtual void Dispose()
     {
         if (_disposed) return;
