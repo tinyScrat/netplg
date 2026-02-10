@@ -13,6 +13,9 @@ public sealed class AuthStateChangedEventPublisher : IDisposable
     private readonly IAppEventBus _eventBus;
     private readonly IDisposable _subscription;
 
+    private bool _isFirstEmission = true;
+    private bool? _wasAuthenticated; // null until first emission
+
     private static bool IsAuthenticated(AuthenticationState s)
         => s.User.Identity?.IsAuthenticated ?? false;
 
@@ -41,20 +44,6 @@ public sealed class AuthStateChangedEventPublisher : IDisposable
                             h => _authProvider.AuthenticationStateChanged -= h)
                         .SelectMany(task => task)
                 )
-                // Re-check once to avoid publishing transient unauthenticated around login callback.
-                // .SelectMany(async state =>
-                // {
-                //     if (!IsAuthenticated(state))
-                //     {
-                //         await Task.Delay(150).ConfigureAwait(false);
-
-                //         var refreshed = await _authProvider.GetAuthenticationStateAsync().ConfigureAwait(false);
-                //         if (IsAuthenticated(refreshed))
-                //             return refreshed;
-                //     }
-
-                //     return state;
-                // })
                 .Subscribe(state =>
                 {
                     var isAuthenticated = IsAuthenticated(state);
@@ -65,7 +54,9 @@ public sealed class AuthStateChangedEventPublisher : IDisposable
                     // Ignore that to avoid resetting app state or triggering redirects too early.
                     if (inAuthFlow && !isAuthenticated)
                     {
-                        _logger.LogInformation("Ignoring unauthenticated auth-state while in auth flow. Route={Route}", current);
+                        _logger.LogInformation("Ignoring unauthenticated auth-state while in auth flow");
+                        _isFirstEmission = false;
+                        _wasAuthenticated = false;
                         return;
                     }
 
@@ -74,6 +65,20 @@ public sealed class AuthStateChangedEventPublisher : IDisposable
                         state.User.Identity?.Name ?? "anonymous");
 
                     _eventBus.Publish(new AuthStateChangedEvent(state.User));
+
+                    if (_isFirstEmission)
+                    {
+                        if (!isAuthenticated)
+                            _eventBus.Publish(new SessionExpiredEvent());
+
+                        _isFirstEmission = false;
+                    }
+                    else if (_wasAuthenticated == true && !isAuthenticated)
+                    {
+                        _eventBus.Publish(new SessionExpiredEvent());
+                    }
+
+                    _wasAuthenticated = isAuthenticated;
                 });
     }
 
