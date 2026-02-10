@@ -8,6 +8,7 @@
     "files.exclude": {
       "*.code-workspace": true,
       "**/.zig-cache": true,
+      "**/*.slnx": true,
       "**/*.sublime-*": true,
       "**/*package-lock.json": true,
       "**/build": true,
