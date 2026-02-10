@@ -1,6 +1,6 @@
-namespace MyApp.WebUI.Features.Storage;
+namespace MyApp.WebUI.Services;
 
-using MyApp.Application.Features.Storage;
+using MyApp.Application.Services;
 using System.Text.Json;
 using Microsoft.JSInterop;
 

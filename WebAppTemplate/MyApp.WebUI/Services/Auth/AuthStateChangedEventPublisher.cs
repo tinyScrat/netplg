@@ -1,4 +1,4 @@
-namespace MyApp.WebUI.Features.Auth;
+namespace MyApp.WebUI.Services;
 
 using System.Reactive.Linq;
 using Microsoft.AspNetCore.Components;

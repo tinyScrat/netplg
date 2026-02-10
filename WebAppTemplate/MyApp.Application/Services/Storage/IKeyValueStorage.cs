@@ -1,4 +1,4 @@
-namespace MyApp.Application.Features.Storage;
+namespace MyApp.Application.Services;
 
 public interface IKeyValueStorage
 {

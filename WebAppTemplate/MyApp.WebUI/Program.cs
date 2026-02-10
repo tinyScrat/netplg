@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MyApp.Application;
 using MyApp.Infrastructure;
 using MyApp.WebUI;
-using MyApp.WebUI.Features.Auth;
+using MyApp.WebUI.Services;
 using Radzen;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);

@@ -1,8 +1,7 @@
 namespace MyApp.WebUI;
 
-using MyApp.Application.Features.Storage;
-using MyApp.WebUI.Features.Auth;
-using MyApp.WebUI.Features.Storage;
+using MyApp.Application.Services;
+using MyApp.WebUI.Services;
 
 internal static class WebUIExtensions
 {
