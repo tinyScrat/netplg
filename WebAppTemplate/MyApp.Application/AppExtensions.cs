@@ -6,6 +6,7 @@ using MyApp.Application.Features.Orders;
 using MyApp.Application.Features.Products;
 using MyApp.Application.Abstractions;
 using MyApp.Application.Features.User;
+using MyApp.Application.Services;
 
 public static class AppExtensions
 {
