@@ -16,7 +16,7 @@ public static class InfraExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddSingleton<IAuthApi, AuthApi>();
+        //services.AddSingleton<IAuthApi, AuthApi>();
         services.AddSingleton<IOrderApi, OrderApi>();
         services.AddSingleton<IPortfolioApi, PortfolioApi>();
         services.AddSingleton<IProductApi, ProductApi>();
