@@ -2,6 +2,8 @@ namespace MyApp.WebUI;
 
 using MyApp.Application.Services;
 using MyApp.WebUI.Services;
+using MyApp.WebUI.Layouts;
+using MyApp.WebUI.Components;
 
 internal static class WebUIExtensions
 {
@@ -13,6 +15,16 @@ internal static class WebUIExtensions
         services.AddScoped<AuthDelegatingHandler>();
         services.AddSingleton<AuthStateChangedEventPublisher>();
         services.AddSingleton<SessionExpiredSubscriber>();
+
+        services.AddViewModels();
+
+        return services;
+    }
+
+    private static IServiceCollection AddViewModels(this IServiceCollection services)
+    {
+        services.AddTransient<HeaderViewModel>();
+        services.AddTransient<AuthorizeViewExViewModel>();
 
         return services;
     }

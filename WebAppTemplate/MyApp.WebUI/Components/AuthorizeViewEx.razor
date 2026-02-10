@@ -3,6 +3,7 @@
 @using MyApp.Application.Features.User
 @inherits MyApp.WebUI.Components.RxComponentBase
 @inject IUserProfileStore UserProfileStore
+@inject AuthorizeViewExViewModel VM
 
 @if (_isAuthorizing)
 {
@@ -36,9 +37,14 @@ else
     private bool _isAuthorized;
     private bool _isAuthorizing = true;
 
+    protected override void OnInitialized()
+    {
+        Bind(VM);
+    }
+
     protected override async Task OnInitializedAsync()
     {
-        SubscribeAsync(UserProfileStore.Changes, _ => Evaluate());
+        SubscribeAsync(UserProfileStore.Changes, (_, _) => Evaluate());
 
         if (AuthenticationStateTask is not null)
         {

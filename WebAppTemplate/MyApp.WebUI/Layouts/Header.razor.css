@@ -1,0 +1,14 @@
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+}
+
+.logo {
+    height: 32px;
+}
+
+.user-name {
+    font-weight: 500;
+}
