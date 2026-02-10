@@ -65,7 +65,6 @@ internal sealed class UserProfileAuthStateSubscriber(
                 }
 
                 // Login / authenticated → load permissions
-                logger.LogInformation("Dispatching LoadUserProfileCmd for user {User}", evt.User.Identity.Name);
                 dispatcher.Dispatch(new LoadUserProfileCmd(evt.User));
             });
 

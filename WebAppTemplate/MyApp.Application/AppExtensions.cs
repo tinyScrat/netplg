@@ -18,7 +18,7 @@ public static class AppExtensions
 
         services
             //.AddAuthFeature()
-            .AddPermissionFeature()
+            //.AddPermissionFeature()
             .AddOrderFeature()
             .AddProductFeature()
             .AddPortfolioFeature()
