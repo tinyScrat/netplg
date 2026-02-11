@@ -1,15 +1,13 @@
 @namespace MyApp.WebUI.Components
-@using System.Security.Claims
-@using MyApp.Application.Features.User
 @inherits RxComponentBase
-@inject IUserProfileStore UserProfileStore
+
 @inject AuthorizeViewExViewModel VM
 
-@if (_isAuthorizing)
+@if (VM.IsAuthorizing)
 {
     @Authorizing
 }
-else if (_isAuthorized)
+else if (VM.IsAuthorized)
 {
     @Authorized
 }
@@ -33,105 +31,18 @@ else
     [Parameter] public string? Policies { get; set; }
     [Parameter] public bool RequireAll { get; set; } = true;
 
-    private ClaimsPrincipal? _user;
-    private bool _isAuthorized;
-    private bool _isAuthorizing = true;
-
     protected override void OnInitialized()
     {
         Bind(VM);
+        VM.Initialize();
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnParametersSetAsync()
     {
-        SubscribeAsync(UserProfileStore.Changes, (_, _) => Evaluate());
+        VM.SetRequirements(Roles, Policy, Policies, RequireAll);
+        VM.SetAuthenticationStateTask(AuthenticationStateTask);
 
-        if (AuthenticationStateTask is not null)
-        {
-            var authState = await AuthenticationStateTask;
-            _user = authState.User;
-        }
-
-        await Evaluate();
-    }
-
-    private async Task Evaluate()
-    {
-        if (AuthenticationStateTask is null)
-        {
-            _isAuthorizing = true;
-            return;
-        }
-
-        var authState = await AuthenticationStateTask;
-        var user = authState.User;
-        _user = user;
-
-        if (user.Identity?.IsAuthenticated != true)
-        {
-            _isAuthorizing = false;
-            _isAuthorized = false;
-            return;
-        }
-
-        if (!UserProfileStore.IsAuthenticated)
-        {
-            _isAuthorizing = true;
-            _isAuthorized = false;
-            return;
-        }
-
-        _isAuthorizing = false;
-
-        // permission / role logic here
-        _isAuthorized = CheckAuthorization(user);
-    }
-
-    private bool CheckAuthorization(ClaimsPrincipal user)
-    {
-        if (user.Identity?.IsAuthenticated != true)
-            return false;
-
-        // === Role check (AuthorizeView semantics) ===
-        var requiredRoles = ParseRoles();
-        if (requiredRoles.Count > 0 &&
-            !requiredRoles.Any(user.IsInRole))
-        {
-            return false;
-        }
-
-        // === Permission check ===
-        var requiredPolicies = ParsePolicies();
-        if (requiredPolicies.Count == 0)
-            return true; // roles passed, no permission constraint
-
-        var permissions = UserProfileStore.Current?.Permissions ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        return RequireAll
-            ? requiredPolicies.All(permissions.Contains)
-            : requiredPolicies.Any(permissions.Contains);
-    }
-
-    private IReadOnlySet<string> ParseRoles()
-    {
-        if (string.IsNullOrWhiteSpace(Roles))
-            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        return Roles
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
-    }
-
-    private IReadOnlySet<string> ParsePolicies()
-    {
-        if (!string.IsNullOrWhiteSpace(Policy))
-            return new HashSet<string>(StringComparer.OrdinalIgnoreCase) { Policy };
-
-        if (string.IsNullOrWhiteSpace(Policies))
-            return new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        return Policies
-            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        // Re-evaluate when auth task/requirements change (auth flow can update this cascading value)
+        return VM.EvaluateAsync();
     }
 }
