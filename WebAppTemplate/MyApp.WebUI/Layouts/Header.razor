@@ -3,15 +3,16 @@
 @inject HeaderViewModel VM
 
 <RadzenHeader>
-    <RadzenStack Orientation="Orientation.Horizontal"
-                 JustifyContent="JustifyContent.SpaceBetween"
-                 AlignItems="AlignItems.Center"
-                 Style="width:100%">
+    <RadzenStack
+        Orientation="Orientation.Horizontal"
+        JustifyContent="JustifyContent.SpaceBetween"
+        AlignItems="AlignItems.Center"
+        Style="width:100%">
 
         <!-- Left -->
-        <RadzenImage Path="images/logo.png"
-                     Alt="Company Logo"
-                     class="company-logo" />
+        <RadzenLink Path="/" Style="display:inline-flex;">
+            <RadzenImage Path="images/logo.png" Alt="Company Logo" class="company-logo" />
+        </RadzenLink>
 
         <!-- Right -->
         <RadzenProfileMenu>
