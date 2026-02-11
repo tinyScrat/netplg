@@ -24,6 +24,7 @@ internal static class WebUIExtensions
     private static IServiceCollection AddViewModels(this IServiceCollection services)
     {
         services.AddTransient<HeaderViewModel>();
+        services.AddTransient<MainMenuViewModel>();
         services.AddTransient<AuthorizeViewExViewModel>();
 
         return services;

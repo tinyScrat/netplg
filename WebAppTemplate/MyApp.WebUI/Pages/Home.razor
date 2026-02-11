@@ -7,58 +7,13 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
-
-<hr />
-
-<NavLink href="product">Go to Product Page</NavLink>
-<NavLink href="orders">Go to Orders Page</NavLink>
-
-<hr />
-
-<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
-
 <AuthorizeViewEx Policy="@Policies.OrderView">
     <Authorized>
-        Authorized
-        <p>@Username</p>
+        <MainMenu />
     </Authorized>
     <NotAuthorized>
-        <button onclick="Login">Login</button>
+        <RadzenText class="rz-mt-4 rz-text-align-center" Style="font-size: 1.5rem;">
+            You are not authorized to view this content.
+        </RadzenText>
     </NotAuthorized>
 </AuthorizeViewEx>
-
-<button @onclick="SayHelloAsync">SayHello</button>
-
-@code {
-    string? Username = null;
-
-    protected override void OnInitialized()
-    {
-    }
-
-    async Task SayHelloAsync()
-    {
-        try
-        {
-            var response = await HttpClient.GetStringAsync("/hello");
-            Console.WriteLine(response);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-    }
-
-    void Login() {
-        //Nav.NavigateTo("authentication/login");
-        Console.WriteLine("Login clicked");
-    }
-
-    void ButtonClicked()
-    {
-        Console.WriteLine("Button clicked");
-    }
-}

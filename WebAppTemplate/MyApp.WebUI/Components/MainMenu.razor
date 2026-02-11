@@ -1,0 +1,30 @@
+@namespace MyApp.WebUI.Components
+@inherits RxComponentBase
+
+@inject MainMenuViewModel VM
+
+<RadzenCard class="rz-p-0 rz-mx-auto" Style="width: 60%; min-height: 70%;">
+    <RadzenStack
+        Orientation="@Orientation.Horizontal"
+        Reverse="false"
+        JustifyContent="@JustifyContent.Center"
+        AlignItems="@AlignItems.Center"
+        Wrap="@FlexWrap.NoWrap">
+        <RadzenCard class="rz-p-1 rz-background-color-info rz-color-on-info rz-text-align-center">
+            Create Order
+        </RadzenCard>
+        <RadzenCard class="rz-p-1 rz-background-color-success rz-color-on-success rz-text-align-center">
+            Order Overview
+        </RadzenCard>
+        <RadzenCard class="rz-p-1 rz-background-color-warning rz-color-on-warning rz-text-align-center">
+            Order Management
+        </RadzenCard>
+    </RadzenStack>
+</RadzenCard>
+
+@code {
+    protected override void OnInitialized()
+    {
+        Bind(VM);
+    }
+}
