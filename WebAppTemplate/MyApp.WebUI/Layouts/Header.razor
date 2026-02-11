@@ -2,14 +2,21 @@
 @inherits RxComponentBase
 @inject HeaderViewModel VM
 
-<RadzenHeader class="app-header">
-    <img src="images/logo.png"
-         alt="Company Logo"
-         class="logo" />
+<RadzenHeader>
+    <RadzenStack Orientation="Orientation.Horizontal"
+                 JustifyContent="JustifyContent.SpaceBetween"
+                 AlignItems="AlignItems.Center"
+                 Style="width:100%">
 
-    <RadzenText Text="@VM.UserDisplayName"
-                TextStyle="TextStyle.Body1"
-                class="user-name" />
+        <!-- Left -->
+        <RadzenImage Path="images/logo.png"
+                     Alt="Company Logo"
+                     class="company-logo" />
+
+        <!-- Right -->
+        <RadzenText Text="@VM.UserDisplayName"
+                    TextStyle="TextStyle.Body1" />
+    </RadzenStack>
 </RadzenHeader>
 
 @code {

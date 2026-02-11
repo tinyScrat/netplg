@@ -1,5 +1,5 @@
 :root {
-    --rz-header-background-color: #0e1216;
+    --rz-header-background-color: #6f7775;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -90,4 +90,10 @@ code {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+
+.company-logo {
+    width: calc(262px * 0.3);
+    height: calc(192px * 0.3);
+    object-fit: contain;
 }
