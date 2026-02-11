@@ -43,11 +43,18 @@ public abstract class ViewModelBase : IDisposable
         Func<T, CancellationToken, Task> handler,
         Action<Exception>? onError = null)
     {
-        var cts = new CancellationTokenSource();
+        var disposeCts = new CancellationTokenSource();
 
         var sub = source
             .Select(v =>
-                Observable.FromAsync(ct => handler(v, ct)))
+                Observable.FromAsync(async rxCt =>
+                {
+                    // Cancel when either:
+                    // - Switch() unsubscribes (rxCt), or
+                    // - VM is disposed (disposeCts)
+                    using var linked = CancellationTokenSource.CreateLinkedTokenSource(rxCt, disposeCts.Token);
+                    await handler(v, linked.Token).ConfigureAwait(false);
+                }))
             .Switch()
             .Subscribe(
                 _ => RaiseStateChanged(),
@@ -55,8 +62,8 @@ public abstract class ViewModelBase : IDisposable
 
         return Track(Disposable.Create(() =>
         {
-            cts.Cancel();
-            cts.Dispose();
+            disposeCts.Cancel();
+            disposeCts.Dispose();
             sub.Dispose();
         }));
     }
