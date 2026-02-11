@@ -14,8 +14,17 @@
                      class="company-logo" />
 
         <!-- Right -->
-        <RadzenText Text="@VM.UserDisplayName"
+        <RadzenProfileMenu>
+            <Template>
+                <RadzenText
+                    Text="@VM.UserDisplayName"
                     TextStyle="TextStyle.Body1" />
+            </Template>
+            <ChildContent>
+                <RadzenProfileMenuItem Text="Profile" Path="/profile" Icon="account_circle"></RadzenProfileMenuItem>
+                <RadzenProfileMenuItem Text="Help" Path="/help" Icon="announcement"></RadzenProfileMenuItem>
+            </ChildContent>
+        </RadzenProfileMenu>
     </RadzenStack>
 </RadzenHeader>
 
