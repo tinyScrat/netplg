@@ -1,11 +1,11 @@
-namespace MyApp.Application.Features.Orders;
+namespace MyApp.WebUI.Features.Orders;
 
 using Microsoft.Extensions.Logging;
 using MyApp.Application.Abstractions;
+using MyApp.WebUI.Abstractions;
 using MyApp.Contracts;
 using MyApp.Contracts.Orders;
-
-public sealed record LoadOrdersCmd() : ICommand<PagedResponse<OrderOverview>>;
+using MyApp.Application.Features.Orders;
 
 public sealed class OrdersViewModel : ViewModelBase
 {

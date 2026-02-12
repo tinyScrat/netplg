@@ -4,6 +4,8 @@ using MyApp.Application.Abstractions;
 using System;
 using System.Reactive.Linq;
 
+public sealed record LoadProductCmd(Guid ProductId) : ICommand<ProductDetailDTO>;
+
 public sealed class LoadProductEffect(IProductApi api) : IEffect<LoadProductCmd, ProductDetailDTO>
 {
     public IObservable<ProductDetailDTO> Handle(LoadProductCmd command, CancellationToken ct)

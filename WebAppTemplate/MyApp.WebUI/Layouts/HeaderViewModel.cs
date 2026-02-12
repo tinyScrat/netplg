@@ -1,8 +1,8 @@
 namespace MyApp.WebUI.Layouts;
 
 using System.Reactive.Linq;
-using MyApp.Application.Abstractions;
 using MyApp.Application.Features.User;
+using MyApp.WebUI.Abstractions;
 
 internal sealed class HeaderViewModel : ViewModelBase
 {

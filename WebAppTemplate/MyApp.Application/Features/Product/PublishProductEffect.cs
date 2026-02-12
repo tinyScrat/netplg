@@ -6,6 +6,9 @@ using System.Reactive.Linq;
 
 // one effect map to one commnad
 
+public sealed record PublishProductCmd(Guid ProductId) : ICommand<int>;
+
+
 public sealed class PublishProductEffect(IProductApi api) : IEffect<PublishProductCmd, int>
 {
     public IObservable<int> Handle(PublishProductCmd command, CancellationToken ct)

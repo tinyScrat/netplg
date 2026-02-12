@@ -5,6 +5,8 @@ using MyApp.Application.Abstractions;
 using MyApp.Contracts;
 using MyApp.Contracts.Orders;
 
+public sealed record LoadOrderCommand(Guid OrderId) : ICommand<Order?>;
+
 public sealed class LoadOrderEffect(IOrderApi api) 
     : IEffect<LoadOrderCommand, Order?>
 {
@@ -25,6 +27,8 @@ public sealed class LoadOrderEffect(IOrderApi api)
                 factor: 2.0);
     }
 }
+
+public sealed record LoadOrdersCmd() : ICommand<PagedResponse<OrderOverview>>;
 
 public sealed class LoadOrdersEffect(IOrderApi api) : IEffect<LoadOrdersCmd, PagedResponse<OrderOverview>>
 {

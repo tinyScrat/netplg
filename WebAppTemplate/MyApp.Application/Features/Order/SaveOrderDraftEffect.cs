@@ -1,8 +1,11 @@
 namespace MyApp.Application.Features.Orders;
 
 using MyApp.Application.Abstractions;
+using MyApp.Contracts.Orders;
 using System.Reactive;
 using System.Reactive.Linq;
+
+public sealed record SaveOrderDraftCommand(Guid OrderId, OrderDraftDto Draft) : ICommand<Unit>;
 
 public sealed class SaveOrderDraftEffect(IOrderApi api) : IEffect<SaveOrderDraftCommand, Unit>
 {

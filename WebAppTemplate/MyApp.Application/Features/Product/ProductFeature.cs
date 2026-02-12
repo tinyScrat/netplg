@@ -4,15 +4,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 public static class ProductFeature
 {
-    public static IServiceCollection AddProductFeature(this IServiceCollection service)
+    public static IServiceCollection AddProductFeature(this IServiceCollection services)
     {
-        service.AddSingleton<SaveProductEffect>();
-        service.AddTransient<SaveProductReducer>();
+        services.AddSingleton<SaveProductEffect>();
+        services.AddSingleton<PublishProductEffect>();
+        services.AddSingleton<LoadProductEffect>();
 
-        service.AddSingleton<PublishProductEffect>();
-        service.AddSingleton<LoadProductEffect>();
+        services.AddTransient<SaveProductReducer>();
 
-        service.AddTransient<ProductViewModel>();
-        return service;
+        return services;
     }
 }

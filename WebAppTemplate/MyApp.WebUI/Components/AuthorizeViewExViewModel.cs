@@ -2,8 +2,8 @@ namespace MyApp.WebUI.Components;
 
 using System.Security.Claims;
 using Microsoft.AspNetCore.Components.Authorization;
-using MyApp.Application.Abstractions;
 using MyApp.Application.Features.User;
+using MyApp.WebUI.Abstractions;
 
 internal sealed class AuthorizeViewExViewModel(IUserProfileStore userProfileStore) : ViewModelBase
 {

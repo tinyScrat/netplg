@@ -1,39 +1,9 @@
-namespace MyApp.Application.Features.Products;
+namespace MyApp.WebUI.Features.Products;
 
 using Microsoft.Extensions.Logging;
 using MyApp.Application.Abstractions;
-
-public sealed record Product(
-    string ProductNumber,
-    string ProductName,
-    string Description,
-    decimal Price,
-    int Version,
-    DateTimeOffset LastSavedAt);
-
-public sealed record ProductVersion(int Version);
-public sealed record SaveProductCmd(Product Draft) : ICommand<ProductVersion>;
-
-public sealed class SaveProductReducer
-    : IReducer<Product, SaveProductCmd, ProductVersion>
-{
-    public Product Reduce(
-        Product state,
-        SaveProductCmd command,
-        ProductVersion version)
-    {
-        return state with
-        {
-            Version = version.Version,
-            LastSavedAt = DateTimeOffset.UtcNow
-        };
-    }
-}
-
-
-public sealed record PublishProductCmd(Guid ProductId) : ICommand<int>;
-
-public sealed record LoadProductCmd(Guid ProductId) : ICommand<ProductDetailDTO>;
+using MyApp.Application.Features.Products;
+using MyApp.WebUI.Abstractions;
 
 public sealed class ProductViewModel : ViewModelBase
 {

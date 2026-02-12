@@ -22,3 +22,8 @@ MyApp.Client
 ## Things to Avoid
 
 - Don't use `System.Reactive.Linq.Observable.ToEventPattern`, it is not trimming safe.
+
+
+## Key Points
+
+- Place ViewModel in UI layer

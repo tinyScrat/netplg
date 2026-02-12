@@ -1,15 +1,13 @@
-namespace MyApp.Application.Features.Orders;
+namespace MyApp.WebUI.Features.Orders;
 
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Microsoft.Extensions.Logging;
 using MyApp.Application.Abstractions;
+using MyApp.WebUI.Abstractions;
 using MyApp.Contracts.Orders;
-
-public sealed record LoadOrderCommand(Guid OrderId) : ICommand<Order?>;
-
-public sealed record SaveOrderDraftCommand(Guid OrderId, OrderDraftDto Draft) : ICommand<Unit>;
+using MyApp.Application.Features.Orders;
 
 public sealed class EditOrderViewModel : ViewModelBase
 {

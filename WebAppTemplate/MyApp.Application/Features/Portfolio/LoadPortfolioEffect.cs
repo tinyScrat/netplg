@@ -20,6 +20,9 @@ Effects are stateless executors.
 Register concrete for ownership, interface for visibility — both pointing to the same instance.
 */
 
+public sealed record LoadPortfolioCmd(Guid PortfolioId) : ICommand<Unit>;
+
+
 // Concrete for mutation
 internal sealed class LoadPortfolioEffect(PortfolioStore store) : IEffect<LoadPortfolioCmd, Unit>
 {
