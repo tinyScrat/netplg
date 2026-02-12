@@ -1,4 +1,4 @@
-namespace MyApp.WebUI.Components;
+namespace MyApp.WebUI.Abstractions;
 
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
-using MyApp.WebUI.Abstractions;
 
 public abstract class RxComponentBase : ComponentBase, IDisposable
 {
