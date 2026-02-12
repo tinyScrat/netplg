@@ -14,8 +14,8 @@ public sealed class EditOrderViewModel : ViewModelBase
     private readonly ReactiveState<OrderDraftDto> _state;
     private readonly Subject<Unit> _saveClicks = new();
 
-    public ReactiveCommand<LoadOrderCommand, Order?> LoadOrderRmd { get; }
-    public AsyncState<Order?> Order { get; }
+    private ReactiveCommand<LoadOrderCommand, Order?> LoadOrderRmd { get; }
+    private AsyncState<Order?> _order { get; }
 
     private readonly IDisposable _savePipeline;
 
@@ -24,8 +24,8 @@ public sealed class EditOrderViewModel : ViewModelBase
         LoadOrderEffect loadOrderEffect,
         SaveOrderDraftEffect saveEffect)
     {
-        Order = new AsyncState<Order?>(null);
-        Order.DisposeWith(this);
+        _order = new AsyncState<Order?>(null);
+        _order.DisposeWith(this);
 
         var address = new AddressDto("street", "city");
         var initial = new OrderDraftDto(address, []);
@@ -35,30 +35,33 @@ public sealed class EditOrderViewModel : ViewModelBase
 
         LoadOrderRmd = new ReactiveCommand<LoadOrderCommand, Order?>(
             effect: loadOrderEffect,
-            asyncState: Order,
+            asyncState: _order,
             onResult: (cmd, result) =>
             {
                 logger.LogInformation("Loaded order details, id: {Id}.", cmd.OrderId);
             })
             .DisposeWith(this);
 
-        // Derived state
-        HasChanges = _state.Changes
-            .Select(s => !s.Equals(initial))
-            .DistinctUntilChanged();
-
-        IsValid = _state.Changes
+        var isValidObservable = _state.Changes
             .Select(Validate)
             .DistinctUntilChanged();
 
-        CanSave = HasChanges
-            .CombineLatest(IsValid, (c, v) => c && v)
+        var canSaveObservable = _state.Changes
+            .Select(s => !s.Equals(initial))
+            .CombineLatest(isValidObservable, (c, v) => c && v)
             .DistinctUntilChanged();
+
+        Subscribe(canSaveObservable,
+            canSave =>
+            {
+                CanSave = canSave;
+                RaiseStateChanged();
+            });
 
         // Save effect pipeline
         _savePipeline =
             _saveClicks
-                .WithLatestFrom(CanSave, (_, canSave) => canSave)
+                .WithLatestFrom(canSaveObservable, (_, canSave) => canSave)
                 .Where(canSave => canSave)
                 .SelectMany(_ =>
                     saveEffect.Handle(new SaveOrderDraftCommand(Guid.NewGuid(), _state.Value), CancellationToken.None)
@@ -70,13 +73,7 @@ public sealed class EditOrderViewModel : ViewModelBase
         _savePipeline.DisposeWith(this);
     }
 
-    // ---- Reactive outputs ----
-
-    public IObservable<bool> HasChanges { get; }
-    public IObservable<bool> IsValid { get; }
-    public IObservable<bool> CanSave { get; }
-
-    // ---- UI entry points ----
+    public bool CanSave { get; private set; }
 
     public void UpdateAddress(AddressDto address)
         => _state.Update(s => s with { Address = address });
@@ -90,7 +87,6 @@ public sealed class EditOrderViewModel : ViewModelBase
     public void LoadOrder(Guid orderId) =>
         LoadOrderRmd.Execute(new LoadOrderCommand(orderId));
 
-    // ---- Mapping ----
     private static bool Validate(OrderDraftDto dto)
         => dto.Items.Count > 0 && !string.IsNullOrWhiteSpace(dto.Address.Street);
 }

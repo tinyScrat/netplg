@@ -1,27 +1,15 @@
 @namespace MyApp.WebUI.Features.Orders
 @inherits RxComponentBase
-@inject EditOrderViewModel Vm
+@inject EditOrderViewModel VM
 
-<button disabled="@(!canSave)" @onclick="Vm.Save">
+<button disabled="@(!VM.CanSave)" @onclick="VM.Save">
     Save
 </button>
 
 @code {
-    bool canSave;
-
     protected override void OnInitialized()
     {
-        Subscribe(Vm.CanSave, v =>
-        {
-            canSave = v;
-            InvokeAsync(StateHasChanged);
-        });
-
-        Subscribe(Vm.Order.Data.Changes, order =>
-        {
-            Console.WriteLine($"OrderNumber: {order?.OrderNumber}");
-        });
-
-        Vm.LoadOrder(Guid.NewGuid());
+        Bind(VM);
+        VM.LoadOrder(Guid.NewGuid());
     }
 }
