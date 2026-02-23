@@ -5,14 +5,20 @@ using System.Reactive.Disposables;
 
 // UI → Dispatch(Command) → Effect → State update
 
-public abstract class ViewModelBase : IDisposable
+public abstract class ViewModelBase(GlobalErrorStore errorStore) : IDisposable
 {
     private readonly CompositeDisposable _disposables = [];
     private bool _disposed;
     public event Action? StateChanged;
+    public event Action<Exception>? ExceptionOccurred;
 
-    protected void RaiseStateChanged()
-        => StateChanged?.Invoke();
+    protected void RaiseStateChanged() => StateChanged?.Invoke();
+    
+    protected void RaiseException(Exception ex)
+    {
+        errorStore.Publish(ex);
+        ExceptionOccurred?.Invoke(ex);
+    }
 
     internal IDisposable Track(IDisposable disposable)
     {
@@ -33,7 +39,11 @@ public abstract class ViewModelBase : IDisposable
     {
         var sub = source.Subscribe(
             onNext,
-            ex => onError?.Invoke(ex));
+            ex =>
+            {
+                onError?.Invoke(ex);
+                RaiseException(ex);
+            });
 
         return Track(sub);
     }
@@ -58,7 +68,11 @@ public abstract class ViewModelBase : IDisposable
             .Switch()
             .Subscribe(
                 _ => RaiseStateChanged(),
-                ex => onError?.Invoke(ex));
+                ex =>
+                {
+                    onError?.Invoke(ex);
+                    RaiseException(ex);
+                });
 
         return Track(Disposable.Create(() =>
         {

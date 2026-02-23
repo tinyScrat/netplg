@@ -31,6 +31,7 @@ public abstract class RxComponentBase : ComponentBase, IDisposable
 
             _boundViewModels.Add(vm);
             vm.StateChanged += OnViewModelStateChanged;
+            vm.ExceptionOccurred += OnViewModelException;
 
             AutoSubscribeObservables(vm);
         }
@@ -69,10 +70,10 @@ public abstract class RxComponentBase : ComponentBase, IDisposable
         Track(sub);
     }
 
-    private void OnViewModelStateChanged()
-    {
-        InvokeAsync(StateHasChanged);
-    }
+    private void OnViewModelStateChanged() => InvokeAsync(StateHasChanged);
+
+    private void OnViewModelException(Exception ex)
+        => InvokeAsync(async () => await DispatchExceptionAsync(ex)); // it will caught by the nearest ErrorBoundary if any
 
     #endregion
 
@@ -154,6 +155,7 @@ public abstract class RxComponentBase : ComponentBase, IDisposable
         foreach (var vm in _boundViewModels)
         {
             vm.StateChanged -= OnViewModelStateChanged;
+            vm.ExceptionOccurred -= OnViewModelException;
         }
 
         _disposables.Dispose();

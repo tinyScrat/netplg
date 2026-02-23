@@ -15,7 +15,8 @@ public sealed class OrdersViewModel : ViewModelBase
 
     public OrdersViewModel(
         LoadOrdersEffect loadOrdersEffect,
-        ILogger<OrdersViewModel> logger)
+        ILogger<OrdersViewModel> logger,
+        GlobalErrorStore errorStore) : base(errorStore)
     {
         Orders = new AsyncState<PagedResponse<OrderOverview>>(
             new PagedResponse<OrderOverview>

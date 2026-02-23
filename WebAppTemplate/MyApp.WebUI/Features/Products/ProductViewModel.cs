@@ -20,7 +20,8 @@ public sealed class ProductViewModel : ViewModelBase
         SaveProductEffect saveProductEffect,
         SaveProductReducer saveProductReducer,
         PublishProductEffect publishProductEffect,
-        LoadProductEffect loadProductEffect)
+        LoadProductEffect loadProductEffect,
+        GlobalErrorStore errorStore) : base(errorStore)
     {
         Product = new AsyncState<Product>(new Product(string.Empty, string.Empty, string.Empty, 0, 1, DateTimeOffset.Now));
         Product.DisposeWith(this);

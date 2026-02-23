@@ -1,5 +1,6 @@
 @namespace MyApp.WebUI.Layouts
 @inherits LayoutComponentBase
+@inject GlobalErrorStore ErrorStore
 
 <RadzenLayout>
     <Header />
@@ -8,4 +9,31 @@
     </RadzenBody>
 </RadzenLayout>
 
+@if (_lastError != null)
+{
+    <div class="global-error-banner">
+        @_lastError.Message
+        <button @onclick="ErrorStore.Clear">Dismiss</button>
+    </div>
+}
+
 <RadzenComponents />
+
+@code {
+    private Exception? _lastError;
+    private IDisposable? _sub;
+
+    protected override void OnInitialized()
+    {
+        _sub = ErrorStore.Errors.Subscribe(ex =>
+        {
+            _lastError = ex;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+
+    public void Dispose()
+    {
+        _sub?.Dispose();
+    }
+}

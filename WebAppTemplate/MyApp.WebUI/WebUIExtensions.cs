@@ -7,6 +7,7 @@ using MyApp.WebUI.Components;
 using MyApp.WebUI.Features.Orders;
 using MyApp.Application.Features.Portfolios;
 using MyApp.WebUI.Features.Products;
+using MyApp.WebUI.Abstractions;
 
 internal static class WebUIExtensions
 {
@@ -26,6 +27,8 @@ internal static class WebUIExtensions
 
     private static IServiceCollection AddViewModels(this IServiceCollection services)
     {
+        services.AddScoped<GlobalErrorStore>();
+
         services.AddTransient<HeaderViewModel>();
         services.AddTransient<MainMenuViewModel>();
         services.AddTransient<AuthorizeViewExViewModel>();

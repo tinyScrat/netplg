@@ -8,7 +8,7 @@ internal sealed class HeaderViewModel : ViewModelBase
 {
     private const string GuestDisplayName = "Guest";
 
-    public HeaderViewModel(IUserProfileStore userProfileStore)
+    public HeaderViewModel(IUserProfileStore userProfileStore, GlobalErrorStore errorStore) : base(errorStore)
     {
         userProfileStore.Changes
             .DistinctUntilChanged()

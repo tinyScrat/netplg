@@ -26,7 +26,8 @@ public sealed class EditOrderViewModel : ViewModelBase
         ILogger<EditOrderViewModel> logger,
         LoadOrderEffect loadOrderEffect,
         LoadOrderCategoriesEffect loadCategoriesEffect,
-        SaveOrderDraftEffect saveEffect)
+        SaveOrderDraftEffect saveEffect,
+        GlobalErrorStore errorStore) : base(errorStore)
     {
         // _order = new AsyncState<Order?>(null);
         // _order.DisposeWith(this);

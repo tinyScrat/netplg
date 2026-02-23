@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using MyApp.Application.Features.User;
 using MyApp.WebUI.Abstractions;
 
-internal sealed class AuthorizeViewExViewModel(IUserProfileStore userProfileStore) : ViewModelBase
+internal sealed class AuthorizeViewExViewModel(IUserProfileStore userProfileStore, GlobalErrorStore errorStore) : ViewModelBase(errorStore)
 {
     private readonly SemaphoreSlim _gate = new(1, 1);
     private bool _initialized;
