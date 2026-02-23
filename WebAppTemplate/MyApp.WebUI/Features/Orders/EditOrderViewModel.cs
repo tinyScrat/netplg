@@ -99,7 +99,7 @@ public sealed class EditOrderViewModel : ViewModelBase
         get => _state.Value.CategoryIds.ToList();
         set
         {
-            _state.Update(s => s with { CategoryIds = value.ToList() });
+            _state.Update(s => s with { CategoryIds = value != null ? value.ToList() : [] });
             RaiseStateChanged();
         }
     }
