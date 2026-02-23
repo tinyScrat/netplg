@@ -6,8 +6,8 @@ using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
+// using System.Threading;
+// using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 
 public abstract class RxComponentBase : ComponentBase, IDisposable
@@ -37,7 +37,7 @@ public abstract class RxComponentBase : ComponentBase, IDisposable
     }
 
     /// <summary>
-    /// Automatically subscribes all public IObservable&lt;T&gt; properties in a ViewModel.
+    /// Automatically subscribes all public IObservable<T> properties in a ViewModel.
     /// </summary>
     private void AutoSubscribeObservables(ViewModelBase vm)
     {
@@ -81,50 +81,50 @@ public abstract class RxComponentBase : ComponentBase, IDisposable
     /// <summary>
     /// Manually subscribe to an observable with optional onNext and onError callbacks.
     /// </summary>
-    protected IDisposable Subscribe<T>(
-        IObservable<T> source,
-        Action<T>? onNext = null,
-        Action<Exception>? onError = null)
-    {
-        var sub = source.Subscribe(
-            value => InvokeAsync(() =>
-            {
-                onNext?.Invoke(value);
-                StateHasChanged();
-            }),
-            ex => onError?.Invoke(ex));
+    // protected IDisposable Subscribe<T>(
+    //     IObservable<T> source,
+    //     Action<T>? onNext = null,
+    //     Action<Exception>? onError = null)
+    // {
+    //     var sub = source.Subscribe(
+    //         value => InvokeAsync(() =>
+    //         {
+    //             onNext?.Invoke(value);
+    //             StateHasChanged();
+    //         }),
+    //         ex => onError?.Invoke(ex));
 
-        return Track(sub);
-    }
+    //     return Track(sub);
+    // }
 
     /// <summary>
     /// Manually subscribe to an observable with async handler, safe cancellation, and error handling.
     /// </summary>
-    protected IDisposable SubscribeAsync<T>(
-        IObservable<T> source,
-        Func<T, CancellationToken, Task> handler,
-        Action<Exception>? onError = null)
-    {
-        var cts = new CancellationTokenSource();
+    // protected IDisposable SubscribeAsync<T>(
+    //     IObservable<T> source,
+    //     Func<T, CancellationToken, Task> handler,
+    //     Action<Exception>? onError = null)
+    // {
+    //     var cts = new CancellationTokenSource();
 
-        var sub = source
-            .Select(v => Observable.FromAsync(ct => handler(v, ct)))
-            .Switch() // cancels previous async if new value arrives
-            .Subscribe(
-                _ => InvokeAsync(StateHasChanged),
-                ex =>
-                {
-                    onError?.Invoke(ex);
-                    InvokeAsync(StateHasChanged);
-                });
+    //     var sub = source
+    //         .Select(v => Observable.FromAsync(ct => handler(v, ct)))
+    //         .Switch() // cancels previous async if new value arrives
+    //         .Subscribe(
+    //             _ => InvokeAsync(StateHasChanged),
+    //             ex =>
+    //             {
+    //                 onError?.Invoke(ex);
+    //                 InvokeAsync(StateHasChanged);
+    //             });
 
-        return Track(Disposable.Create(() =>
-        {
-            cts.Cancel();
-            cts.Dispose();
-            sub.Dispose();
-        }));
-    }
+    //     return Track(Disposable.Create(() =>
+    //     {
+    //         cts.Cancel();
+    //         cts.Dispose();
+    //         sub.Dispose();
+    //     }));
+    // }
 
     #endregion
 
