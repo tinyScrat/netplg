@@ -1,23 +1,22 @@
 @page "/product"
 @namespace MyApp.WebUI.Features.Products
-@using MyApp.Application.Features.Products
 @inherits RxComponentBase
 
 @inject ProductViewModel VM
 
 <h2>Product</h2>
 
-<button disabled="@VM.Product.Status.Value.IsLoading()"
+<button disabled="@VM.IsLoading"
         @onclick="() => VM.PublishProduct(Guid.NewGuid())">
     Publish Product
 </button>
 
-<button disabled="@VM.Product.Status.Value.IsLoading()"
+<button disabled="@VM.IsLoading"
         @onclick="() => VM.LoadProduct(Guid.NewGuid())">
     Load Product
 </button>
 
-@switch (VM.Product.Status.Value)
+@switch (VM.Status)
 {
     case AsyncStatus.Loading:
         <p>Loading...</p>
@@ -31,9 +30,6 @@
 @code {
     protected override void OnInitialized()
     {
-        Subscribe(VM.Product.Status.Changes, status =>
-        {
-            Console.WriteLine($"Cmd status changed to: {status}");
-        });
+        Bind(VM);
     }
 }

@@ -25,6 +25,13 @@ public sealed class ProductViewModel : ViewModelBase
         Product = new AsyncState<Product>(new Product(string.Empty, string.Empty, string.Empty, 0, 1, DateTimeOffset.Now));
         Product.DisposeWith(this);
 
+        Subscribe(Product.Status.Changes, status =>
+        {
+            IsLoading = status.IsLoading();
+            Status = status;
+            RaiseStateChanged();
+        });
+
         SaveProductRcmd = ReactiveCommand.CreateWithReducer(
             state: Product,
             effect: saveProductEffect,
@@ -65,6 +72,9 @@ public sealed class ProductViewModel : ViewModelBase
             })
             .DisposeWith(this);
     }
+
+    public bool IsLoading { get; private set; } = false;
+    public AsyncStatus Status { get; private set; } = AsyncStatus.IdleInstance;
 
     public void SaveProduct(Product draft) =>
         SaveProductRcmd.Execute(new SaveProductCmd(draft));
