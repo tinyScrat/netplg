@@ -2,7 +2,7 @@
 @namespace MyApp.WebUI.Features.Orders
 @using MyApp.Contracts.Orders
 @inherits RxComponentBase
-@inject OrdersViewModel Vm
+@inject OrdersViewModel VM
 
 <PageTitle>Orders</PageTitle>
 
@@ -13,15 +13,15 @@
     FilterMode="FilterMode.Simple"
     AllowGrouping="false"
     AllowSorting="true"
-    PageSize="@Vm.Orders.Data.Value.PageSize"
+    PageSize="@VM.OrdersData.PageSize"
     AllowPaging="true"
     PagerHorizontalAlign="HorizontalAlign.Left"
-    Data="@Vm.Orders.Data.Value.Items"
+    Data="@VM.OrdersData.Items"
     TItem="OrderOverview"
     ColumnWidth="300px"
     LogicalFilterOperator="LogicalFilterOperator.And"
     ShowPagingSummary="true"
-    IsLoading="@Vm.Orders.Status.Value.IsLoading()">
+    IsLoading="@VM.IsLoading">
     <Columns>
         <RadzenDataGridColumn Property="@nameof(OrderOverview.CustomerName)" Title="Customer Name" Frozen="true" Width="160px" />
         <RadzenDataGridColumn Property="@nameof(OrderOverview.Amount)" Title="Amount" Width="160px" FormatString="{0:C}" />
@@ -33,10 +33,7 @@
 @code {
     protected override void OnInitialized()
     {
-        Subscribe(Vm.Orders.Data.Changes);
-
-        Subscribe(Vm.Orders.Status.Changes);
-
-        Vm.LoadOrders();
+        Bind(VM);
+        VM.LoadOrders();
     }
 }

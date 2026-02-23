@@ -12,4 +12,13 @@ public sealed class PagedResponse<T>
 
     public bool HasNext => Page < TotalPages;
     public bool HasPrevious => Page > 1;
+
+    public static PagedResponse<T> Empty => new()
+    {
+        Page = 1,
+        PageSize = 100,
+        TotalItems = 0,
+        TotalPages = 0,
+        Items = []
+    };
 }

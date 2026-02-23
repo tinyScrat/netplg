@@ -29,6 +29,18 @@ public sealed class OrdersViewModel : ViewModelBase
         );
         Orders.DisposeWith(this);
 
+        Subscribe(Orders.Status.Changes, status =>
+        {
+            IsLoading = status.IsLoading();
+            RaiseStateChanged();
+        });
+
+        Subscribe(Orders.Data.Changes, data =>
+        {
+            OrdersData = data;
+            RaiseStateChanged();
+        });
+
         LoadOrdersRmd = new ReactiveCommand<LoadOrdersCmd, PagedResponse<OrderOverview>>(
             loadOrdersEffect,
             Orders,
@@ -45,6 +57,10 @@ public sealed class OrdersViewModel : ViewModelBase
         })
         .DisposeWith(this);
     }
+
+    public bool IsLoading { get; private set; } = false;
+
+    public PagedResponse<OrderOverview> OrdersData { get; private set; } = PagedResponse<OrderOverview>.Empty;
 
     public void LoadOrders()
     {
