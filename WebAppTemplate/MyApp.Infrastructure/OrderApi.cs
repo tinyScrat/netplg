@@ -103,4 +103,16 @@ internal sealed class OrderApi(
             Items = [order]
         };
     }
+
+    public async Task<IReadOnlyCollection<OrderCategoryDto>> GetOrderCategoriesAsync(CancellationToken ct)
+    {
+        await Task.Delay(100);
+
+        return
+        [
+            new OrderCategoryDto(Guid.Parse("11111111-1111-1111-1111-111111111111"), "Standard"),
+            new OrderCategoryDto(Guid.Parse("22222222-2222-2222-2222-222222222222"), "Express"),
+            new OrderCategoryDto(Guid.Parse("33333333-3333-3333-3333-333333333333"), "Overnight")
+        ];
+    }
 }

@@ -1,5 +1,7 @@
 namespace MyApp.Contracts.Orders;
 
+public sealed record OrderCategoryDto(Guid Id, string Name);
+
 public sealed record OrderDto
 {
     public Guid Id { get; init; }
@@ -29,7 +31,8 @@ public sealed record OrderItemDto(
 
 public sealed record OrderDraftDto(
     AddressDto Address,
-    IReadOnlyList<OrderItemDto> Items
+    IReadOnlyList<OrderItemDto> Items,
+    IReadOnlyList<Guid> CategoryIds
 );
 
 public enum OrderStatus

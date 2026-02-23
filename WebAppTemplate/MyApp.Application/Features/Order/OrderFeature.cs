@@ -9,6 +9,7 @@ public static class OrderFeature
         services.AddSingleton<LoadOrderEffect>();
         services.AddSingleton<SaveOrderDraftEffect>();
         services.AddSingleton<LoadOrdersEffect>();
+        services.AddSingleton<LoadOrderCategoriesEffect>();
 
         return services;
     }

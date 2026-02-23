@@ -3,6 +3,8 @@ namespace MyApp.Application.Features.Orders;
 using MyApp.Contracts;
 using MyApp.Contracts.Orders;
 
+public sealed record OrderCategory(Guid Id, string Name);
+
 public sealed class Order
 {
     public Guid Id { get; }
@@ -80,4 +82,5 @@ public interface IOrderApi
     Task<OrderDto?> TryGetOrderAsync(Guid orderId, CancellationToken ct);
     Task<IEnumerable<OrderLineDto>> GetOrderLinesAsync(Guid orderId, CancellationToken ct);
     Task<PagedResponse<OrderOverview>> GetOrdersAsync(CancellationToken ct);
+    Task<IReadOnlyCollection<OrderCategoryDto>> GetOrderCategoriesAsync(CancellationToken ct);
 }

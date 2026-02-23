@@ -40,3 +40,18 @@ public sealed class LoadOrdersEffect(IOrderApi api) : IEffect<LoadOrdersCmd, Pag
         });
     }
 }
+
+
+public sealed record LoadOrderCategoriesCmd() : ICommand<IReadOnlyCollection<OrderCategory>>;
+
+public sealed class LoadOrderCategoriesEffect(IOrderApi api) : IEffect<LoadOrderCategoriesCmd, IReadOnlyCollection<OrderCategory>>
+{
+    public IObservable<IReadOnlyCollection<OrderCategory>> Handle(LoadOrderCategoriesCmd command, CancellationToken ct = default)
+    {
+        return Observable.FromAsync(async () =>
+        {
+            var dtos = await api.GetOrderCategoriesAsync(ct);
+            return dtos.Select(dto => new OrderCategory(dto.Id, dto.Name)).ToArray();
+        });
+    }
+}

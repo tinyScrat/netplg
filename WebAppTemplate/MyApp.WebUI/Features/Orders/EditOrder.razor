@@ -6,10 +6,24 @@
     Save
 </button>
 
+<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.Center" Gap="0.5rem" class="rz-p-sm-12">
+    <RadzenLabel Text="Select Values" Component="DropDownMultiple" />
+    <RadzenDropDown
+        @bind-Value=@VM.SelectedCategoryIds
+        Data=@VM.Categories
+        TextProperty="@nameof(OrderCategory.Name)"
+        ValueProperty="@nameof(OrderCategory.Id)"
+        Name="DropDownMultiple"
+        Multiple=true AllowClear=true
+        Placeholder="Select Categories"
+        Style="width: 100%; max-width: 400px;" />
+</RadzenStack>
+
 @code {
     protected override void OnInitialized()
     {
         Bind(VM);
-        VM.LoadOrder(Guid.NewGuid());
+        // VM.LoadOrder(Guid.NewGuid());
+        VM.LoadCategories();
     }
 }
