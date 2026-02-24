@@ -8,6 +8,8 @@ using MyApp.WebUI.Features.Orders;
 using MyApp.Application.Features.Portfolios;
 using MyApp.WebUI.Features.Products;
 using MyApp.WebUI.Abstractions;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using MyApp.Infrastructure;
 
 internal static class WebUIExtensions
 {
@@ -16,11 +18,28 @@ internal static class WebUIExtensions
     {
         services.AddSingleton<IKeyValueStorage, BrowserLocalStorage>();
 
-        services.AddScoped<AuthDelegatingHandler>();
         services.AddSingleton<AuthStateChangedEventPublisher>();
         services.AddSingleton<SessionExpiredSubscriber>();
 
         services.AddViewModels();
+
+        return services;
+    }
+
+    public static IServiceCollection AddApiHttpClientWithAuth(
+        this IServiceCollection services,
+        string name,
+        IConfiguration configuration,
+        string fallbackBaseAddress)
+    {
+        services
+            .AddTransient<AuthDelegatingHandler>()
+            .AddApiHttpClient<HttpClient>(
+                name,
+                configuration,
+                fallbackBaseAddress)
+            .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
+            .AddHttpMessageHandler<AuthDelegatingHandler>();
 
         return services;
     }

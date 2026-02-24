@@ -15,40 +15,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddRadzenComponents();
 
 builder.Services
-    .AddHttpClient("API", (sp, client) =>
-    {
-        var logger = sp.GetRequiredService<ILogger<Program>>();
-
-        var configuredBaseAddress = builder.Configuration.GetValue<string>("BaseAddress");
-
-        var baseAddress =
-            string.IsNullOrWhiteSpace(configuredBaseAddress)
-                ? builder.HostEnvironment.BaseAddress
-                : configuredBaseAddress;
-
-        if (!Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
-        {
-            logger.LogWarning(
-                "Invalid BaseAddress '{BaseAddress}', falling back to '{Fallback}'",
-                baseAddress,
-                builder.HostEnvironment.BaseAddress);
-
-            uri = new Uri(builder.HostEnvironment.BaseAddress);
-        }
-
-        client.BaseAddress = uri;
-
-        logger.LogInformation("BaseAddress: {BaseAddress}", client.BaseAddress);
-    })
-    .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
-    .AddHttpMessageHandler<AuthDelegatingHandler>();
-
-builder.Services
-    .AddScoped(sp =>
-    {
-        var factory = sp.GetRequiredService<IHttpClientFactory>();
-        return factory.CreateClient("API");
-    });
+    .AddApiHttpClientWithAuth("API", builder.Configuration, builder.HostEnvironment.BaseAddress);
 
 builder.Services
     .AddAuthorizationCore(options => options.AddPermissionPolicies())
