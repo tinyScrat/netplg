@@ -10,9 +10,12 @@
 
 <RadzenDataGrid
     AllowFiltering="true"
+    FilterMode="FilterMode.Simple"
+    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+    LogicalFilterOperator="LogicalFilterOperator.And"
+
     AllowColumnResize="true"
     AllowAlternatingRows="false"
-    FilterMode="FilterMode.Simple"
     AllowGrouping="false"
     AllowSorting="true"
     PageSize="@VM.OrdersData.PageSize"
@@ -21,12 +24,11 @@
     Data="@VM.OrdersData.Items"
     TItem="OrderOverview"
     ColumnWidth="300px"
-    LogicalFilterOperator="LogicalFilterOperator.And"
     ShowPagingSummary="true"
     IsLoading="@VM.IsLoading">
     <Columns>
         <RadzenDataGridColumn Property="@nameof(OrderOverview.CustomerName)" Title="Customer Name" Frozen="true" Width="160px" />
-        <RadzenDataGridColumn Property="@nameof(OrderOverview.Amount)" Title="Amount" Width="160px" FormatString="{0:C}" />
+        <RadzenDataGridColumn Property="@nameof(OrderOverview.Amount)" Title="Amount" Width="160px" FormatString="{0:N2}" />
         <RadzenDataGridColumn Property="@nameof(OrderOverview.Status)" Title="Status" Width="160px" />
         <RadzenDataGridColumn Property="@nameof(OrderOverview.CreatedAt)" Title="Created At" Width="160px" FormatString="{0:d}" />
     </Columns>
