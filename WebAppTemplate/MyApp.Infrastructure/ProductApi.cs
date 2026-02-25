@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using MyApp.Application.Features.Products;
 using Microsoft.Extensions.Logging;
 
-internal sealed class ProductApi(ILogger<ProductApi> logger) : IProductApi
+internal sealed class ProductApi(
+    HttpClient http,
+    ILogger<ProductApi> logger) : IProductApi
 {
     public Task<int> SaveProductAsync(Product draft)
     {

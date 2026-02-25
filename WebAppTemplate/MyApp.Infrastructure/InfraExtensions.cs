@@ -15,23 +15,23 @@ using Microsoft.Extensions.Options;
 
 public static class InfraExtensions
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, string httpClientName)
     {
-        services.AddSingleton<IOrderApi, OrderApi>();
-        services.AddSingleton<IPortfolioApi, PortfolioApi>();
-        services.AddSingleton<IProductApi, ProductApi>();
-        services.AddSingleton<IUserProfileApi, UserProfileApi>();
+        services.AddHttpClient<IOrderApi, OrderApi>(httpClientName);
+        services.AddHttpClient<IPortfolioApi, PortfolioApi>(httpClientName);
+        services.AddHttpClient<IProductApi, ProductApi>(httpClientName);
+        services.AddHttpClient<IUserProfileApi, UserProfileApi>(httpClientName);
 
         return services;
     }
 
     public static IHttpClientBuilder AddApiHttpClient<TClient>(
         this IServiceCollection services,
-        string name,
+        string httpClientName,
         string fallbackBaseAddress) where TClient : class
     {
         return services
-            .AddHttpClient(name, (sp, client) =>
+            .AddHttpClient(httpClientName, (sp, client) =>
             {
                 var logger = sp.GetRequiredService<ILogger<TClient>>();
 

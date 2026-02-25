@@ -10,7 +10,7 @@ using MyApp.Contracts;
 // using System.Net.Http.Json;
 
 internal sealed class OrderApi(
-    /*HttpClient http,*/
+    HttpClient http,
     ILogger<OrderApi> logger) : IOrderApi
 {
     public Task SaveOrderAsync(OrderDraftDto dto)

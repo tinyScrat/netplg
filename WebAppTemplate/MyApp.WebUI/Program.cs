@@ -15,7 +15,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddRadzenComponents();
 
 builder.Services
-    .AddApiHttpClientWithAuth("API", builder.Configuration, builder.HostEnvironment.BaseAddress);
+    .AddApiHttpClientWithAuth(Consts.ApiHttpClientName, builder.Configuration, builder.HostEnvironment.BaseAddress);
 
 builder.Services
     .AddAuthorizationCore(options => options.AddPermissionPolicies())
@@ -30,7 +30,7 @@ builder.Services
 builder.Services
     .AddWebUIFeatures()
     .AddApplication()
-    .AddInfrastructure();
+    .AddInfrastructure(Consts.ApiHttpClientName);
 
 var app = builder.Build();
 

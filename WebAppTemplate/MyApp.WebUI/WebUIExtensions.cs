@@ -30,14 +30,14 @@ internal static class WebUIExtensions
 
     public static IServiceCollection AddApiHttpClientWithAuth(
         this IServiceCollection services,
-        string name,
+        string httpClientName,
         IConfiguration configuration,
         string fallbackBaseAddress)
     {
         services
             .Configure<BaseAddressSettings>(configuration.GetSection(BaseAddressSettings.SectionName))
             .AddTransient<AuthDelegatingHandler>()
-            .AddApiHttpClient<HttpClient>(name, fallbackBaseAddress)
+            .AddApiHttpClient<HttpClient>(httpClientName, fallbackBaseAddress)
             .AddHttpMessageHandler(sp =>
             {
                 var settings = sp.GetRequiredService<IOptions<BaseAddressSettings>>().Value;
@@ -48,10 +48,6 @@ internal static class WebUIExtensions
                         authorizedUrls: [uri.ToString()]);
             })
             .AddHttpMessageHandler<AuthDelegatingHandler>();
-
-        services
-            .AddScoped(sp =>
-                sp.GetRequiredService<IHttpClientFactory>().CreateClient(name));
 
         return services;
     }
