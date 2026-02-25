@@ -44,8 +44,7 @@ internal static class WebUIExtensions
                 var uri = ApiHttpClientExtensions.ResolveBaseAddress(settings, fallbackBaseAddress);
 
                 return sp.GetRequiredService<AuthorizationMessageHandler>()
-                    .ConfigureHandler(
-                        authorizedUrls: [uri.ToString()]);
+                    .ConfigureHandler([uri.ToString()]);
             })
             .AddHttpMessageHandler<AuthDelegatingHandler>();
 

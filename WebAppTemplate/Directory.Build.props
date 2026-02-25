@@ -1,0 +1,29 @@
+<Project>
+
+  <PropertyGroup>
+    <CommonTargetFramework>net10.0</CommonTargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoWarn>CS1591</NoWarn>
+    <NuGetAudit>false</NuGetAudit>
+    <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
+    <PublishReferencesDocumentationFiles>false</PublishReferencesDocumentationFiles>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Product>MyApp</Product>
+    <Version>1.0.0</Version>
+    <Company>LooperCorp</Company>
+    <Copyright>&#169;2026 LooperCorp</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+</Project>
