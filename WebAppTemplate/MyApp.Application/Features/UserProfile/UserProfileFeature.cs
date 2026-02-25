@@ -2,6 +2,7 @@ namespace MyApp.Application.Features.User;
 
 using MyApp.Application.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 public static class UserProfileFeatures
 {
@@ -22,7 +23,8 @@ public static class UserProfileFeatures
                         profile =>
                             sp.GetRequiredService<UserProfileStore>()
                                 .SetProfile(profile),
-                    sp.GetRequiredService<ICommandKey<LoadUserProfileCmd>>());
+                    sp.GetRequiredService<ICommandKey<LoadUserProfileCmd>>(),
+                    sp.GetRequiredService<ILogger<IdempotentCommandPipeline<LoadUserProfileCmd, UserProfile>>>());
             });
 
         services.AddSingleton<UserProfileAuthStateSubscriber>();

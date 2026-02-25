@@ -1,5 +1,6 @@
 namespace MyApp.Infrastructure.Services;
 
+using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using MyApp.Application.Features.User;
 
@@ -7,20 +8,15 @@ public sealed class UserProfileApi(HttpClient http, ILogger<UserProfileApi> logg
 {
     public async Task<UserProfileDto> GetUserProfileAsync()
     {
-        await Task.Delay(1000); // Simulate network delay
+        var dto = await http.GetFromJsonAsync<UserProfileDto>("/data/profile.json"); // Simulate API call
+
+        if (dto == null)
+        {
+            logger.LogWarning("Failed to load user profile");
+            throw new InvalidOperationException("Failed to load user profile");
+        }
 
         logger.LogInformation("User profile loaded");
-
-        var dto = new UserProfileDto
-        {
-            Username = "johndoe",
-            DisplayName = "John Doe",
-            Email = "john.doe@example.com",
-            BusinessUnitId = "bu-123",
-            BusinessUnitName = "Sales",
-            Roles = new HashSet<string> { "User", "Admin" },
-            Permissions = new HashSet<string> { "Order.View", "Order.Create" }
-        };
 
         return dto;
     }

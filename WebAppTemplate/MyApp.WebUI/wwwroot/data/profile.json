@@ -1,0 +1,16 @@
+{
+  "Username": "scratty",
+  "DisplayName": "John Doe",
+  "Email": "john.doe@example.com",
+  "BusinessUnitId": "Sales",
+  "BusinessUnitName": "Sales Department",
+  "Roles": [
+    "Admin",
+    "User"
+  ],
+  "Permissions": [
+    "Order.View",
+    "Order.Create",
+    "Order.Submit"
+  ]
+}

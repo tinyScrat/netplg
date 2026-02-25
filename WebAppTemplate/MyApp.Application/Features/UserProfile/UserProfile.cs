@@ -7,8 +7,8 @@ public sealed record UserProfile(
     string DisplayName,
     string Email,
     BusinessUnit BusinessUnit,
-    IReadOnlySet<string> Roles,
-    IReadOnlySet<string> Permissions,
+    IReadOnlyCollection<string> Roles,
+    IReadOnlyCollection<string> Permissions,
     bool IsInitialized
 )
 {

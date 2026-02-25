@@ -37,11 +37,16 @@ internal static class WebUIExtensions
         services
             .Configure<BaseAddressSettings>(configuration.GetSection(BaseAddressSettings.SectionName))
             .AddTransient<AuthDelegatingHandler>()
-            .AddApiHttpClient<HttpClient>(httpClientName, fallbackBaseAddress)
+            .AddApiHttpClient(httpClientName, fallbackBaseAddress)
             .AddHttpMessageHandler(sp =>
             {
+                var logger = sp.GetRequiredService<ILoggerFactory>()
+                    .CreateLogger("ApiHttpClient");
+
                 var settings = sp.GetRequiredService<IOptions<BaseAddressSettings>>().Value;
                 var uri = ApiHttpClientExtensions.ResolveBaseAddress(settings, fallbackBaseAddress);
+
+                logger.LogInformation("API BaseAddress: {BaseAddress}", uri);
 
                 return sp.GetRequiredService<AuthorizationMessageHandler>()
                     .ConfigureHandler([uri.ToString()]);

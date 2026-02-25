@@ -2,6 +2,7 @@ namespace MyApp.Application.Abstractions;
 
 using System.Collections.Concurrent;
 using System.Reactive.Disposables;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// A service for executing commands through a pipeline of effects, with support for cancellation and disposal.
@@ -24,7 +25,8 @@ public interface ICommandPipeline<in TCommand> where TCommand : ICommand
 internal sealed class IdempotentCommandPipeline<TCommand, TResult>(
     IEffect<TCommand, TResult> effect,
     Action<TResult> onResult,
-    ICommandKey<TCommand> keyProvider)
+    ICommandKey<TCommand> keyProvider,
+    ILogger logger)
     : ICommandPipeline<TCommand>
     where TCommand : ICommand<TResult>
 {
@@ -49,7 +51,10 @@ internal sealed class IdempotentCommandPipeline<TCommand, TResult>(
                 .Handle(command, cts.Token)
                 .Subscribe(
                     onResult,
-                    _ => Cleanup(key),
+                    error => {
+                        logger.LogError(error, "Error executing command with key {Key}", key);
+                        Cleanup(key);
+                    },
                     () => Cleanup(key));
 
         var entry = new InFlight(cts, subscription);

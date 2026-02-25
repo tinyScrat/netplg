@@ -25,27 +25,20 @@ public static class InfraExtensions
         return services;
     }
 
-    public static IHttpClientBuilder AddApiHttpClient<TClient>(
+    public static IHttpClientBuilder AddApiHttpClient(
         this IServiceCollection services,
         string httpClientName,
-        string fallbackBaseAddress) where TClient : class
+        string fallbackBaseAddress)
     {
         return services
             .AddHttpClient(httpClientName, (sp, client) =>
             {
-                var logger = sp.GetRequiredService<ILogger<TClient>>();
-
                 var settings = sp.GetRequiredService<IOptions<BaseAddressSettings>>().Value;
                 var uri = ApiHttpClientExtensions.ResolveBaseAddress(settings, fallbackBaseAddress);
 
                 client.BaseAddress = uri;
                 client.DefaultRequestHeaders.Accept
                     .Add(new MediaTypeWithQualityHeaderValue(MediaTypeNames.Application.Json));
-
-                logger.LogInformation(
-                    "Configured API client {Client} with BaseAddress {BaseAddress}",
-                    typeof(TClient).Name,
-                    uri);
             });
     }
 }
