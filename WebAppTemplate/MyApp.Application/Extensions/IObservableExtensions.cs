@@ -6,7 +6,7 @@ using System.Net.Sockets;
 using System.Reactive.Linq;
 using MyApp.Application.Exceptions;
 
-public static class RxRetry
+public static class IObservableExtensions
 {
     public static IObservable<T> RetryWithBackoff<T>(
         this IObservable<T> source,
