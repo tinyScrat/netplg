@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Mime;
+using MyApp.Infrastructure.Configs;
+using Microsoft.Extensions.Options;
 
 public static class InfraExtensions
 {
@@ -26,37 +28,15 @@ public static class InfraExtensions
     public static IHttpClientBuilder AddApiHttpClient<TClient>(
         this IServiceCollection services,
         string name,
-        IConfiguration configuration,
         string fallbackBaseAddress) where TClient : class
     {
-        services
-            .AddScoped(sp =>
-            {
-                var factory = sp.GetRequiredService<IHttpClientFactory>();
-                return factory.CreateClient(name);
-            });
-
         return services
             .AddHttpClient(name, (sp, client) =>
             {
                 var logger = sp.GetRequiredService<ILogger<TClient>>();
 
-                var configuredBaseAddress = configuration.GetValue<string>("BaseAddress");
-
-                var baseAddress =
-                    string.IsNullOrWhiteSpace(configuredBaseAddress)
-                        ? fallbackBaseAddress
-                        : configuredBaseAddress;
-
-                if (!Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri))
-                {
-                    logger.LogWarning(
-                        "Invalid BaseAddress '{BaseAddress}', falling back to '{Fallback}'",
-                        baseAddress,
-                        fallbackBaseAddress);
-
-                    uri = new Uri(fallbackBaseAddress);
-                }
+                var settings = sp.GetRequiredService<IOptions<BaseAddressSettings>>().Value;
+                var uri = ApiHttpClientExtensions.ResolveBaseAddress(settings, fallbackBaseAddress);
 
                 client.BaseAddress = uri;
                 client.DefaultRequestHeaders.Accept
@@ -67,5 +47,23 @@ public static class InfraExtensions
                     typeof(TClient).Name,
                     uri);
             });
+    }
+}
+
+public static class ApiHttpClientExtensions
+{
+    public static Uri ResolveBaseAddress(
+        BaseAddressSettings settings,
+        string fallbackBaseAddress)
+    {
+        var configured = settings.BaseAddress;
+
+        var baseAddress = string.IsNullOrWhiteSpace(configured)
+            ? fallbackBaseAddress
+            : configured;
+
+        return Uri.TryCreate(baseAddress, UriKind.Absolute, out var uri)
+            ? uri
+            : new Uri(fallbackBaseAddress);
     }
 }

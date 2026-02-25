@@ -10,6 +10,8 @@ using MyApp.WebUI.Features.Products;
 using MyApp.WebUI.Abstractions;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MyApp.Infrastructure;
+using Microsoft.Extensions.Options;
+using MyApp.Infrastructure.Configs;
 
 internal static class WebUIExtensions
 {
@@ -33,13 +35,23 @@ internal static class WebUIExtensions
         string fallbackBaseAddress)
     {
         services
+            .Configure<BaseAddressSettings>(configuration.GetSection(BaseAddressSettings.SectionName))
             .AddTransient<AuthDelegatingHandler>()
-            .AddApiHttpClient<HttpClient>(
-                name,
-                configuration,
-                fallbackBaseAddress)
-            .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>()
+            .AddApiHttpClient<HttpClient>(name, fallbackBaseAddress)
+            .AddHttpMessageHandler(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<BaseAddressSettings>>().Value;
+                var uri = ApiHttpClientExtensions.ResolveBaseAddress(settings, fallbackBaseAddress);
+
+                return sp.GetRequiredService<AuthorizationMessageHandler>()
+                    .ConfigureHandler(
+                        authorizedUrls: [uri.ToString()]);
+            })
             .AddHttpMessageHandler<AuthDelegatingHandler>();
+
+        services
+            .AddScoped(sp =>
+                sp.GetRequiredService<IHttpClientFactory>().CreateClient(name));
 
         return services;
     }
