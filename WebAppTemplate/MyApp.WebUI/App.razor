@@ -22,3 +22,16 @@
     </Found>
   </Router>
 </CascadingAuthenticationState>
+
+@code {
+    [Inject] private AuthStateChangedEventPublisher AuthPublisher { get; set; } = null!;
+    [Inject] private SessionExpiredSubscriber SessionExpiredSubscriber { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        // Just resolve the publisher to start the subscription
+        // No need to store it; DI manages disposal
+        _ = AuthPublisher;
+        _ = SessionExpiredSubscriber;
+    }
+}

@@ -6,7 +6,6 @@ using MyApp.Application.Features.Products;
 using MyApp.Application.Features.Portfolios;
 using MyApp.Application.Features.User;
 using MyApp.Infrastructure.Services;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Net.Mime;
@@ -34,7 +33,7 @@ public static class InfraExtensions
             .AddHttpClient(httpClientName, (sp, client) =>
             {
                 var settings = sp.GetRequiredService<IOptions<BaseAddressSettings>>().Value;
-                var uri = ApiHttpClientExtensions.ResolveBaseAddress(settings, fallbackBaseAddress);
+                var uri = settings.ResolveBaseAddress(fallbackBaseAddress);
 
                 client.BaseAddress = uri;
                 client.DefaultRequestHeaders.Accept
@@ -46,7 +45,7 @@ public static class InfraExtensions
 public static class ApiHttpClientExtensions
 {
     public static Uri ResolveBaseAddress(
-        BaseAddressSettings settings,
+        this BaseAddressSettings settings,
         string fallbackBaseAddress)
     {
         var configured = settings.BaseAddress;

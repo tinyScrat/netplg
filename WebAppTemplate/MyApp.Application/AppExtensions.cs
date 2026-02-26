@@ -17,6 +17,8 @@ public static class AppExtensions
         services.AddSingleton<IAppEventBus>(sp =>
             sp.GetRequiredService<AppEventBus>());
 
+        // Safe as singleton now: dispatcher only resolves ICommandPipeline<T>,
+        // which are also singletons (they create their own scopes internally).
         services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
 
         services
@@ -27,13 +29,11 @@ public static class AppExtensions
 
         return services;
     }
-}
 
-public static class UseApplicationExtensions
-{
     public static IServiceProvider UseApplicationFeatures(this IServiceProvider sp)
     {
-        _ = sp.GetRequiredService<UserProfileAuthStateSubscriber>();
+        // Force the DI container to create the effects instance and its dependencies.
+        sp.UseUserProfileFeature();
 
         return sp;
     }

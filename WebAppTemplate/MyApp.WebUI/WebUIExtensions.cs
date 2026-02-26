@@ -20,8 +20,9 @@ internal static class WebUIExtensions
     {
         services.AddSingleton<IKeyValueStorage, BrowserLocalStorage>();
 
-        services.AddSingleton<AuthStateChangedEventPublisher>();
-        services.AddSingleton<SessionExpiredSubscriber>();
+        services
+            .AddScoped<SessionExpiredSubscriber>()
+            .AddScoped<AuthStateChangedEventPublisher>();
 
         services.AddViewModels();
 
@@ -38,20 +39,22 @@ internal static class WebUIExtensions
             .Configure<BaseAddressSettings>(configuration.GetSection(BaseAddressSettings.SectionName))
             .AddTransient<AuthDelegatingHandler>()
             .AddApiHttpClient(httpClientName, fallbackBaseAddress)
+            // OUTERMOST: can catch exceptions from inner handlers (incl. AuthorizationMessageHandler)
+            .AddHttpMessageHandler<AuthDelegatingHandler>()
+            // INNER: attaches access token for configured URLs
             .AddHttpMessageHandler(sp =>
             {
                 var logger = sp.GetRequiredService<ILoggerFactory>()
                     .CreateLogger("ApiHttpClient");
 
                 var settings = sp.GetRequiredService<IOptions<BaseAddressSettings>>().Value;
-                var uri = ApiHttpClientExtensions.ResolveBaseAddress(settings, fallbackBaseAddress);
+                var uri = settings.ResolveBaseAddress(fallbackBaseAddress);
 
                 logger.LogInformation("API BaseAddress: {BaseAddress}", uri);
 
                 return sp.GetRequiredService<AuthorizationMessageHandler>()
                     .ConfigureHandler([uri.ToString()]);
-            })
-            .AddHttpMessageHandler<AuthDelegatingHandler>();
+            });
 
         return services;
     }
@@ -79,9 +82,6 @@ public static class UseWebUIExtensions
     public static IServiceProvider UseWebUIFeatures(
         this IServiceProvider sp)
     {
-        _ = sp.GetRequiredService<AuthStateChangedEventPublisher>();
-        _ = sp.GetRequiredService<SessionExpiredSubscriber>();
-
         return sp;
     }
 }
