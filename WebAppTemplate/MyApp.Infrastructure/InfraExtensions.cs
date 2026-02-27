@@ -11,11 +11,15 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using MyApp.Infrastructure.Configs;
 using Microsoft.Extensions.Options;
+using MyApp.Application.Abstractions;
 
 public static class InfraExtensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, string httpClientName)
     {
+        services.AddScoped<IDialogOrchestrator, DialogOrchestrator>();
+        services.AddScoped(typeof(IDialogMiddleware<,>), typeof(DialogLoggingMiddleware<,>));
+        
         services.AddHttpClient<IOrderApi, OrderApi>(httpClientName);
         services.AddHttpClient<IPortfolioApi, PortfolioApi>(httpClientName);
         services.AddHttpClient<IProductApi, ProductApi>(httpClientName);

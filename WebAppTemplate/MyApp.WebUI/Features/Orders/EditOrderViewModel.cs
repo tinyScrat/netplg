@@ -8,6 +8,7 @@ using MyApp.Application.Abstractions;
 using MyApp.WebUI.Abstractions;
 using MyApp.Contracts.Orders;
 using MyApp.Application.Features.Orders;
+using MyApp.WebUI.Components;
 
 public sealed class EditOrderViewModel : ViewModelBase
 {
@@ -21,14 +22,17 @@ public sealed class EditOrderViewModel : ViewModelBase
     private AsyncState<IReadOnlyCollection<OrderCategory>> _categories { get; }
 
     private readonly IDisposable _savePipeline;
+    private readonly IDialogOrchestrator _dialogOrchestrator;
 
     public EditOrderViewModel(
         ILogger<EditOrderViewModel> logger,
         LoadOrderEffect loadOrderEffect,
         LoadOrderCategoriesEffect loadCategoriesEffect,
         SaveOrderDraftEffect saveEffect,
-        GlobalErrorStore errorStore) : base(errorStore)
+        GlobalErrorStore errorStore,
+        IDialogOrchestrator dialogOrchestrator) : base(errorStore)
     {
+        _dialogOrchestrator = dialogOrchestrator;
         // _order = new AsyncState<Order?>(null);
         // _order.DisposeWith(this);
         _categories = new AsyncState<IReadOnlyCollection<OrderCategory>>([]);
@@ -121,4 +125,17 @@ public sealed class EditOrderViewModel : ViewModelBase
 
     private static bool Validate(OrderDraftDto dto)
         => dto.Items.Count > 0 && !string.IsNullOrWhiteSpace(dto.Address.Street);
+
+    public async Task ShowConfirmDialog()
+    {
+        var request = new ConfirmDialogRequest("Are you sure you want to save the order?")
+        {
+            Message = "This action cannot be undone."
+        };
+
+        var result  = await _dialogOrchestrator.RequestAsync<ConfirmDialogRequest, bool>(request);
+
+        Console.WriteLine($"Dialog result: {result}");
+
+    }
 }

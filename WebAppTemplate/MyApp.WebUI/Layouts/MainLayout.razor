@@ -1,4 +1,5 @@
 @namespace MyApp.WebUI.Layouts
+@using System.Reactive.Disposables
 @inherits LayoutComponentBase
 @inject GlobalErrorStore ErrorStore
 
@@ -21,19 +22,20 @@
 
 @code {
     private Exception? _lastError;
-    private IDisposable? _sub;
+    private CompositeDisposable _disposables = new();
 
     protected override void OnInitialized()
     {
-        _sub = ErrorStore.Errors.Subscribe(ex =>
+        var sub = ErrorStore.Errors.Subscribe(ex =>
         {
             _lastError = ex;
             InvokeAsync(StateHasChanged);
         });
+        _disposables.Add(sub);
     }
 
     public void Dispose()
     {
-        _sub?.Dispose();
+        _disposables.Dispose();
     }
 }

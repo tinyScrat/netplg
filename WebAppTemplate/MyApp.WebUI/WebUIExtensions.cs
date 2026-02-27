@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MyApp.Infrastructure;
 using Microsoft.Extensions.Options;
 using MyApp.Infrastructure.Configs;
+using MyApp.Application.Abstractions;
+using Microsoft.AspNetCore.Components;
 
 internal static class WebUIExtensions
 {
@@ -24,6 +26,7 @@ internal static class WebUIExtensions
             .AddScoped<SessionExpiredSubscriber>()
             .AddScoped<AuthStateChangedEventPublisher>();
 
+        services.AddDialogServices();
         services.AddViewModels();
 
         return services;
@@ -59,6 +62,14 @@ internal static class WebUIExtensions
         return services;
     }
 
+    private static IServiceCollection AddDialogServices(this IServiceCollection services)
+    {
+        services.AddScoped<INavigationDialogCancellation, BlazorNavigationDialogCancellation>();
+        services.AddDialog<ConfirmDialog, ConfirmDialogRequest, bool>();
+
+        return services;
+    }
+
     private static IServiceCollection AddViewModels(this IServiceCollection services)
     {
         services.AddScoped<GlobalErrorStore>();
@@ -74,6 +85,16 @@ internal static class WebUIExtensions
         services.AddTransient<ProductViewModel>();
 
         return services;
+    }
+
+    public static IServiceCollection AddDialog<TComponent, TRequest, TResult>(
+        this IServiceCollection services)
+        where TComponent : ComponentBase, IDialogComponent<TRequest, TResult>
+        where TRequest : IDialogRequest<TResult>
+    {
+        return services.AddScoped<
+            IDialogHandler<TRequest, TResult>,
+            RadzenDialogHandler<TComponent, TRequest, TResult>>();
     }
 }
 
