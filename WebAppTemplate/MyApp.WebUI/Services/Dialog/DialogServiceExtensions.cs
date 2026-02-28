@@ -24,8 +24,25 @@ public static class DialogServiceExtensions
 
         var result = await dialogService.OpenAsync<TComponent>(
             request.Title,
-            parameters);
+            parameters,
+            request.Policy.ToOptions());
 
         return result is TResult typedResult ? typedResult : defaultResult;
+    }
+
+    public static DialogOptions ToOptions(this DialogPolicy policy)
+    {
+        return new DialogOptions
+        {
+            CloseDialogOnOverlayClick = policy.CloseOnOverlayClick,
+            Draggable = policy.Draggable,
+            Resizable = policy.Resizable,
+            Width = policy.Width,
+            Height = policy.Height,
+            ShowClose = true,
+            CloseDialogOnEsc = policy.IsModal,
+            // Modal behavior:
+            Style = policy.IsModal ? null : "position: fixed;"
+        };
     }
 }
