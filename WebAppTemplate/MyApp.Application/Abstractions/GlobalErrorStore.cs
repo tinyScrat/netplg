@@ -1,4 +1,4 @@
-namespace MyApp.WebUI.Abstractions;
+namespace MyApp.Application.Abstractions;
 
 using System.Reactive.Subjects;
 using System.Reactive.Linq;
