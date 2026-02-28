@@ -17,6 +17,8 @@ public static class AppExtensions
         services.AddSingleton<IAppEventBus>(sp =>
             sp.GetRequiredService<AppEventBus>());
 
+        services.AddScoped<GlobalErrorStore>();
+
         // Safe as singleton now: dispatcher only resolves ICommandPipeline<T>,
         // which are also singletons (they create their own scopes internally).
         services.AddSingleton<ICommandDispatcher, CommandDispatcher>();

@@ -72,8 +72,6 @@ internal static class WebUIExtensions
 
     private static IServiceCollection AddViewModels(this IServiceCollection services)
     {
-        services.AddScoped<GlobalErrorStore>();
-
         services.AddTransient<HeaderViewModel>();
         services.AddTransient<MainMenuViewModel>();
         services.AddTransient<AuthorizeViewExViewModel>();
