@@ -7,7 +7,6 @@ using MyApp.WebUI.Components;
 using MyApp.WebUI.Features.Orders;
 using MyApp.Application.Features.Portfolios;
 using MyApp.WebUI.Features.Products;
-using MyApp.WebUI.Abstractions;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using MyApp.Infrastructure;
 using Microsoft.Extensions.Options;
@@ -26,10 +25,15 @@ internal static class WebUIExtensions
             .AddScoped<SessionExpiredSubscriber>()
             .AddScoped<AuthStateChangedEventPublisher>();
 
-        services.AddDialogServices();
+        services.RegisterDialogs();
         services.AddViewModels();
 
         return services;
+    }
+
+    public static IServiceProvider UseWebUIFeatures(this IServiceProvider sp)
+    {
+        return sp;
     }
 
     public static IServiceCollection AddApiHttpClientWithAuth(
@@ -62,14 +66,6 @@ internal static class WebUIExtensions
         return services;
     }
 
-    private static IServiceCollection AddDialogServices(this IServiceCollection services)
-    {
-        services.AddScoped<INavigationDialogCancellation, BlazorNavigationDialogCancellation>();
-        services.AddDialog<ConfirmDialog, ConfirmDialogRequest, bool>();
-
-        return services;
-    }
-
     private static IServiceCollection AddViewModels(this IServiceCollection services)
     {
         services.AddTransient<HeaderViewModel>();
@@ -85,6 +81,14 @@ internal static class WebUIExtensions
         return services;
     }
 
+    private static IServiceCollection RegisterDialogs(this IServiceCollection services)
+    {
+        services.AddScoped<INavigationDialogCancellation, BlazorNavigationDialogCancellation>();
+        services.AddDialog<ConfirmDialog, ConfirmDialogRequest, bool>();
+
+        return services;
+    }
+
     public static IServiceCollection AddDialog<TComponent, TRequest, TResult>(
         this IServiceCollection services)
         where TComponent : ComponentBase, IDialogComponent<TRequest, TResult>
@@ -93,14 +97,5 @@ internal static class WebUIExtensions
         return services.AddScoped<
             IDialogHandler<TRequest, TResult>,
             RadzenDialogHandler<TComponent, TRequest, TResult>>();
-    }
-}
-
-public static class UseWebUIExtensions
-{
-    public static IServiceProvider UseWebUIFeatures(
-        this IServiceProvider sp)
-    {
-        return sp;
     }
 }
