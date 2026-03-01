@@ -13,7 +13,7 @@ public static class PortfolioFeature
         services.AddSingleton<IPortfolioStore>(sp =>
             sp.GetRequiredService<PortfolioStore>());
 
-        services.AddSingleton<LoadPortfolioEffect>();
+        services.AddScoped<LoadPortfolioEffect>();
 
         return services;
     }

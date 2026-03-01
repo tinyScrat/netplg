@@ -11,9 +11,9 @@ public sealed class Portfolio
 
 public sealed record PortfolioState(string Name, IEnumerable<Portfolio> Portfolios);
 
-internal sealed class PortfolioStore(PortfolioState initial) : IPortfolioStore
+internal sealed class PortfolioStore() : IPortfolioStore
 {
-    private ReactiveState<PortfolioState> _state = new(initial);
+    private ReactiveState<PortfolioState> _state = new(new PortfolioState(string.Empty, []));
 
     public PortfolioState Value => _state.Value;
 
