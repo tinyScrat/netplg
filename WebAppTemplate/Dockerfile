@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 as sdk
 
-RUN apt-get update && \
-    apt-get install -y python3 && \
-    rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#     apt-get install -y python3 && \
+#     rm -rf /var/lib/apt/lists/*
 
-RUN dotnet workload install wasm-tools
+# RUN dotnet workload install wasm-tools
 
 ARG C=Release
 ARG ENV=Production
@@ -32,7 +32,7 @@ RUN dotnet publish \
     -p:WasmApplicationEnvironmentName=${ENV} \
     -o /app/publish
 
-FROM docker.io/library/nginx:stable-alpine-slim
+FROM docker.io/library/nginx:1.28-alpine-slim
 
 # Prepare directories and permissions for random, non-root UID
 # OpenShift typically runs the container as a random UID in group 0 (root).
