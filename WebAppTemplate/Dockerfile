@@ -69,5 +69,5 @@ EXPOSE 8080
 # Run nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
 
-# podman build --build-arg ENV=Development -t loopercorp/myapp:latest -f ./Dockerfile .
+# podman build --build-arg ENV=Local -t loopercorp/myapp:latest -f ./Dockerfile .
 # podman run -d --rm -p 8000:8080 --name myapp-webui loopercorp/myapp:latest
