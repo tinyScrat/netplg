@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Lpc.Application/Lpc.Application.csproj" />
+  <Project Path="Lpc.Domain/Lpc.Domain.csproj" />
+  <Project Path="Lpc.Infrastructure/Lpc.Infrastructure.csproj" />
+  <Project Path="Lpc.WebApi/Lpc.WebApi.csproj" />
+</Solution>
