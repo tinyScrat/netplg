@@ -17,6 +17,9 @@ builder.Services
 
 var app = builder.Build();
 
+app.Services
+    .UseInfrastructure();
+
 app.UseCors();
 
 app.MapGet("/hello", () => "Hello World!");
