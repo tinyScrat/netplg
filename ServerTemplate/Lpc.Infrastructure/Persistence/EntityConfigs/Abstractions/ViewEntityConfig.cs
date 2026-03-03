@@ -1,4 +1,4 @@
-namespace Lpc.Infrastructure.Persistence.EntityConfigs;
+namespace Lpc.Infrastructure.Persistence.EntityConfigs.Abstractions;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

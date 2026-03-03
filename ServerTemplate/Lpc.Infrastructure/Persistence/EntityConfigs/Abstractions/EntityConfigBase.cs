@@ -1,11 +1,11 @@
-namespace Lpc.Infrastructure.Persistence.EntityConfigs;
+namespace Lpc.Infrastructure.Persistence.EntityConfigs.Abstractions;
 
 using System.Linq.Expressions;
 using Lpc.Domain.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-internal abstract class EntityTypeConfigBase<TEntity, TId> : IEntityTypeConfiguration<TEntity>
+internal abstract class EntityConfigBase<TEntity, TId> : IEntityTypeConfiguration<TEntity>
     where TEntity : EntityBase<TId>
     where TId : EntityId<TId>
 {

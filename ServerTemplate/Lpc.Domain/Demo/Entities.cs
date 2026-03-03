@@ -70,7 +70,7 @@ public class Order : AggregateRoot<OrderId>
     {
         Total = total ?? throw new ArgumentNullException(nameof(total));
 
-        RaiseDomainEvent(new OrderPlaced(OrderId, CustomerId));
+        RaiseDomainEvent(new OrderPlaced(Guid.NewGuid(), DateTimeOffset.UtcNow, OrderId, CustomerId));
     }
 
     public void AddAddress(Address address)
@@ -108,7 +108,7 @@ public class Customer : AggregateRoot<CustomerId>
 
         _addresses.Add(address);
 
-        RaiseDomainEvent(new CustomerAddressAdded(CustomerId, address));
+        RaiseDomainEvent(new CustomerAddressAdded(Guid.NewGuid(), DateTimeOffset.UtcNow, CustomerId, address));
     }
 
     public void RemoveAddress(Address address)

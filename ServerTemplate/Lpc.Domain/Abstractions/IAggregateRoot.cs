@@ -1,30 +1,29 @@
 namespace Lpc.Domain.Abstractions;
 
-public interface IAggregateRoot<out TId>
-    where TId : EntityId<TId>
+public interface IAggregateRoot
 {
-    TId GetId();
+    IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
+    void ClearDomainEvents();
 }
 
-public abstract class AggregateRoot<TId>
-    : EntityBase<TId>, IAggregateRoot<TId>
+public interface IAggregateRoot<out TId> : IAggregateRoot where TId : EntityId<TId>
+{
+}
+
+public abstract class AggregateRoot<TId>(TId id)
+    : EntityBase<TId>(id), IAggregateRoot<TId>
     where TId : EntityId<TId>
 {
-    private readonly List<DomainEvent> _domainEvents = [];
+    private readonly List<IDomainEvent> _domainEvents = [];
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public int Version { get; private set; } = 0;
 
-    protected AggregateRoot(TId id) : base(id) { }
-
-    TId IAggregateRoot<TId>.GetId() => Id;
-
-    protected void RaiseDomainEvent(DomainEvent @event)
+    protected void RaiseDomainEvent(IDomainEvent evt)
     {
-        _domainEvents.Add(@event);
+        _domainEvents.Add(evt);
         Version += 1;
     }
-
-    public IReadOnlyCollection<DomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public void ClearDomainEvents() => _domainEvents.Clear();
 }

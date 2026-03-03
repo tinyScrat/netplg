@@ -1,0 +1,13 @@
+namespace Lpc.Infrastructure.Persistence;
+
+public sealed class OutboxMessage
+{
+    public Guid Id { get; set; }
+    public DateTimeOffset OccurredOnUtc { get; set; }
+
+    public string Type { get; set; } = default!;
+    public string Payload { get; set; } = default!;
+
+    public DateTimeOffset? ProcessedOnUtc { get; set; }
+    public string? Error { get; set; }
+}

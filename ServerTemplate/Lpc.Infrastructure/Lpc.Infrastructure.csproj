@@ -18,6 +18,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.3" />
     <PackageReference Include="Proto.Actor" Version="1.8.0" />
     <PackageReference Include="Proto.Persistence" Version="1.8.0" />
     <PackageReference Include="Proto.Persistence.SqlServer" Version="1.8.0" />
