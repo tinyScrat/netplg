@@ -10,7 +10,7 @@ using Lpc.Contracts;
 // using System.Net.Http.Json;
 
 internal sealed class OrderApi(
-    //HttpClient http,
+    HttpClient http,
     ILogger<OrderApi> logger) : IOrderApi
 {
     public Task SaveOrderAsync(OrderDraftDto dto)
@@ -21,6 +21,7 @@ internal sealed class OrderApi(
 
     public async Task<OrderDto?> TryGetOrderAsync(Guid orderId, CancellationToken ct)
     {
+        _ = http;
         // var response = await http.GetAsync($"/orders/{orderId}");
         // if (response.StatusCode == HttpStatusCode.NotFound)
         //     return null;

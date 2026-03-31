@@ -5,11 +5,12 @@ using Lpc.Application.Features.Products;
 using Microsoft.Extensions.Logging;
 
 internal sealed class ProductApi(
-    //HttpClient http,
+    HttpClient http,
     ILogger<ProductApi> logger) : IProductApi
 {
     public Task<int> SaveProductAsync(Product draft)
     {
+        _ = http;
         logger.LogInformation("Product {Name} Saved", draft.ProductName);
         return Task.FromResult(1);
     }
