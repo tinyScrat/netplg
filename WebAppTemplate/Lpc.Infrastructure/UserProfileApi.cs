@@ -4,7 +4,9 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.Logging;
 using Lpc.Application.Features.User;
 
-public sealed class UserProfileApi(HttpClient http, ILogger<UserProfileApi> logger) : IUserProfileApi
+public sealed class UserProfileApi(
+    HttpClient http,
+    ILogger<UserProfileApi> logger) : IUserProfileApi
 {
     public async Task<UserProfileDto> GetUserProfileAsync()
     {
