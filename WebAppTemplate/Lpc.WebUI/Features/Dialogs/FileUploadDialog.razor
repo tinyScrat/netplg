@@ -1,0 +1,8 @@
+@namespace Lpc.WebUI.Components
+@inherits DialogComponentBase<FileUploadDialogRequest, bool>
+
+<RadzenStack Orientation="Orientation.Vertical" Gap="1rem">
+    <RadzenText>@Request.Message</RadzenText>
+    <RadzenUpload Url="/api/files/upload" Auto="true" Style="width: 100%;" />
+    <RadzenButton Text="Close" Click="() => Close(true)" Style="width: 80px;" />
+</RadzenStack>

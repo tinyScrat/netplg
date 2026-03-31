@@ -3,6 +3,7 @@ namespace Lpc.WebUI.Layouts;
 using System.Reactive.Linq;
 using Lpc.Application.Abstractions;
 using Lpc.Application.Features.User;
+using Lpc.Presentation.Abstractions;
 
 internal sealed class HeaderViewModel : ViewModelBase
 {

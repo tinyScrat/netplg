@@ -6,6 +6,7 @@ using Lpc.WebUI.Abstractions;
 using Lpc.Contracts;
 using Lpc.Contracts.Orders;
 using Lpc.Application.Features.Orders;
+using Lpc.Presentation.Abstractions;
 
 public sealed class OrdersViewModel : ViewModelBase
 {

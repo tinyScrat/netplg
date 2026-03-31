@@ -9,6 +9,7 @@ using Lpc.WebUI.Abstractions;
 using Lpc.Contracts.Orders;
 using Lpc.Application.Features.Orders;
 using Lpc.WebUI.Components;
+using Lpc.Presentation.Abstractions;
 
 public sealed class EditOrderViewModel : ViewModelBase
 {

@@ -1,7 +1,8 @@
-namespace Lpc.Application.Abstractions;
+namespace Lpc.Presentation.Abstractions;
 
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
+using Lpc.Application.Abstractions;
 
 // UI → Dispatch(Command) → Effect → State update
 

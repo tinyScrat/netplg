@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Lpc.Application.Abstractions;
 using Lpc.Application.Features.User;
 using Lpc.WebUI.Abstractions;
+using Lpc.Presentation.Abstractions;
 
 internal sealed class AuthorizeViewExViewModel(IUserProfileStore userProfileStore, GlobalErrorStore errorStore) : ViewModelBase(errorStore)
 {

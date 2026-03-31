@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Lpc.Application\Lpc.Application.csproj" />
     <ProjectReference Include="..\Lpc.Infrastructure\Lpc.Infrastructure.csproj" />
+    <ProjectReference Include="..\Lpc.Presentation\Lpc.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

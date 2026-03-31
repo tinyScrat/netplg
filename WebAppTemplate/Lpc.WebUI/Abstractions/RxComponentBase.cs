@@ -10,6 +10,7 @@ using System.Reflection;
 // using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Lpc.Application.Abstractions;
+using Lpc.Presentation.Abstractions;
 
 public abstract class RxComponentBase : ComponentBase, IDisposable
 {
