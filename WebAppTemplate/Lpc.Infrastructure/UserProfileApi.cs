@@ -10,7 +10,7 @@ public sealed class UserProfileApi(
 {
     public async Task<UserProfileDto> GetUserProfileAsync()
     {
-        var dto = await http.GetFromJsonAsync<UserProfileDto>("/data/profile.json"); // Simulate API call
+        var dto = await http.GetFromJsonAsync<UserProfileDto>("profile.json"); // Simulate API call
 
         if (dto == null)
         {
