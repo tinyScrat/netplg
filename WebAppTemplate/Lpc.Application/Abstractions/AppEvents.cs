@@ -1,0 +1,9 @@
+namespace Lpc.Application.Abstractions;
+
+using System.Security.Claims;
+
+public sealed record SessionExpiredEvent : AppEvent;
+
+public sealed record UserLoggedOutEvent : AppEvent;
+
+public sealed record AuthStateChangedEvent(ClaimsPrincipal User) : AppEvent;

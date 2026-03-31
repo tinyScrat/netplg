@@ -1,0 +1,48 @@
+@namespace Lpc.WebUI.Components
+@inherits RxComponentBase
+
+@inject AuthorizeViewExViewModel VM
+
+@if (VM.IsAuthorizing)
+{
+    @Authorizing
+}
+else if (VM.IsAuthorized)
+{
+    @Authorized
+}
+else
+{
+    @NotAuthorized
+}
+
+@code {
+    [CascadingParameter] Task<AuthenticationState>? AuthenticationStateTask { get; set; }
+
+    [Parameter] public RenderFragment? Authorized { get; set; }
+    [Parameter] public RenderFragment? NotAuthorized { get; set; }
+    [Parameter] public RenderFragment? Authorizing { get; set; }
+
+    // === Standard AuthorizeView ===
+    [Parameter] public string? Roles { get; set; }
+
+    // === Permission-based ===
+    [Parameter] public string? Policy { get; set; }
+    [Parameter] public string? Policies { get; set; }
+    [Parameter] public bool RequireAll { get; set; } = true;
+
+    protected override void OnInitialized()
+    {
+        Bind(VM);
+        VM.Initialize();
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        VM.SetRequirements(Roles, Policy, Policies, RequireAll);
+        VM.SetAuthenticationStateTask(AuthenticationStateTask);
+
+        // Re-evaluate when auth task/requirements change (auth flow can update this cascading value)
+        return VM.EvaluateAsync();
+    }
+}

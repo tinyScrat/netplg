@@ -1,0 +1,19 @@
+@page "/"
+@namespace Lpc.WebUI.Pages
+
+@inject HttpClient HttpClient
+@inject NavigationManager Nav
+@inherits RxComponentBase
+
+<PageTitle>Home</PageTitle>
+
+<AuthorizeViewEx Policy="@Policies.OrderView">
+    <Authorized>
+        <MainMenu />
+    </Authorized>
+    <NotAuthorized>
+        <RadzenText class="rz-mt-4 rz-text-align-center" Style="font-size: 1.5rem;">
+            You are not authorized to view this content.
+        </RadzenText>
+    </NotAuthorized>
+</AuthorizeViewEx>

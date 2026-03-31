@@ -1,0 +1,35 @@
+@page "/product"
+@namespace Lpc.WebUI.Features.Products
+@inherits RxComponentBase
+
+@inject ProductViewModel VM
+
+<h2>Product</h2>
+
+<button disabled="@VM.IsLoading"
+        @onclick="() => VM.PublishProduct(Guid.NewGuid())">
+    Publish Product
+</button>
+
+<button disabled="@VM.IsLoading"
+        @onclick="() => VM.LoadProduct(Guid.NewGuid())">
+    Load Product
+</button>
+
+@switch (VM.Status)
+{
+    case AsyncStatus.Loading:
+        <p>Loading...</p>
+        break;
+
+    case AsyncStatus.Error (Exception ex):
+        <p>@ex.Message</p>
+        break;
+}
+
+@code {
+    protected override void OnInitialized()
+    {
+        Bind(VM);
+    }
+}

@@ -1,0 +1,9 @@
+@namespace Lpc.WebUI.Components
+@inject NavigationManager Nav
+
+@code {
+    protected override void OnInitialized()
+    {
+        Nav.NavigateToLogin("authentication/login");
+    }
+}

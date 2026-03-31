@@ -1,0 +1,18 @@
+namespace Lpc.Application.Features.Products;
+
+using Lpc.Application.Abstractions;
+using System;
+using System.Reactive.Linq;
+
+public sealed record LoadProductCmd(Guid ProductId) : ICommand<ProductDetailDTO>;
+
+public sealed class LoadProductEffect(IProductApi api) : IEffect<LoadProductCmd, ProductDetailDTO>
+{
+    public IObservable<ProductDetailDTO> Handle(LoadProductCmd command, CancellationToken ct)
+    {
+        return Observable.FromAsync(async () =>
+        {
+            return await api.LoadProductAsync(command.ProductId);
+        });
+    }
+}

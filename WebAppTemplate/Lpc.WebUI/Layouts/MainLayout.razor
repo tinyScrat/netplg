@@ -1,0 +1,41 @@
+@namespace Lpc.WebUI.Layouts
+@using System.Reactive.Disposables
+@inherits LayoutComponentBase
+@inject GlobalErrorStore ErrorStore
+
+<RadzenLayout>
+    <Header />
+    <RadzenBody>
+        @Body
+    </RadzenBody>
+</RadzenLayout>
+
+@if (_lastError != null)
+{
+    <div class="global-error-banner">
+        @_lastError.Message
+        <button @onclick="ErrorStore.Clear">Dismiss</button>
+    </div>
+}
+
+<RadzenComponents />
+
+@code {
+    private Exception? _lastError;
+    private CompositeDisposable _disposables = new();
+
+    protected override void OnInitialized()
+    {
+        var sub = ErrorStore.Errors.Subscribe(ex =>
+        {
+            _lastError = ex;
+            InvokeAsync(StateHasChanged);
+        });
+        _disposables.Add(sub);
+    }
+
+    public void Dispose()
+    {
+        _disposables.Dispose();
+    }
+}

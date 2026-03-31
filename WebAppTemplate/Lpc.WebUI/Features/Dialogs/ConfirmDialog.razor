@@ -1,0 +1,10 @@
+@namespace Lpc.WebUI.Components
+@inherits DialogComponentBase<ConfirmDialogRequest, bool>
+
+<RadzenStack Orientation="Orientation.Horizontal" Gap="0.5rem" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.SpaceBetween">
+    <RadzenText>@Request.Message</RadzenText>
+    <RadzenStack Orientation="Orientation.Horizontal">
+        <RadzenButton Text="Ok" Click="() => Close(true)" Style="width: 80px;" />
+        <RadzenButton Text="Cancel" Click="() => Close(false)" ButtonStyle="ButtonStyle.Light" />
+    </RadzenStack>
+</RadzenStack>
