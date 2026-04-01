@@ -6,7 +6,7 @@ using Lpc.Application.Features.Products;
 using Lpc.Presentation.Abstractions;
 using Lpc.Application.Contracts;
 
-public sealed class ProductViewModel : ViewModelBase
+public sealed class ProductDetailViewModel : ViewModelBase
 {
     public AsyncState<Product> Product { get; }
 
@@ -14,14 +14,14 @@ public sealed class ProductViewModel : ViewModelBase
 
     public ReactiveCommand<PublishProductCmd, int> PublishRcmd { get; }
 
-    public ReactiveCommand<LoadProductCmd, ProductDetailDTO> LoadRcmd { get; }
+    public ReactiveCommand<LoadProductDetailCmd, ProductDetailDTO> LoadRcmd { get; }
 
-    public ProductViewModel(
-        ILogger<ProductViewModel> logger,
+    public ProductDetailViewModel(
+        ILogger<ProductDetailViewModel> logger,
         SaveProductEffect saveProductEffect,
         SaveProductReducer saveProductReducer,
         PublishProductEffect publishProductEffect,
-        LoadProductEffect loadProductEffect,
+        LoadProductDetailEffect loadProductEffect,
         GlobalErrorStore errorStore) : base(errorStore)
     {
         Product = new AsyncState<Product>(new Product(string.Empty, string.Empty, string.Empty, 0, 1, DateTimeOffset.Now));
@@ -40,7 +40,7 @@ public sealed class ProductViewModel : ViewModelBase
             reducer: saveProductReducer)
             .DisposeWith(this);
 
-        LoadRcmd = new ReactiveCommand<LoadProductCmd, ProductDetailDTO>(
+        LoadRcmd = new ReactiveCommand<LoadProductDetailCmd, ProductDetailDTO>(
             effect: loadProductEffect,
             asyncState: Product,
             onResult: (cmd, result) =>
@@ -85,5 +85,5 @@ public sealed class ProductViewModel : ViewModelBase
         PublishRcmd.Execute(new PublishProductCmd(productId));
 
     public void LoadProduct(Guid productId) =>
-        LoadRcmd.Execute(new LoadProductCmd(productId));
+        LoadRcmd.Execute(new LoadProductDetailCmd(productId));
 }

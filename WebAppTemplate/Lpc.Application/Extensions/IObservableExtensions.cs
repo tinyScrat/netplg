@@ -5,19 +5,28 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reactive.Linq;
 using Lpc.Application.Exceptions;
+using Microsoft.Extensions.Logging;
 
-public static class IObservableExtensions
+public static class ObservableExtensions
 {
+    public static readonly int MaxRetries = 3;
+    public static readonly TimeSpan InitialDelay = TimeSpan.FromMilliseconds(500);
+    public static readonly double Factor = 2.0;
+
+    public static IObservable<T> WithRetry<T>(this IObservable<T> source, ILogger? logger = null)
+        => source.RetryWithBackoff(MaxRetries, InitialDelay, Factor, logger);
+
     public static IObservable<T> RetryWithBackoff<T>(
         this IObservable<T> source,
         int maxRetries,
         TimeSpan initialDelay,
-        double factor = 2.0)
+        double factor = 2.0,
+        ILogger? logger = null)
     {
         return source.RetryWhen(errors =>
             errors
                 .Zip(Observable.Range(1, maxRetries), (error, attempt) => (error, attempt))
-                .SelectMany(tuple => NextDelayOrError(tuple.error, tuple.attempt, maxRetries, initialDelay, factor))
+                .SelectMany(tuple => NextDelayOrError(tuple.error, tuple.attempt, maxRetries, initialDelay, factor, logger))
         );
 
         static IObservable<int> NextDelayOrError(
@@ -25,8 +34,11 @@ public static class IObservableExtensions
             int attempt,
             int maxRetries,
             TimeSpan initialDelay,
-            double factor)
+            double factor,
+            ILogger? logger)
         {
+            logger?.LogInformation("Retry attempt {Attempt} after error: {ErrorMessage}", attempt, error.Message);
+            
             // Never retry auth redirect / token acquisition
             if (error is AuthenticationUnavailableException)
                 return Observable.Throw<int>(error);
@@ -41,6 +53,10 @@ public static class IObservableExtensions
 
             if (error is HttpRequestException { StatusCode: HttpStatusCode status })
             {
+                // Never retry 400 Bad Request - client error
+                if (status == HttpStatusCode.BadRequest)
+                    return Observable.Throw<int>(error);
+
                 // Non-transient 4xx except 408/429
                 if (status is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError
                     && status is not HttpStatusCode.RequestTimeout

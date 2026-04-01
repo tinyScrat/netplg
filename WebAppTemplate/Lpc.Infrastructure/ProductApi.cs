@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Lpc.Application.Features.Products;
 using Microsoft.Extensions.Logging;
 using Lpc.Application.Contracts;
+using System.Net.Http.Json;
 
 internal sealed class ProductApi(
     HttpClient http,
@@ -11,7 +12,6 @@ internal sealed class ProductApi(
 {
     public Task<int> SaveProductAsync(Product draft)
     {
-        _ = http;
         logger.LogInformation("Product {Name} Saved", draft.ProductName);
         return Task.FromResult(1);
     }
@@ -22,18 +22,15 @@ internal sealed class ProductApi(
         return Task.CompletedTask;
     }
 
-    public async Task<ProductDetailDTO> LoadProductAsync(Guid productId)
+    public async Task<ProductDetailDTO> LoadProductDetailAsync(Guid productId, CancellationToken ct = default)
     {
-        await Task.Delay(1000);
+        return await http.GetFromJsonAsync<ProductDetailDTO>("api/P001.json", ct)
+            ?? throw new InvalidOperationException("Failed to load product details.");
+    }
 
-        return new ProductDetailDTO
-        {
-            ProductNumber = "P0001",
-            ProductName = "iPhone 17",
-            ProductDescription = "Design by Apple, made in China",
-            Price = 5800,
-            Version = 3,
-            LastSavedAt = DateTimeOffset.UtcNow.AddDays(1)
-        };
+    public async Task<IEnumerable<ProductOverviewDTO>> LoadProductsAsync(CancellationToken ct = default)
+    {
+        return await http.GetFromJsonAsync<IEnumerable<ProductOverviewDTO>>("products.json", ct)
+            ?? throw new InvalidOperationException("Failed to load products.");
     }
 }

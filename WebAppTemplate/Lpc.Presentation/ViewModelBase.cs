@@ -3,6 +3,7 @@ namespace Lpc.Presentation.Abstractions;
 using System.Reactive.Linq;
 using System.Reactive.Disposables;
 using Lpc.Application.Abstractions;
+using System.Reactive;
 
 // UI → Dispatch(Command) → Effect → State update
 
@@ -31,6 +32,13 @@ public abstract class ViewModelBase(GlobalErrorStore errorStore) : IDisposable
 
         _disposables.Add(disposable);
         return disposable;
+    }
+
+    protected void ObserveState(params IObservable<Unit>[] signals)
+    {
+        Observable.Merge(signals)
+            .Subscribe(_ => RaiseStateChanged())
+            .DisposeWith(this);
     }
 
     protected IDisposable Subscribe<T>(

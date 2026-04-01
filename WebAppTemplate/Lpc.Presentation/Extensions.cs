@@ -13,7 +13,8 @@ public static class ViewModelExtensions
             .AddTransient<MainMenuViewModel>()
             .AddTransient<OrdersViewModel>()
             .AddTransient<PortfolioViewModel>()
-            .AddTransient<ProductViewModel>();
+            .AddTransient<ProductDetailViewModel>()
+            .AddTransient<ProductOverviewViewModel>();
 
         return services;
     }

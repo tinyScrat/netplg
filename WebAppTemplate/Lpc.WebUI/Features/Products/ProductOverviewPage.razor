@@ -1,0 +1,83 @@
+@page "/products"
+@namespace Lpc.WebUI.Features.Products
+@using Lpc.Application.Features.Products
+@inherits RxComponentBase
+@inject ProductOverviewViewModel VM
+
+<RadzenDataGrid
+    @ref="grid"
+
+    TItem="ProductRow"
+    Data="VM.Products"
+    LoadData="@(_ => VM.LoadProducts())"
+
+    AllowFiltering="true"
+    FilterMode="FilterMode.Simple"
+    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+
+    AllowPaging="false"
+
+    AllowSorting="false"
+
+    SelectionMode="DataGridSelectionMode.Multiple"
+
+    ColumnWidth="200px">
+    <Columns>
+        <RadzenDataGridColumn Width="60px" Sortable="false" Filterable="false">
+            <HeaderTemplate>
+                @* <RadzenCheckBox TabIndex="-1" TriState="false" TValue="bool?" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Select all items" }})"
+                   Value="@(selectedEmployees == null || selectedEmployees?.Any() != true ? false : !employees.All(i => selectedEmployees.Contains(i)) ? null : employees.Any(i => selectedEmployees.Contains(i)))"
+                   Change="@(args => selectedEmployees = args == true ? employees.ToList() : null)" /> *@
+            </HeaderTemplate>
+            <Template Context="data">
+                <RadzenCheckBox
+                    TabIndex="-1"
+                    TriState="false"
+                    Value="VM.IsSelected(data)"
+                    InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Select item" }})"
+                    TValue="bool"
+                    Change="@(v => VM.ToggleSelection(data, v))" />
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Title="Number">
+            <Template Context="row">
+                @row.Product.ProductNumber
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Title="Name">
+            <Template Context="row">
+                @row.Product.ProductName
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Title="Price">
+            <Template Context="row">
+                @row.Product.Price.ToString("F2")
+            </Template>
+        </RadzenDataGridColumn>
+
+        <RadzenDataGridColumn Title="Currency">
+            <Template Context="row">
+                @row.Product.Currency
+            </Template>
+        </RadzenDataGridColumn>
+    </Columns>
+</RadzenDataGrid>
+
+@code {
+    private RadzenDataGrid<ProductRow> grid = null!;
+
+    protected override void OnInitialized()
+    {
+        Bind(VM);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender && grid != null)
+        {
+            grid.Reload();
+        }
+    }
+}

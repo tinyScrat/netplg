@@ -8,7 +8,8 @@ public static class ProductFeature
     {
         services.AddSingleton<SaveProductEffect>();
         services.AddSingleton<PublishProductEffect>();
-        services.AddSingleton<LoadProductEffect>();
+        services.AddSingleton<LoadProductDetailEffect>();
+        services.AddSingleton<LoadProductsEffect>();
 
         services.AddTransient<SaveProductReducer>();
 

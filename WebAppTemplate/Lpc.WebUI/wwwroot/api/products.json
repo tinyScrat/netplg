@@ -1,0 +1,72 @@
+[
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0001",
+    "ProductNumber": "P-1001",
+    "ProductName": "Wireless Mouse",
+    "Price": 25.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0002",
+    "ProductNumber": "P-1002",
+    "ProductName": "Mechanical Keyboard",
+    "Price": 89.5,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0003",
+    "ProductNumber": "P-1003",
+    "ProductName": "HD Monitor 24\"",
+    "Price": 149.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0004",
+    "ProductNumber": "P-1004",
+    "ProductName": "USB-C Hub",
+    "Price": 39.0,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0005",
+    "ProductNumber": "P-1005",
+    "ProductName": "External SSD 1TB",
+    "Price": 129.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0006",
+    "ProductNumber": "P-1006",
+    "ProductName": "Gaming Headset",
+    "Price": 59.75,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0007",
+    "ProductNumber": "P-1007",
+    "ProductName": "Webcam 1080p",
+    "Price": 45.0,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0008",
+    "ProductNumber": "P-1008",
+    "ProductName": "Bluetooth Speaker",
+    "Price": 34.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0009",
+    "ProductNumber": "P-1009",
+    "ProductName": "Laptop Stand",
+    "Price": 27.49,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0010",
+    "ProductNumber": "P-1010",
+    "ProductName": "Portable Charger 20000mAh",
+    "Price": 49.99,
+    "Currency": "USD"
+  }
+]
