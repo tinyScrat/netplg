@@ -1,4 +1,4 @@
-namespace Lpc.Contracts;
+namespace Lpc.Application.Contracts;
 
 public sealed class PagedResult<T>
 {

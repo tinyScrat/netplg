@@ -3,6 +3,7 @@ namespace Lpc.Application.Features.Products;
 using Lpc.Application.Abstractions;
 using System;
 using System.Reactive.Linq;
+using Lpc.Application.Contracts;
 
 public sealed record LoadProductCmd(Guid ProductId) : ICommand<ProductDetailDTO>;
 

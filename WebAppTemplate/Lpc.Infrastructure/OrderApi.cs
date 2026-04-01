@@ -4,7 +4,7 @@ using Lpc.Contracts.Orders;
 using System.Threading.Tasks;
 using Lpc.Application.Features.Orders;
 using Microsoft.Extensions.Logging;
-using Lpc.Contracts;
+using Lpc.Application.Contracts;
 
 // using System.Net;
 // using System.Net.Http.Json;

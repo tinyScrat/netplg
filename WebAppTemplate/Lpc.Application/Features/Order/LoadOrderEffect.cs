@@ -2,7 +2,7 @@ namespace Lpc.Application.Features.Orders;
 
 using System.Reactive.Linq;
 using Lpc.Application.Abstractions;
-using Lpc.Contracts;
+using Lpc.Application.Contracts;
 using Lpc.Contracts.Orders;
 
 public sealed record LoadOrderCommand(Guid OrderId) : ICommand<Order?>;

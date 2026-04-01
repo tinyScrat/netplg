@@ -2,7 +2,7 @@ namespace Lpc.Presentation.Features;
 
 using Microsoft.Extensions.Logging;
 using Lpc.Application.Abstractions;
-using Lpc.Contracts;
+using Lpc.Application.Contracts;
 using Lpc.Contracts.Orders;
 using Lpc.Application.Features.Orders;
 using Lpc.Presentation.Abstractions;

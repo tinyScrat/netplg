@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Lpc.Application.Abstractions;
 using Lpc.Application.Features.Products;
 using Lpc.Presentation.Abstractions;
+using Lpc.Application.Contracts;
 
 public sealed class ProductViewModel : ViewModelBase
 {

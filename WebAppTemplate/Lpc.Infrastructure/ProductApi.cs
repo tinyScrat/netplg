@@ -3,6 +3,7 @@ namespace Lpc.Infrastructure.Services;
 using System.Threading.Tasks;
 using Lpc.Application.Features.Products;
 using Microsoft.Extensions.Logging;
+using Lpc.Application.Contracts;
 
 internal sealed class ProductApi(
     HttpClient http,

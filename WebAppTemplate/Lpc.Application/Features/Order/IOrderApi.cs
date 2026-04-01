@@ -1,6 +1,6 @@
 namespace Lpc.Application.Features.Orders;
 
-using Lpc.Contracts;
+using Lpc.Application.Contracts;
 using Lpc.Contracts.Orders;
 
 public sealed record OrderCategory(Guid Id, string Name);
