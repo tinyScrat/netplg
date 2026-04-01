@@ -1,4 +1,4 @@
-namespace Lpc.WebUI.Components;
+namespace Lpc.Presentation.Features;
 
 using Lpc.Application.Abstractions;
 

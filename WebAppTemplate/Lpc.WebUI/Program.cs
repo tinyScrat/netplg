@@ -6,6 +6,7 @@ using Lpc.Infrastructure;
 using Lpc.WebUI;
 using Lpc.WebUI.Services;
 using Radzen;
+using Lpc.Presentation;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -29,6 +30,7 @@ builder.Services
 
 builder.Services
     .AddWebUIFeatures()
+    .AddViewModels()
     .AddApplication()
     .AddInfrastructure(Consts.ApiHttpClientName);
 

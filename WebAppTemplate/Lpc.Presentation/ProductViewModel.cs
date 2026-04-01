@@ -1,9 +1,8 @@
-namespace Lpc.WebUI.Features.Products;
+namespace Lpc.Presentation.Features;
 
 using Microsoft.Extensions.Logging;
 using Lpc.Application.Abstractions;
 using Lpc.Application.Features.Products;
-using Lpc.WebUI.Abstractions;
 using Lpc.Presentation.Abstractions;
 
 public sealed class ProductViewModel : ViewModelBase

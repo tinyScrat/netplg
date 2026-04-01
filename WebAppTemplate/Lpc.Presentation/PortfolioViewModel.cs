@@ -1,7 +1,6 @@
-namespace Lpc.Application.Features.Portfolios;
+namespace Lpc.Presentation.Features;
 
 using Lpc.Application.Abstractions;
-using Lpc.WebUI.Abstractions;
 using Lpc.Presentation.Abstractions;
 
 public sealed class PortfolioViewModel(GlobalErrorStore errorStore) : ViewModelBase(errorStore)

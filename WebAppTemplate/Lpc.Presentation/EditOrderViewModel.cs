@@ -1,14 +1,12 @@
-namespace Lpc.WebUI.Features.Orders;
+namespace Lpc.Presentation.Features;
 
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Microsoft.Extensions.Logging;
 using Lpc.Application.Abstractions;
-using Lpc.WebUI.Abstractions;
 using Lpc.Contracts.Orders;
 using Lpc.Application.Features.Orders;
-using Lpc.WebUI.Components;
 using Lpc.Presentation.Abstractions;
 
 public sealed class EditOrderViewModel : ViewModelBase

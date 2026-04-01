@@ -1,8 +1,7 @@
-namespace Lpc.WebUI.Features.Orders;
+namespace Lpc.Presentation.Features;
 
 using Microsoft.Extensions.Logging;
 using Lpc.Application.Abstractions;
-using Lpc.WebUI.Abstractions;
 using Lpc.Contracts;
 using Lpc.Contracts.Orders;
 using Lpc.Application.Features.Orders;

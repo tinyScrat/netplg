@@ -2,17 +2,14 @@ namespace Lpc.WebUI;
 
 using Lpc.Application.Services;
 using Lpc.WebUI.Services;
-using Lpc.WebUI.Layouts;
 using Lpc.WebUI.Components;
-using Lpc.WebUI.Features.Orders;
-using Lpc.Application.Features.Portfolios;
-using Lpc.WebUI.Features.Products;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Lpc.Infrastructure;
 using Microsoft.Extensions.Options;
 using Lpc.Infrastructure.Configs;
 using Lpc.Application.Abstractions;
 using Microsoft.AspNetCore.Components;
+using Lpc.Presentation.Features;
 
 internal static class WebUIExtensions
 {
@@ -26,7 +23,8 @@ internal static class WebUIExtensions
             .AddScoped<AuthStateChangedEventPublisher>();
 
         services.RegisterDialogs();
-        services.AddViewModels();
+        
+        services.AddTransient<AuthorizeViewExViewModel>();
 
         return services;
     }
@@ -62,21 +60,6 @@ internal static class WebUIExtensions
                 return sp.GetRequiredService<AuthorizationMessageHandler>()
                     .ConfigureHandler([uri.ToString()]);
             });
-
-        return services;
-    }
-
-    private static IServiceCollection AddViewModels(this IServiceCollection services)
-    {
-        services.AddTransient<HeaderViewModel>();
-        services.AddTransient<MainMenuViewModel>();
-        services.AddTransient<AuthorizeViewExViewModel>();
-
-        services.AddTransient<EditOrderViewModel>();
-        services.AddTransient<OrdersViewModel>();
-
-        services.AddTransient<PortfolioViewModel>();
-        services.AddTransient<ProductViewModel>();
 
         return services;
     }

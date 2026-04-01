@@ -1,11 +1,11 @@
-namespace Lpc.WebUI.Layouts;
+namespace Lpc.Presentation.Features;
 
 using System.Reactive.Linq;
 using Lpc.Application.Abstractions;
 using Lpc.Application.Features.User;
 using Lpc.Presentation.Abstractions;
 
-internal sealed class HeaderViewModel : ViewModelBase
+public sealed class HeaderViewModel : ViewModelBase
 {
     private const string GuestDisplayName = "Guest";
 
