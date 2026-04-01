@@ -81,7 +81,7 @@ internal sealed class OrderApi(
         ];
     }
 
-    public async Task<PagedResponse<OrderOverview>> GetOrdersAsync(CancellationToken ct)
+    public async Task<PagedResult<OrderOverview>> GetOrdersAsync(CancellationToken ct)
     {
         await Task.Delay(100);
         
@@ -95,12 +95,11 @@ internal sealed class OrderApi(
             CreatedAt = DateTimeOffset.Now
         };
 
-        return new PagedResponse<OrderOverview>
+        return new PagedResult<OrderOverview>
         {
             Page = 1,
             PageSize = 10,
             TotalItems = 1,
-            TotalPages = 1,
             Items = [order]
         };
     }

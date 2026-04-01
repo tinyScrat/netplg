@@ -9,22 +9,21 @@ using Lpc.Presentation.Abstractions;
 
 public sealed class OrdersViewModel : ViewModelBase
 {
-    public AsyncState<PagedResponse<OrderOverview>> Orders { get; }
+    public AsyncState<PagedResult<OrderOverview>> Orders { get; }
 
-    public ReactiveCommand<LoadOrdersCmd, PagedResponse<OrderOverview>> LoadOrdersRmd { get; }
+    public ReactiveCommand<LoadOrdersCmd, PagedResult<OrderOverview>> LoadOrdersRmd { get; }
 
     public OrdersViewModel(
         LoadOrdersEffect loadOrdersEffect,
         ILogger<OrdersViewModel> logger,
         GlobalErrorStore errorStore) : base(errorStore)
     {
-        Orders = new AsyncState<PagedResponse<OrderOverview>>(
-            new PagedResponse<OrderOverview>
+        Orders = new AsyncState<PagedResult<OrderOverview>>(
+            new PagedResult<OrderOverview>
             {
                 Page = 1,
                 PageSize = 100,
                 TotalItems = 0,
-                TotalPages = 0,
                 Items = []
             }
         );
@@ -42,7 +41,7 @@ public sealed class OrdersViewModel : ViewModelBase
             RaiseStateChanged();
         });
 
-        LoadOrdersRmd = new ReactiveCommand<LoadOrdersCmd, PagedResponse<OrderOverview>>(
+        LoadOrdersRmd = new ReactiveCommand<LoadOrdersCmd, PagedResult<OrderOverview>>(
             loadOrdersEffect,
             Orders,
             (cmd, response) =>
@@ -61,7 +60,7 @@ public sealed class OrdersViewModel : ViewModelBase
 
     public bool IsLoading { get; private set; } = false;
 
-    public PagedResponse<OrderOverview> OrdersData { get; private set; } = PagedResponse<OrderOverview>.Empty;
+    public PagedResult<OrderOverview> OrdersData { get; private set; } = PagedResult<OrderOverview>.Empty;
 
     public void LoadOrders()
     {

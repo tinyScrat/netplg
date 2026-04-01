@@ -81,6 +81,6 @@ public interface IOrderApi
     Task SaveOrderAsync(OrderDraftDto dto);
     Task<OrderDto?> TryGetOrderAsync(Guid orderId, CancellationToken ct);
     Task<IEnumerable<OrderLineDto>> GetOrderLinesAsync(Guid orderId, CancellationToken ct);
-    Task<PagedResponse<OrderOverview>> GetOrdersAsync(CancellationToken ct);
+    Task<PagedResult<OrderOverview>> GetOrdersAsync(CancellationToken ct);
     Task<IReadOnlyCollection<OrderCategoryDto>> GetOrderCategoriesAsync(CancellationToken ct);
 }

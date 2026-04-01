@@ -28,11 +28,11 @@ public sealed class LoadOrderEffect(IOrderApi api)
     }
 }
 
-public sealed record LoadOrdersCmd() : ICommand<PagedResponse<OrderOverview>>;
+public sealed record LoadOrdersCmd() : ICommand<PagedResult<OrderOverview>>;
 
-public sealed class LoadOrdersEffect(IOrderApi api) : IEffect<LoadOrdersCmd, PagedResponse<OrderOverview>>
+public sealed class LoadOrdersEffect(IOrderApi api) : IEffect<LoadOrdersCmd, PagedResult<OrderOverview>>
 {
-    public IObservable<PagedResponse<OrderOverview>> Handle(LoadOrdersCmd command, CancellationToken ct = default)
+    public IObservable<PagedResult<OrderOverview>> Handle(LoadOrdersCmd command, CancellationToken ct = default)
     {
         return Observable.FromAsync(async () =>
         {
