@@ -51,7 +51,6 @@ public sealed class ProductOverviewViewModel : ViewModelBase
     public IEnumerable<ProductOverviewDTO> Products => products.Data.Value.Items;
     public bool IsLoading => products.Status.Value.IsLoading();
     public int TotalProducts => products.Data.Value.TotalItems;
-    public int PageSize => products.Data.Value.PageSize;
 
     public void LoadProducts(int page = 1, int pageSize = 10)
     {
