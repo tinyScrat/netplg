@@ -61,6 +61,25 @@ public sealed class ProductOverviewViewModel : ViewModelBase
     public bool IsSelected(ProductOverviewDTO row)
         => selectedProductIds.Value.Contains(row.ProductId);
 
+    public bool? SelectionState
+    {
+        get
+        {
+            if (!Products.Any())
+                return false;
+
+            var selectedInPage = products.Data.Value.Items.Count(p => selectedProductIds.Value.Contains(p.ProductId));
+
+            if (selectedInPage == 0)
+                return false;
+
+            if (selectedInPage == products.Data.Value.Items.Count)
+                return true;
+
+            return null; // partially selected
+        }
+    }
+
     public void ToggleSelection(ProductOverviewDTO row, bool selected)
     {
         var id = row.ProductId;
@@ -75,6 +94,21 @@ public sealed class ProductOverviewViewModel : ViewModelBase
                 newSet.Remove(id);
 
             return newSet;
+        });
+    }
+
+    public void SelectAll(bool selected)
+    {
+        logger.LogInformation("{Action} all products on current page.", selected ? "Selecting" : "Deselecting");
+        
+        if (!Products.Any()) return;
+
+        selectedProductIds.Update(ids =>
+        {
+            if (selected)
+                return [.. products.Data.Value.Items.Select(p => p.ProductId)];
+            else
+                return [];
         });
     }
 }

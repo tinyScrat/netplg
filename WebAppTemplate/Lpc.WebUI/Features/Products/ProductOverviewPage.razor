@@ -11,6 +11,7 @@
     Data="VM.Products"
     Count="VM.TotalProducts"
     LoadData="OnLoadData"
+    IsLoading="VM.IsLoading"
 
     AllowFiltering="true"
     FilterMode="FilterMode.Simple"
@@ -33,9 +34,13 @@
     <Columns>
         <RadzenDataGridColumn Width="60px" Sortable="false" Filterable="false">
             <HeaderTemplate>
-                @* <RadzenCheckBox TabIndex="-1" TriState="false" TValue="bool?" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Select all items" }})"
-                   Value="@(selectedEmployees == null || selectedEmployees?.Any() != true ? false : !employees.All(i => selectedEmployees.Contains(i)) ? null : employees.Any(i => selectedEmployees.Contains(i)))"
-                   Change="@(args => selectedEmployees = args == true ? employees.ToList() : null)" /> *@
+                <RadzenCheckBox
+                    TabIndex="-1"
+                    TriState="true"
+                    TValue="bool?"
+                    InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Select all items" }})"
+                    Value="VM.SelectionState"
+                    Change="@(args => VM.SelectAll(args ?? true))" />
             </HeaderTemplate>
             <Template Context="data">
                 <RadzenCheckBox
