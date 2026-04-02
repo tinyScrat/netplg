@@ -7,7 +7,7 @@
 <RadzenDataGrid
     @ref="grid"
 
-    TItem="ProductRow"
+    TItem="ProductOverviewDTO"
     Data="VM.Products"
     LoadData="@(_ => VM.LoadProducts())"
 
@@ -39,34 +39,15 @@
                     Change="@(v => VM.ToggleSelection(data, v))" />
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn Title="Number">
-            <Template Context="row">
-                @row.Product.ProductNumber
-            </Template>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Title="Name">
-            <Template Context="row">
-                @row.Product.ProductName
-            </Template>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Title="Price">
-            <Template Context="row">
-                @row.Product.Price.ToString("F2")
-            </Template>
-        </RadzenDataGridColumn>
-
-        <RadzenDataGridColumn Title="Currency">
-            <Template Context="row">
-                @row.Product.Currency
-            </Template>
-        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.ProductNumber)" Title="Number" />
+        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.ProductName)" Title="Name" />
+        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.Price)" Title="Price" FormatString="{0:F2}" />
+        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.Currency)" Title="Currency" />
     </Columns>
 </RadzenDataGrid>
 
 @code {
-    private RadzenDataGrid<ProductRow> grid = null!;
+    private RadzenDataGrid<ProductOverviewDTO> grid = null!;
 
     protected override void OnInitialized()
     {

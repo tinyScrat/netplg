@@ -12,7 +12,7 @@ public sealed class ProductOverviewViewModel : ViewModelBase
 {
     private readonly ILogger<ProductOverviewViewModel> logger;
 
-    private readonly AsyncState<IEnumerable<ProductRow>> products = new([]);
+    private readonly AsyncState<IEnumerable<ProductOverviewDTO>> products = new([]);
     private readonly ReactiveCommand<LoadProductsCmd, IEnumerable<ProductOverviewDTO>> loadProductsCmd;
 
     private readonly ReactiveState<HashSet<Guid>> selectedProductIds = new([]);
@@ -37,7 +37,7 @@ public sealed class ProductOverviewViewModel : ViewModelBase
             asyncState: products,
             onResult: (_, result) =>
             {
-                products.Data.Set(result.Select(p => new ProductRow(p, selectedProductIds.Value.Contains(p.ProductId))));
+                products.Data.Set(result);
                 logger.LogInformation("Loaded {Count} products.", result.Count());
             })
             .DisposeWith(this);
@@ -48,7 +48,7 @@ public sealed class ProductOverviewViewModel : ViewModelBase
         });
     }
 
-    public IEnumerable<ProductRow> Products => products.Data.Value;
+    public IEnumerable<ProductOverviewDTO> Products => products.Data.Value;
     public bool IsLoading => products.Status.Value.IsLoading();
     public int TotalProducts => products.Data.Value.Count();
 
@@ -57,14 +57,12 @@ public sealed class ProductOverviewViewModel : ViewModelBase
         loadProductsCmd.Execute(new LoadProductsCmd());
     }
 
-    public bool IsSelected(ProductRow row)
-        => selectedProductIds.Value.Contains(row.Product.ProductId);
+    public bool IsSelected(ProductOverviewDTO row)
+        => selectedProductIds.Value.Contains(row.ProductId);
 
-    public void ToggleSelection(ProductRow row, bool selected)
+    public void ToggleSelection(ProductOverviewDTO row, bool selected)
     {
-        logger.LogInformation("{Action} product {Id}.", selected ? "Selected" : "Deselected", row.Product.ProductId.ToString("N"));
-        
-        var id = row.Product.ProductId;
+        var id = row.ProductId;
 
         selectedProductIds.Update(ids =>
         {
