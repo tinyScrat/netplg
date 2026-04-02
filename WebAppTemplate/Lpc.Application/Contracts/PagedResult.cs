@@ -2,6 +2,10 @@ namespace Lpc.Application.Contracts;
 
 public sealed class PagedResult<T>
 {
+    public const int DefaultPage = 1;
+    public const int DefaultPageSize = 20;
+    public const int MaxPageSize = 500;
+
     public required int Page { get; init; }          // 1-based
     public required int PageSize { get; init; }
     public required int TotalItems { get; init; }
@@ -14,8 +18,8 @@ public sealed class PagedResult<T>
 
     public static PagedResult<T> Empty => new()
     {
-        Page = 1,
-        PageSize = 100,
+        Page = DefaultPage,
+        PageSize = DefaultPageSize,
         TotalItems = 0,
         Items = []
     };
@@ -28,8 +32,10 @@ public static class PagedResultExtensions
         int page,
         int pageSize)
     {
-        if (page <= 0) page = 1;
-        if (pageSize <= 0) pageSize = 30;
+        if (page <= 0) page = PagedResult<T>.DefaultPage;
+        if (pageSize <= 0) pageSize = PagedResult<T>.DefaultPageSize;
+
+        pageSize = Math.Min(pageSize, PagedResult<T>.MaxPageSize);
 
         var list = source as IList<T> ?? [.. source];
 
