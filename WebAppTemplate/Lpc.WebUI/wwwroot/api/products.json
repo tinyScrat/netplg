@@ -1,5 +1,5 @@
 [
-  {
+    {
     "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0001",
     "ProductNumber": "P-1001",
     "ProductName": "Wireless Mouse",
@@ -67,6 +67,286 @@
     "ProductNumber": "P-1010",
     "ProductName": "Portable Charger 20000mAh",
     "Price": 49.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0011",
+    "ProductNumber": "P-1011",
+    "ProductName": "Ergonomic Chair",
+    "Price": 199.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0012",
+    "ProductNumber": "P-1012",
+    "ProductName": "Desk Lamp LED",
+    "Price": 29.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0013",
+    "ProductNumber": "P-1013",
+    "ProductName": "Wireless Charger",
+    "Price": 19.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0014",
+    "ProductNumber": "P-1014",
+    "ProductName": "Noise Cancelling Headphones",
+    "Price": 149.0,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0015",
+    "ProductNumber": "P-1015",
+    "ProductName": "Smart Watch",
+    "Price": 199.0,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0016",
+    "ProductNumber": "P-1016",
+    "ProductName": "Fitness Tracker",
+    "Price": 49.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0017",
+    "ProductNumber": "P-1017",
+    "ProductName": "Portable Bluetooth Keyboard",
+    "Price": 39.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0018",
+    "ProductNumber": "P-1018",
+    "ProductName": "4K Action Camera",
+    "Price": 119.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0019",
+    "ProductNumber": "P-1019",
+    "ProductName": "Smart Plug",
+    "Price": 14.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0020",
+    "ProductNumber": "P-1020",
+    "ProductName": "WiFi Router",
+    "Price": 89.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0021",
+    "ProductNumber": "P-1021",
+    "ProductName": "Gaming Mouse Pad",
+    "Price": 19.5,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0022",
+    "ProductNumber": "P-1022",
+    "ProductName": "USB Flash Drive 128GB",
+    "Price": 17.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0023",
+    "ProductNumber": "P-1023",
+    "ProductName": "Laptop Cooling Pad",
+    "Price": 25.0,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0024",
+    "ProductNumber": "P-1024",
+    "ProductName": "Wireless Earbuds",
+    "Price": 79.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0025",
+    "ProductNumber": "P-1025",
+    "ProductName": "Tablet Stand",
+    "Price": 18.49,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0026",
+    "ProductNumber": "P-1026",
+    "ProductName": "HDMI Cable 2m",
+    "Price": 9.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0027",
+    "ProductNumber": "P-1027",
+    "ProductName": "Smart Light Bulb",
+    "Price": 12.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0028",
+    "ProductNumber": "P-1028",
+    "ProductName": "Graphic Drawing Tablet",
+    "Price": 89.0,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0029",
+    "ProductNumber": "P-1029",
+    "ProductName": "USB Microphone",
+    "Price": 69.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0030",
+    "ProductNumber": "P-1030",
+    "ProductName": "Desk Organizer",
+    "Price": 22.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0031",
+    "ProductNumber": "P-1031",
+    "ProductName": "Wireless Presenter",
+    "Price": 27.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0032",
+    "ProductNumber": "P-1032",
+    "ProductName": "Power Strip Surge Protector",
+    "Price": 24.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0033",
+    "ProductNumber": "P-1033",
+    "ProductName": "VR Headset",
+    "Price": 299.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0034",
+    "ProductNumber": "P-1034",
+    "ProductName": "External HDD 2TB",
+    "Price": 89.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0035",
+    "ProductNumber": "P-1035",
+    "ProductName": "USB-C to HDMI Adapter",
+    "Price": 21.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0036",
+    "ProductNumber": "P-1036",
+    "ProductName": "Smart Thermostat",
+    "Price": 129.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0037",
+    "ProductNumber": "P-1037",
+    "ProductName": "Wireless Game Controller",
+    "Price": 59.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0038",
+    "ProductNumber": "P-1038",
+    "ProductName": "Portable Monitor",
+    "Price": 179.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0039",
+    "ProductNumber": "P-1039",
+    "ProductName": "Laptop Backpack",
+    "Price": 49.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0040",
+    "ProductNumber": "P-1040",
+    "ProductName": "Smart Door Lock",
+    "Price": 199.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0041",
+    "ProductNumber": "P-1041",
+    "ProductName": "Air Purifier",
+    "Price": 149.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0042",
+    "ProductNumber": "P-1042",
+    "ProductName": "Electric Kettle",
+    "Price": 34.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0043",
+    "ProductNumber": "P-1043",
+    "ProductName": "Coffee Maker",
+    "Price": 79.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0044",
+    "ProductNumber": "P-1044",
+    "ProductName": "Robot Vacuum",
+    "Price": 249.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0045",
+    "ProductNumber": "P-1045",
+    "ProductName": "Hair Dryer",
+    "Price": 29.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0046",
+    "ProductNumber": "P-1046",
+    "ProductName": "Electric Toothbrush",
+    "Price": 49.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0047",
+    "ProductNumber": "P-1047",
+    "ProductName": "Smart Scale",
+    "Price": 39.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0048",
+    "ProductNumber": "P-1048",
+    "ProductName": "LED Strip Lights",
+    "Price": 19.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0049",
+    "ProductNumber": "P-1049",
+    "ProductName": "Mini Projector",
+    "Price": 129.99,
+    "Currency": "USD"
+  },
+  {
+    "ProductId": "a1f3c9d2-1b4a-4f6d-9c01-0c2e8d9a0050",
+    "ProductNumber": "P-1050",
+    "ProductName": "Smart Alarm Clock",
+    "Price": 59.99,
     "Currency": "USD"
   }
 ]

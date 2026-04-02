@@ -28,9 +28,11 @@ internal sealed class ProductApi(
             ?? throw new InvalidOperationException("Failed to load product details.");
     }
 
-    public async Task<IEnumerable<ProductOverviewDTO>> LoadProductsAsync(CancellationToken ct = default)
+    public async Task<PagedResult<ProductOverviewDTO>> LoadProductsAsync(int page, int pageSize, CancellationToken ct = default)
     {
-        return await http.GetFromJsonAsync<IEnumerable<ProductOverviewDTO>>("products.json", ct)
+        var products = await http.GetFromJsonAsync<IEnumerable<ProductOverviewDTO>>("products.json", ct)
             ?? throw new InvalidOperationException("Failed to load products.");
+
+        return products.ToPagedResult(page, pageSize);
     }
 }

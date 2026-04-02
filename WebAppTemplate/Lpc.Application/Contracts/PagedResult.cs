@@ -20,3 +20,32 @@ public sealed class PagedResult<T>
         Items = []
     };
 }
+
+public static class PagedResultExtensions
+{
+    public static PagedResult<T> ToPagedResult<T>(
+        this IEnumerable<T> source,
+        int page,
+        int pageSize)
+    {
+        if (page <= 0) page = 1;
+        if (pageSize <= 0) pageSize = 30;
+
+        var list = source as IList<T> ?? [.. source];
+
+        var totalItems = list.Count;
+
+        var items = list
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return new PagedResult<T>
+        {
+            Page = page,
+            PageSize = pageSize,
+            TotalItems = totalItems,
+            Items = items
+        };
+    }
+}

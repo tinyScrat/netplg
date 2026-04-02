@@ -9,15 +9,23 @@
 
     TItem="ProductOverviewDTO"
     Data="VM.Products"
-    LoadData="@(_ => VM.LoadProducts())"
+    Count="VM.TotalProducts"
+    LoadData="OnLoadData"
 
     AllowFiltering="true"
     FilterMode="FilterMode.Simple"
     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
 
-    AllowPaging="false"
+    AllowPaging="true"
+    PageSize="10"
+    PageSizeOptions="@(new int[] { 20, 50, 100 })"
+    PageSizeText="Page"
+    PagingSummaryFormat="Page {0}"
+    PagerPosition="PagerPosition.Bottom"
+    PagerHorizontalAlign="HorizontalAlign.Right"
+    ShowPagingSummary="true"
 
-    AllowSorting="false"
+    AllowSorting="true"
 
     SelectionMode="DataGridSelectionMode.Multiple"
 
@@ -60,5 +68,15 @@
         {
             grid.Reload();
         }
+    }
+
+    void OnLoadData(LoadDataArgs args)
+    {
+        var pageSize = args.Top ?? 20;
+        var skip = args.Skip ?? 0;
+
+        var page = (skip / pageSize) + 1;
+
+        VM.LoadProducts(page, pageSize);
     }
 }

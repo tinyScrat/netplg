@@ -12,8 +12,8 @@ public sealed class ProductOverviewViewModel : ViewModelBase
 {
     private readonly ILogger<ProductOverviewViewModel> logger;
 
-    private readonly AsyncState<IEnumerable<ProductOverviewDTO>> products = new([]);
-    private readonly ReactiveCommand<LoadProductsCmd, IEnumerable<ProductOverviewDTO>> loadProductsCmd;
+    private readonly AsyncState<PagedResult<ProductOverviewDTO>> products = new(PagedResult<ProductOverviewDTO>.Empty);
+    private readonly ReactiveCommand<LoadProductsCmd, PagedResult<ProductOverviewDTO>> loadProductsCmd;
 
     private readonly ReactiveState<HashSet<Guid>> selectedProductIds = new([]);
 
@@ -32,13 +32,13 @@ public sealed class ProductOverviewViewModel : ViewModelBase
             products.Status.Signal,
             selectedProductIds.Signal);
 
-        loadProductsCmd = new ReactiveCommand<LoadProductsCmd, IEnumerable<ProductOverviewDTO>>(
+        loadProductsCmd = new ReactiveCommand<LoadProductsCmd, PagedResult<ProductOverviewDTO>>(
             effect: loadProductsEffect,
             asyncState: products,
             onResult: (_, result) =>
             {
                 products.Data.Set(result);
-                logger.LogInformation("Loaded {Count} products.", result.Count());
+                logger.LogInformation("Loaded {Count} products.", result.TotalItems);
             })
             .DisposeWith(this);
 
@@ -48,13 +48,15 @@ public sealed class ProductOverviewViewModel : ViewModelBase
         });
     }
 
-    public IEnumerable<ProductOverviewDTO> Products => products.Data.Value;
+    public IEnumerable<ProductOverviewDTO> Products => products.Data.Value.Items;
     public bool IsLoading => products.Status.Value.IsLoading();
-    public int TotalProducts => products.Data.Value.Count();
+    public int TotalProducts => products.Data.Value.TotalItems;
+    public int PageSize => products.Data.Value.PageSize;
 
-    public void LoadProducts()
+    public void LoadProducts(int page = 1, int pageSize = 10)
     {
-        loadProductsCmd.Execute(new LoadProductsCmd());
+        logger.LogInformation("Loading products (Page: {Page}, PageSize: {PageSize})", page, pageSize);
+        loadProductsCmd.Execute(new LoadProductsCmd(page, pageSize));
     }
 
     public bool IsSelected(ProductOverviewDTO row)

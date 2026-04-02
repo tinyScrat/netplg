@@ -6,16 +6,16 @@ using System.Reactive.Linq;
 using Lpc.Application.Contracts;
 using Microsoft.Extensions.Logging;
 
-public sealed record LoadProductsCmd : ICommand<IEnumerable<ProductOverviewDTO>>;
+public sealed record LoadProductsCmd(int Page, int PageSize) : ICommand<PagedResult<ProductOverviewDTO>>;
 
 public sealed class LoadProductsEffect(
     IProductApi api,
-    ILogger<LoadProductsEffect> logger) : IEffect<LoadProductsCmd, IEnumerable<ProductOverviewDTO>>
+    ILogger<LoadProductsEffect> logger) : IEffect<LoadProductsCmd, PagedResult<ProductOverviewDTO>>
 {
-    public IObservable<IEnumerable<ProductOverviewDTO>> Handle(LoadProductsCmd command, CancellationToken ct)
+    public IObservable<PagedResult<ProductOverviewDTO>> Handle(LoadProductsCmd command, CancellationToken ct)
     {
         return Observable
-            .FromAsync(async () => await api.LoadProductsAsync(ct))
+            .FromAsync(async () => await api.LoadProductsAsync(command.Page, command.PageSize, ct))
             .WithRetry(logger);
     }
 }

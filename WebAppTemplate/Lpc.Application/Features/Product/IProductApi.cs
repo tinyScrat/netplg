@@ -9,5 +9,5 @@ public interface IProductApi
     Task PublishProductAsync(Guid productId);
 
     Task<ProductDetailDTO> LoadProductDetailAsync(Guid productId, CancellationToken ct = default);
-    Task<IEnumerable<ProductOverviewDTO>> LoadProductsAsync(CancellationToken ct = default);
+    Task<PagedResult<ProductOverviewDTO>> LoadProductsAsync(int page, int pageSize, CancellationToken ct = default);
 }
