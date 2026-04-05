@@ -7,7 +7,7 @@
 <RadzenDataGrid
     @ref="grid"
 
-    TItem="ProductOverviewDTO"
+    TItem="ProductRow"
     Data="VM.Products"
     Count="VM.TotalProducts"
     LoadData="OnLoadData"
@@ -52,15 +52,35 @@
                     Change="@(v => VM.ToggleSelection(data, v))" />
             </Template>
         </RadzenDataGridColumn>
-        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.ProductNumber)" Title="Number" />
-        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.ProductName)" Title="Name" />
-        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.Price)" Title="Price" FormatString="{0:F2}" />
-        <RadzenDataGridColumn Property="@nameof(ProductOverviewDTO.Currency)" Title="Currency" />
+        <RadzenDataGridColumn Title="Number">
+            <Template Context="data">
+                <RadzenText>@data.Product.ProductNumber</RadzenText>
+                @if (!data.IsValid)
+                {
+                    <RadzenText Style="color: red; font-size: smaller;">@data.ValidationError</RadzenText>
+                }
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Title="Name">
+                <Template Context="data">
+                    <RadzenText>@data.Product.ProductName</RadzenText>
+                </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Title="Price" FormatString="{0:F2}">
+            <Template Context="data">
+                <RadzenText>@data.Product.Price.ToString("F2")</RadzenText>
+            </Template>
+        </RadzenDataGridColumn>
+        <RadzenDataGridColumn Title="Currency">
+            <Template Context="data">
+                <RadzenText>@data.Product.Currency</RadzenText>
+            </Template>
+        </RadzenDataGridColumn>
     </Columns>
 </RadzenDataGrid>
 
 @code {
-    private RadzenDataGrid<ProductOverviewDTO> grid = null!;
+    private RadzenDataGrid<ProductRow> grid = null!;
 
     protected override void OnInitialized()
     {

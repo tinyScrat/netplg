@@ -10,6 +10,7 @@ public static class ProductFeature
         services.AddSingleton<PublishProductEffect>();
         services.AddSingleton<LoadProductDetailEffect>();
         services.AddSingleton<LoadProductsEffect>();
+        services.AddSingleton<CheckDuplicatedProuductEffect>();
 
         services.AddTransient<SaveProductReducer>();
 

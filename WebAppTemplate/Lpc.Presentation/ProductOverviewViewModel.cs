@@ -6,14 +6,32 @@ using Lpc.Application.Features.Products;
 using Lpc.Presentation.Abstractions;
 using Lpc.Application.Contracts;
 
-public sealed record ProductRow(ProductOverviewDTO Product, bool IsSelected);
+public sealed record ProductRow
+{
+    public ProductOverviewDTO Product { get; init; } = null!;
+    public bool IsValid { get; private set; } = true;
+    public string? ValidationError { get; private set; }
+
+    public void SetValidationResult(bool isValid, string? error)
+    {
+        IsValid = isValid;
+        ValidationError = error;
+    }
+
+    public void ClearValidation()
+    {
+        IsValid = true;
+        ValidationError = null;
+    }
+}
 
 public sealed class ProductOverviewViewModel : ViewModelBase
 {
     private readonly ILogger<ProductOverviewViewModel> logger;
 
-    private readonly AsyncState<PagedResult<ProductOverviewDTO>> products = new(PagedResult<ProductOverviewDTO>.Empty);
+    private readonly AsyncState<PagedResult<ProductRow>> products = new(PagedResult<ProductRow>.Empty);
     private readonly ReactiveCommand<LoadProductsCmd, PagedResult<ProductOverviewDTO>> loadProductsCmd;
+    private readonly ReactiveCommand<CheckDuplicatedProductCmd, DuplicatedProductResultDTO> checkDuplicatedCmd;
 
     private readonly ReactiveState<HashSet<Guid>> selectedProductIds = new([]);
 
@@ -37,18 +55,44 @@ public sealed class ProductOverviewViewModel : ViewModelBase
             asyncState: products,
             onResult: (_, result) =>
             {
-                products.Data.Set(result);
+                var rows = result.Map(dto => new ProductRow { Product = dto });
+                products.Data.Set(rows);
                 logger.LogInformation("Loaded {Count} products.", result.TotalItems);
+            })
+            .DisposeWith(this);
+
+        checkDuplicatedCmd = new ReactiveCommand<CheckDuplicatedProductCmd, DuplicatedProductResultDTO>(
+            effect: new CheckDuplicatedProuductEffect(),
+            asyncState: null,
+            onResult: (_, result) =>
+            {
+                var productRow = products.Data.Value.Items.FirstOrDefault(r => r.Product.ProductId == result.ProductId);
+                if (productRow != null && result.IsDuplicated)
+                {
+                    productRow.SetValidationResult(false, $"Duplicated with existing product: {result.ExistingProductNumber}");
+                }
+                else
+                {
+                    productRow?.ClearValidation();
+                }
+
+                //products.Data.Set(products.Data.Value); // Trigger UI update
+                RaiseStateChanged();
+
+                logger.LogInformation(
+                    "Checked duplication for product {ProductId}: {IsDuplicated}",
+                    result.ProductId,
+                    result.IsDuplicated);
             })
             .DisposeWith(this);
 
         Subscribe(selectedProductIds.Changes, ids =>
         {
-            logger.LogInformation("Selected products: {Ids}", string.Join(", ", ids.Select(id => id.ToString("N"))));
+            // logger.LogInformation("Selected products: {Ids}", string.Join(", ", ids.Select(id => id.ToString("N"))));
         });
     }
 
-    public IEnumerable<ProductOverviewDTO> Products => products.Data.Value.Items;
+    public IEnumerable<ProductRow> Products => products.Data.Value.Items;
     public bool IsLoading => products.Status.Value.IsLoading();
     public int TotalProducts => products.Data.Value.TotalItems;
 
@@ -58,8 +102,8 @@ public sealed class ProductOverviewViewModel : ViewModelBase
         loadProductsCmd.Execute(new LoadProductsCmd(page, pageSize));
     }
 
-    public bool IsSelected(ProductOverviewDTO row)
-        => selectedProductIds.Value.Contains(row.ProductId);
+    public bool IsSelected(ProductRow row)
+        => selectedProductIds.Value.Contains(row.Product.ProductId);
 
     public bool? SelectionState
     {
@@ -68,7 +112,8 @@ public sealed class ProductOverviewViewModel : ViewModelBase
             if (!Products.Any())
                 return false;
 
-            var selectedInPage = products.Data.Value.Items.Count(p => selectedProductIds.Value.Contains(p.ProductId));
+            var selectedInPage =
+                products.Data.Value.Items.Count(p => selectedProductIds.Value.Contains(p.Product.ProductId));
 
             if (selectedInPage == 0)
                 return false;
@@ -80,9 +125,21 @@ public sealed class ProductOverviewViewModel : ViewModelBase
         }
     }
 
-    public void ToggleSelection(ProductOverviewDTO row, bool selected)
+    public void ToggleSelection(ProductRow row, bool selected)
     {
-        var id = row.ProductId;
+        var id = row.Product.ProductId;
+
+        if (selected)
+        {
+            checkDuplicatedCmd.Execute(new CheckDuplicatedProductCmd(id));
+        }
+        else
+        {
+            // Clear validation when deselecting
+            row.ClearValidation();
+            //products.Data.Set(products.Data.Value); // Trigger UI update
+            RaiseStateChanged();
+        }
 
         selectedProductIds.Update(ids =>
         {
@@ -106,7 +163,7 @@ public sealed class ProductOverviewViewModel : ViewModelBase
         selectedProductIds.Update(ids =>
         {
             if (selected)
-                return [.. products.Data.Value.Items.Select(p => p.ProductId)];
+                return [.. products.Data.Value.Items.Select(p => p.Product.ProductId)];
             else
                 return [];
         });

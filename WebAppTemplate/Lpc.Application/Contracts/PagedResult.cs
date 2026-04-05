@@ -54,4 +54,17 @@ public static class PagedResultExtensions
             Items = items
         };
     }
+
+    public static PagedResult<TOut> Map<T, TOut>(
+        this PagedResult<T> source,
+        Func<T, TOut> selector)
+    {
+        return new PagedResult<TOut>
+        {
+            Page = source.Page,
+            PageSize = source.PageSize,
+            TotalItems = source.TotalItems,
+            Items = [.. source.Items.Select(selector)]
+        };
+    }
 }

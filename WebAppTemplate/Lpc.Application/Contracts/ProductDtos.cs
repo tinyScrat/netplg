@@ -18,3 +18,10 @@ public sealed class ProductOverviewDTO
     public decimal Price { get; init; }
     public string Currency { get; init; } = null!;
 }
+
+public sealed class DuplicatedProductResultDTO
+{
+    public Guid ProductId { get; init; }
+    public bool IsDuplicated { get; init; }
+    public string? ExistingProductNumber { get; init; }
+}
