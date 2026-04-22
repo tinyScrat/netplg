@@ -1,7 +1,7 @@
 <Project>
 
   <PropertyGroup>
-    <CommonTargetFramework>net10.0</CommonTargetFramework>
+    <SolutionTargetFramework>net10.0</SolutionTargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>

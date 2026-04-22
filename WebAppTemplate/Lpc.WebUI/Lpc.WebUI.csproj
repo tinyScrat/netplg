@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>$(CommonTargetFramework)</TargetFramework>
+    <TargetFramework>$(SolutionTargetFramework)</TargetFramework>
     <InvariantGlobalization>true</InvariantGlobalization>
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
   </PropertyGroup>
