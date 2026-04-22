@@ -27,6 +27,28 @@
     <span class="dismiss">🗙</span>
   </div>
 
+  <script>
+      /* Monkey patch the localStorage onto the sessionStorage variable and accessor
+
+          Since oidc-client-js by default uses sessionStorage and the Blazor AuthenticationService
+          wrapper around it does not allow changing the configuration of that to localStorage,
+          and because the wrapper directly uses window.sessionStorage for its own additional data,
+          we have to change the global variable and the window property to point to localStorage instead.
+      */
+      const originalSessionStorage = window.sessionStorage;
+      const sessionStorage = window.localStorage;
+      Object.defineProperty(window, 'sessionStorage', { get: () => window.localStorage });
+
+      // Save return URL on page load and before unload (refresh/close)
+      function saveReturnUrl() {
+          if (!window.location.pathname.startsWith('/authentication/')) {
+              localStorage.setItem('returnUrl', window.location.pathname + window.location.search);
+          }
+      }
+
+      saveReturnUrl();
+      window.addEventListener('beforeunload', saveReturnUrl);
+  </script>
   <script src="_content/Microsoft.AspNetCore.Components.WebAssembly.Authentication/AuthenticationService.js"></script>
   <script src="_content/Radzen.Blazor/Radzen.Blazor.min.js"></script>
   <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>

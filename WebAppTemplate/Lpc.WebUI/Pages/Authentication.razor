@@ -7,7 +7,7 @@
 
 @inject ILogger<Authentication> Logger
 @inject IAppEventBus EventBus
-@inject NavigationManager Nav
+@inject JSRuntime JS
 @inject AuthenticationStateProvider AuthStateProvider
 
 <RemoteAuthenticatorView
@@ -25,9 +25,8 @@
         var authState = await AuthStateProvider.GetAuthenticationStateAsync();
         EventBus.Publish(new AuthStateChangedEvent(authState.User));
 
-        if (string.IsNullOrWhiteSpace(state.ReturnUrl))
-        {
-            Nav.NavigateTo("/", replace: true);
-        }
+        var returnUrl = await JS.InvokeAsync<string?>("localStorage.getItem", "returnUrl");
+
+        state.ReturnUrl = returnUrl ?? "/";
     }
 }
